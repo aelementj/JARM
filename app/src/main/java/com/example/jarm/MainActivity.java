@@ -21,9 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // --- EdgeToEdge Setup ---
         EdgeToEdge.enable(this);
-        // --- End EdgeToEdge Setup ---
 
         // Inflate the layout using ViewBinding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -31,21 +29,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-        // --- Window Insets Listener ---
-        // Your root layout in activity_main.xml should have android:id="@+id/main" for this
-        // or apply insets directly to binding.getRoot().
-        // If activity_main.xml's root is ConstraintLayout, you can give it an id e.g., android:id="@+id/main_container"
-        // and use that ID here: ViewCompat.setOnApplyWindowInsetsListener(binding.mainContainer, (v, insets) -> { ...
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            // Apply padding to the root view to avoid content going under system bars
             v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, v.getPaddingBottom());
-            // The top padding might be handled by EdgeToEdge if you want content behind the status bar
-            // If you don't want content behind status bar, use systemBars.top for v.getPaddingTop()
-            // binding.appBarLayout.setPadding(0, systemBars.top, 0, 0); // If app bar needs specific top padding
+
             return insets;
         });
-        // --- End Window Insets Listener ---
 
         // Setup Click Listeners for Game Cards
         setupGameCardListeners();

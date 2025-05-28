@@ -21,7 +21,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     private static final int PLAYER_O = 2;
     private static final int EMPTY_CELL = 0;
 
-    private int[][] board = new int[3][3]; // 0 for empty, 1 for X, 2 for O
+    private final int[][] board = new int[3][3]; // 0 for empty, 1 for X, 2 for O
     private int currentPlayer;
     private boolean gameActive;
 
@@ -29,7 +29,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     private int scoreO = 0;
     private int scoreTies = 0;
 
-    private ImageButton[][] cellButtons = new ImageButton[3][3];
+    private final ImageButton[][] cellButtons = new ImageButton[3][3];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,21 +69,13 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             for (int j = 0; j < 3; j++) {
                 cellButtons[i][j].setOnClickListener(this);
                 // Set tags to identify row and column, useful in onClick
-                cellButtons[i][j].setTag(R.id.tag_row, i); // You'll need to define these IDs in ids.xml
+                cellButtons[i][j].setTag(R.id.tag_row, i);
                 cellButtons[i][j].setTag(R.id.tag_col, j);
             }
         }
         binding.buttonResetGame.setOnClickListener(v -> resetBoard()); // Clear Board button
         binding.buttonResetScoreboard.setOnClickListener(v -> resetScores()); // Clear Scores button
     }
-
-    // You need to create res/values/ids.xml if it doesn't exist
-    // Add these lines to res/values/ids.xml:
-    // <?xml version="1.0" encoding="utf-8"?>
-    // <resources>
-    //     <item type="id" name="tag_row" />
-    //     <item type="id" name="tag_col" />
-    // </resources>
 
     private void startGame() {
         currentPlayer = PLAYER_X;
@@ -116,7 +108,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         ImageButton clickedCell = (ImageButton) v;
 
         // Retrieve row and col from tags
-        // Make sure you have created tag_row and tag_col in res/values/ids.xml
         Integer rowTag = (Integer) clickedCell.getTag(R.id.tag_row);
         Integer colTag = (Integer) clickedCell.getTag(R.id.tag_col);
 
@@ -173,9 +164,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             }
         }
         if (lastRow + lastCol == 2) { // On anti-diagonal
-            if (board[0][2] == currentPlayer && board[1][1] == currentPlayer && board[2][0] == currentPlayer) {
-                return true;
-            }
+            return board[0][2] == currentPlayer && board[1][1] == currentPlayer && board[2][0] == currentPlayer;
         }
         return false;
     }
@@ -218,10 +207,8 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         scoreO = 0;
         scoreTies = 0;
         updateScoreTextViews();
-        // Optionally, you might want to reset the board as well, or just the scores.
-        // If you want to reset the board too:
         // resetBoard();
-        // Or just update status if game was over:
+
         if (!gameActive) {
             updateStatusText(); // Show current player's turn again
         }

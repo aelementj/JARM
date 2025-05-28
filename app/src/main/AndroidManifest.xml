@@ -22,7 +22,6 @@
             </intent-filter>
         </activity>
 
-        <!-- Add this declaration for TicTacToeActivity -->
         <activity
             android:name=".TicTacToeActivity"
             android:exported="false"
@@ -32,7 +31,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />         <!-- Optional: For older API levels -->
         </activity>
-        <!-- End of TicTacToeActivity declaration -->
 
     </application>
 

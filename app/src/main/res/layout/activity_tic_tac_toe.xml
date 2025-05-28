@@ -120,8 +120,7 @@
         app:layout_constraintBottom_toTopOf="@id/action_buttons_container"
         app:layout_constraintVertical_bias="0.4">
 
-    <!-- Cells (button_00 to button_22) remain the same as before, -->
-    <!-- but ensure their style @style/TicTacToeCell is updated if needed -->
+
     <ImageButton
         android:id="@+id/button_00"
         style="@style/TicTacToeCell"
@@ -162,52 +161,51 @@
         android:id="@+id/button_22"
         style="@style/TicTacToeCell"
         android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-</GridLayout>
+    </GridLayout>
 
-    <!-- Action Buttons -->
-<LinearLayout
-android:id="@+id/action_buttons_container"
-android:layout_width="wrap_content"
-android:layout_height="wrap_content"
-android:orientation="horizontal"
-android:layout_marginBottom="@dimen/action_buttons_container_margin_bottom"
-app:layout_constraintBottom_toBottomOf="parent"
-app:layout_constraintStart_toStartOf="parent"
-app:layout_constraintEnd_toEndOf="parent">
-
-<Button
-    android:id="@+id/button_reset_game"
+        <!-- Action Buttons -->
+    <LinearLayout
+    android:id="@+id/action_buttons_container"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="@string/button_clear_board"
-    android:textSize="@dimen/text_size_button"
-    android:textColor="@color/button_text_white"
-    android:backgroundTint="@color/button_green_reset"
-    android:paddingHorizontal="@dimen/button_padding_horizontal"
-    android:paddingVertical="@dimen/button_padding_vertical"
-    app:cornerRadius="@dimen/action_button_corner_radius"
-    android:layout_marginEnd="@dimen/action_button_spacing"
-    android:drawableTop="@drawable/ic_clearboard"
-    android:drawablePadding="@dimen/button_drawable_padding"
-    android:gravity="center_horizontal|bottom"
-    />
+    android:orientation="horizontal"
+    android:layout_marginBottom="@dimen/action_buttons_container_margin_bottom"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
 
-<Button
-    android:id="@+id/button_reset_scoreboard"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="@string/button_clear_scores"
-    android:textSize="@dimen/text_size_button"
-    android:textColor="@color/button_text_white"
-    android:backgroundTint="@color/button_red_reset_scoreboard"
-    android:paddingHorizontal="@dimen/button_padding_horizontal"
-    android:paddingVertical="@dimen/button_padding_vertical"
-    app:cornerRadius="@dimen/action_button_corner_radius"
-    android:layout_marginStart="@dimen/action_button_spacing"
-    android:drawableTop="@drawable/ic_clearscores"
-    android:drawablePadding="@dimen/button_drawable_padding"
-    android:gravity="center_horizontal|bottom"
-    />
-</LinearLayout>
+    <Button
+        android:id="@+id/button_reset_game"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_clear_board"
+        android:textSize="@dimen/text_size_button"
+        android:textColor="@color/button_text_white"
+        android:backgroundTint="@color/button_green_reset"
+        android:paddingHorizontal="@dimen/button_padding_horizontal"
+        android:paddingVertical="@dimen/button_padding_vertical"
+        app:cornerRadius="@dimen/action_button_corner_radius"
+        android:layout_marginEnd="@dimen/action_button_spacing"
+        android:drawableTop="@drawable/ic_clearboard"
+        android:drawablePadding="@dimen/button_drawable_padding"
+        android:gravity="center_horizontal|bottom"
+        />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/button_reset_scoreboard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_clear_scores"
+        android:textSize="@dimen/text_size_button"
+        android:textColor="@color/button_text_white"
+        android:backgroundTint="@color/button_red_reset_scoreboard"
+        android:paddingHorizontal="@dimen/button_padding_horizontal"
+        android:paddingVertical="@dimen/button_padding_vertical"
+        app:cornerRadius="@dimen/action_button_corner_radius"
+        android:layout_marginStart="@dimen/action_button_spacing"
+        android:drawableTop="@drawable/ic_clearscores"
+        android:drawablePadding="@dimen/button_drawable_padding"
+        android:gravity="center_horizontal|bottom" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
