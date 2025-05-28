@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">JRAM</string> <!-- YOUR NEW APP NAME! -->
+    <string name="app_name">JRAM</string>
 
-    <string name="title_toolbar_mini_games">Just Really Awesome Minigames</string> <!-- This is the text in the toolbar -->
-    <string name="content_desc_toolbar_icon">Settings</string> <!-- Accessibility for top-right icon -->
+    <string name="title_toolbar_mini_games">Just Really Awesome Minigames</string>
+    <string name="content_desc_toolbar_icon">Settings</string> <!-- For MainActivity Toolbar Icon -->
 
     <string name="game_title_tic_tac_toe">Tic Tac Toe</string>
     <string name="game_desc_tic_tac_toe">Classic strategy game for two players.</string>
@@ -23,4 +23,18 @@
     <string name="content_desc_tic_tac_toe_image">Tic Tac Toe game board</string>
     <string name="content_desc_rps_image">Rock, paper, scissors hand gestures</string>
     <string name="content_desc_arithmetic_image">Arithmetic fraction symbol</string>
+
+    <!-- Tic Tac Toe Game Strings -->
+
+    <string name="tic_tac_toe_score_x">x: %1$d</string> <!-- %1$d will be replaced by the score -->
+    <string name="tic_tac_toe_score_o">o: %1$d</string>
+    <string name="tic_tac_toe_score_ties">x/o: %1$d</string>
+    <string name="tic_tac_toe_status_player_turn">Player %1$s\'s Turn</string> <!-- %1$s for player symbol (X or O) -->
+    <string name="tic_tac_toe_status_winner">Player %1$s Wins!</string>
+    <string name="tic_tac_toe_status_draw">It\'s a Draw!</string>
+    <string name="button_clear_board">Clear Board</string>       <!-- UPDATED -->
+    <string name="button_clear_scores">Clear Scores</string>     <!-- UPDATED -->
+    <string name="tic_tac_toe_cell_desc_prefix">Cell</string>    <!-- For dynamic content descriptions like "Cell 0,0" -->
+    <string name="content_desc_help_icon">Help</string>          <!-- NEW: For the help icon in TicTacToeActivity Toolbar -->
+
 </resources>

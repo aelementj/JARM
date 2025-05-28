@@ -1,17 +1,15 @@
 package com.example.jarm; // Replace with your actual package name
 
+import android.content.Intent; // Import Intent
 import android.os.Bundle;
 import android.widget.Toast; // For simple interaction testing
 
 import androidx.appcompat.app.AppCompatActivity;
-// Remove EdgeToEdge and WindowInsets imports if you're simplifying heavily,
-// but they are fine to keep.
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-// Import your generated ViewBinding class
 import com.example.jarm.databinding.ActivityMainBinding; // Make sure this matches your package and XML name
 
 public class MainActivity extends AppCompatActivity {
@@ -23,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // --- EdgeToEdge Setup (Optional for bare minimum display, but good to keep) ---
+        // --- EdgeToEdge Setup ---
         EdgeToEdge.enable(this);
         // --- End EdgeToEdge Setup ---
 
@@ -33,27 +31,39 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-        // --- Window Insets Listener (Optional for bare minimum display, related to EdgeToEdge) ---
-        // Note: The ID 'main' needs to exist in your activity_main.xml as the root layout ID.
-        // If your root layout in activity_main.xml doesn't have android:id="@+id/main",
-        // this part will cause a crash. You can assign the ID or apply insets to binding.getRoot().
+        // --- Window Insets Listener ---
+        // Your root layout in activity_main.xml should have android:id="@+id/main" for this
+        // or apply insets directly to binding.getRoot().
+        // If activity_main.xml's root is ConstraintLayout, you can give it an id e.g., android:id="@+id/main_container"
+        // and use that ID here: ViewCompat.setOnApplyWindowInsetsListener(binding.mainContainer, (v, insets) -> { ...
         ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            // Apply padding to the root view to avoid content going under system bars
+            v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, v.getPaddingBottom());
+            // The top padding might be handled by EdgeToEdge if you want content behind the status bar
+            // If you don't want content behind status bar, use systemBars.top for v.getPaddingTop()
+            // binding.appBarLayout.setPadding(0, systemBars.top, 0, 0); // If app bar needs specific top padding
             return insets;
         });
         // --- End Window Insets Listener ---
 
+        // Setup Click Listeners for Game Cards
+        setupGameCardListeners();
 
-        // ***** BARE MINIMUM FOR FUNCTIONALITY (OPTIONAL FOR JUST DISPLAY) *****
-        // If you want to test the tap/long-tap, add listeners here.
-        // Otherwise, the UI will just display.
+        // Setup Bottom Navigation Listener
+        setupBottomNavigationListener();
 
-        // Example: Make Tic Tac Toe icon clickable (just to show it works)
-        if (binding.cardCompactTicTacToe != null) { // Use the CardView's ID
+        // Setup Top App Bar Menu Listener
+        setupTopAppBarListener();
+    }
+
+    private void setupGameCardListeners() {
+        // Tic Tac Toe Card
+        if (binding.cardCompactTicTacToe != null) {
             binding.cardCompactTicTacToe.setOnClickListener(view -> {
-                Toast.makeText(MainActivity.this, "Tic Tac Toe bar tapped!", Toast.LENGTH_SHORT).show();
-                // TODO: Play Tic Tac Toe game
+                // Launch TicTacToeActivity
+                Intent intent = new Intent(MainActivity.this, TicTacToeActivity.class);
+                startActivity(intent);
             });
 
             binding.cardCompactTicTacToe.setOnLongClickListener(view -> {
@@ -63,10 +73,13 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        if (binding.cardCompactRps != null) { // Ensure this ID exists on the CardView in XML
+        // Rock Paper Scissors Card
+        if (binding.cardCompactRps != null) {
             binding.cardCompactRps.setOnClickListener(view -> {
-                Toast.makeText(MainActivity.this, "Rock Paper Scissors bar tapped!", Toast.LENGTH_SHORT).show();
-                // TODO: Play Rock Paper Scissors
+                Toast.makeText(MainActivity.this, "Rock Paper Scissors tapped!", Toast.LENGTH_SHORT).show();
+                // TODO: Create and launch RockPaperScissorsActivity
+                // Intent intent = new Intent(MainActivity.this, RockPaperScissorsActivity.class);
+                // startActivity(intent);
             });
 
             binding.cardCompactRps.setOnLongClickListener(view -> {
@@ -76,10 +89,13 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        if (binding.cardCompactArithmetic != null) { // Ensure this ID exists on the CardView in XML
+        // Arithmetic Challenge Card
+        if (binding.cardCompactArithmetic != null) {
             binding.cardCompactArithmetic.setOnClickListener(view -> {
-                Toast.makeText(MainActivity.this, "Arithmetic Challenge bar tapped!", Toast.LENGTH_SHORT).show();
-                // TODO: Play Arithmetic Challenge
+                Toast.makeText(MainActivity.this, "Arithmetic Challenge tapped!", Toast.LENGTH_SHORT).show();
+                // TODO: Create and launch ArithmeticChallengeActivity
+                // Intent intent = new Intent(MainActivity.this, ArithmeticChallengeActivity.class);
+                // startActivity(intent);
             });
 
             binding.cardCompactArithmetic.setOnLongClickListener(view -> {
@@ -88,30 +104,39 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             });
         }
+    }
 
-        // Example: Handle Bottom Navigation (just to show it works)
+    private void setupBottomNavigationListener() {
         if (binding.bottomNavigation != null) {
+            // Set an initial selected item if needed, e.g., Games
+            // binding.bottomNavigation.setSelectedItemId(R.id.navigation_games);
+
             binding.bottomNavigation.setOnItemSelectedListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.navigation_games) {
+                    // Already on the games screen, or navigate to it if you have fragments
                     Toast.makeText(MainActivity.this, "Games selected", Toast.LENGTH_SHORT).show();
                     return true;
                 } else if (itemId == R.id.navigation_stats) {
                     Toast.makeText(MainActivity.this, "Stats selected", Toast.LENGTH_SHORT).show();
+                    // TODO: Navigate to Stats screen/fragment
                     return true;
                 } else if (itemId == R.id.navigation_options) {
                     Toast.makeText(MainActivity.this, "Options selected", Toast.LENGTH_SHORT).show();
+                    // TODO: Navigate to Options screen/fragment
                     return true;
                 }
                 return false;
             });
         }
+    }
 
+    private void setupTopAppBarListener() {
         if (binding.topAppBar != null) {
             binding.topAppBar.setOnMenuItemClickListener(menuItem -> {
-                if (menuItem.getItemId() == R.id.action_help) { // CHECK FOR THE CORRECT ID
+                if (menuItem.getItemId() == R.id.action_help) {
                     Toast.makeText(MainActivity.this, "Help icon clicked!", Toast.LENGTH_SHORT).show();
-                    // TODO: Implement what happens when help is clicked (e.g., show a dialog, new activity)
+                    // TODO: Implement what happens when help is clicked (e.g., show a dialog, new activity for general help)
                     return true;
                 }
                 return false;

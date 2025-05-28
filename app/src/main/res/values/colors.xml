@@ -10,18 +10,25 @@
     <color name="white">#FFFFFFFF</color>
 
     <!-- Your App Specific Colors (JRAM) -->
-    <color name="app_background">#F5F5F5</color> <!-- Or the exact light gray from screenshot -->
+    <color name="app_background">#F5F5F5</color>
     <color name="card_background">#FFFFFF</color>
-    <color name="text_primary_dark">#212121</color> <!-- For dark text on light backgrounds -->
-    <color name="text_secondary_dark">#757575</color> <!-- For less prominent dark text -->
-    <color name="button_blue_play">#2979FF</color> <!-- The blue of your Play buttons -->
-    <color name="button_text_white">#FFFFFF</color> <!-- Text color for the Play buttons -->
-    <color name="icon_tint_unselected">#757575</color> <!-- For unselected bottom nav icons -->
-    <color name="icon_tint_selected">@color/button_blue_play</color> <!-- Selected bottom nav icon tint -->
+    <color name="text_primary_dark">#212121</color>
+    <color name="text_secondary_dark">#757575</color>
+    <color name="button_blue_play">#2979FF</color>
+    <color name="button_text_white">#FFFFFF</color>
+    <color name="icon_tint_unselected">#757575</color>
+    <color name="icon_tint_selected">@color/button_blue_play</color>
+    <color name="button_background_play_dark">#303030</color>
 
-    <!-- In res/values/colors.xml -->
-    <color name="button_background_play_dark">#303030</color> <!-- Dark gray for play buttons -->
+    <!-- Tic Tac Toe Specific Colors -->
+    <color name="score_x_background">#2196F3</color> <!-- Blue for X score -->
+    <color name="score_o_background">#F44336</color> <!-- Red for O score -->
+    <color name="score_ties_background">#757575</color> <!-- Grey for Ties score -->
+    <color name="score_text_color">#FFFFFF</color> <!-- White text for scores -->
 
+    <color name="button_green_reset">#4CAF50</color> <!-- Green for Reset Game button -->
+    <color name="button_red_reset_scoreboard">#D32F2F</color> <!-- Red for Reset Scoreboard button -->
 
+    <color name="grid_line_color">#607D8B</color> <!-- Darker color for grid lines (Blue Grey) -->
+    <color name="grid_cell_background">#FFFFFF</color> <!-- White or very light for cell background -->
 </resources>
-
