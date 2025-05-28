@@ -207,7 +207,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         scoreO = 0;
         scoreTies = 0;
         updateScoreTextViews();
-        // resetBoard();
+        resetBoard();
 
         if (!gameActive) {
             updateStatusText(); // Show current player's turn again
