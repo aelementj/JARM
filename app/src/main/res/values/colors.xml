@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Standard Material Colors (examples, adjust as needed) -->
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Your App Specific Colors (JRAM) -->
+    <color name="app_background">#F5F5F5</color> <!-- Or the exact light gray from screenshot -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="text_primary_dark">#212121</color> <!-- For dark text on light backgrounds -->
+    <color name="text_secondary_dark">#757575</color> <!-- For less prominent dark text -->
+    <color name="button_blue_play">#2979FF</color> <!-- The blue of your Play buttons -->
+    <color name="button_text_white">#FFFFFF</color> <!-- Text color for the Play buttons -->
+    <color name="icon_tint_unselected">#757575</color> <!-- For unselected bottom nav icons -->
+    <color name="icon_tint_selected">@color/button_blue_play</color> <!-- Selected bottom nav icon tint -->
+
+    <!-- In res/values/colors.xml -->
+    <color name="button_background_play_dark">#303030</color> <!-- Dark gray for play buttons -->
+
+
 </resources>
+

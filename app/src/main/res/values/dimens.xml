@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General Spacing -->
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_xlarge">24dp</dimen>
+
+    <!-- Card Properties -->
+    <dimen name="card_corner_radius">12dp</dimen> <!-- Adjust based on screenshot -->
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="game_image_height">180dp</dimen> <!-- Adjust as needed -->
+
+    <!-- Button Properties -->
+    <dimen name="button_corner_radius">20dp</dimen> <!-- For pill-shape -->
+    <dimen name="button_padding_horizontal">24dp</dimen>
+    <dimen name="button_padding_vertical">10dp</dimen>
+
+    <!-- Text Sizes -->
+    <dimen name="text_size_toolbar_title">20sp</dimen>
+    <dimen name="text_size_card_title">36sp</dimen>
+    <dimen name="text_size_card_description">14sp</dimen>
+    <dimen name="text_size_button">14sp</dimen>
+    <dimen name="text_size_bottom_nav_label">12sp</dimen>
+
+    <!-- Icon Sizes -->
+    <dimen name="icon_size_toolbar">24dp</dimen>
+
+
+    <!-- ... other dimensions ... -->
+    <dimen name="compact_game_icon_size">120dp</dimen> <!-- Adjust as needed for your icons -->
+    <dimen name="card_corner_radius_compact">8dp</dimen> <!-- Smaller corner radius for compact cards -->
+    <dimen name="card_elevation_compact">2dp</dimen>
+    <dimen name="compact_item_padding">12dp</dimen>
+
+</resources>

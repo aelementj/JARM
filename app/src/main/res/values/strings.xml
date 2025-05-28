@@ -1,3 +1,26 @@
 <resources>
-    <string name="app_name">JARM</string>
+    <string name="app_name">JRAM</string> <!-- YOUR NEW APP NAME! -->
+
+    <string name="title_toolbar_mini_games">Just Really Awesome Minigames</string> <!-- This is the text in the toolbar -->
+    <string name="content_desc_toolbar_icon">Settings</string> <!-- Accessibility for top-right icon -->
+
+    <string name="game_title_tic_tac_toe">Tic Tac Toe</string>
+    <string name="game_desc_tic_tac_toe">Classic strategy game for two players.</string>
+
+    <string name="game_title_rps">Rock Paper Scissors</string>
+    <string name="game_desc_rps">Simple hand game of chance and strategy.</string>
+
+    <string name="game_title_arithmetic">Arithmetic Challenge</string>
+    <string name="game_desc_arithmetic">Test your math skills with quick calculations.</string>
+
+    <string name="button_play">Play</string>
+
+    <string name="bottom_nav_games">Games</string>
+    <string name="bottom_nav_stats">Stats</string>
+    <string name="bottom_nav_options">Options</string>
+
+    <!-- Content Descriptions for Images (Accessibility) -->
+    <string name="content_desc_tic_tac_toe_image">Tic Tac Toe game board</string>
+    <string name="content_desc_rps_image">Rock, paper, scissors hand gestures</string>
+    <string name="content_desc_arithmetic_image">Arithmetic fraction symbol</string>
 </resources>
