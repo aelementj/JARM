@@ -36,4 +36,14 @@
     <string name="tic_tac_toe_cell_desc_prefix">Cell</string>
     <string name="content_desc_help_icon">Help</string>
 
+    <!-- Arithmetic Challenge Game Strings -->
+    <string name="game_title_arithmetic_challenge">Arithmetic Challenge</string>
+    <string name="arithmetic_play_button">Play</string>
+    <string name="arithmetic_difficulty_easy">Easy</string>
+    <string name="arithmetic_difficulty_medium">Medium</string>
+    <string name="arithmetic_difficulty_hard">Hard</string>
+    <string name="arithmetic_how_to_play_button">How to Play</string>
+    <string name="content_desc_arithmetic_icon">Arithmetic Challenge Game Icon</string>
+    <string name="arithmetic_difficulty_label">Difficulty:</string>
+
 </resources>

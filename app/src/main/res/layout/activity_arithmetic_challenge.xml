@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content_arithmetic"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/arithmetic_page_padding"
+    tools:context=".ArithmeticChallengeActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout_arithmetic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_arithmetic_challenge"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ImageView
+        android:id="@+id/image_view_arithmetic_icon"
+        android:layout_width="@dimen/arithmetic_icon_size"
+        android:layout_height="@dimen/arithmetic_icon_size"
+        android:src="@drawable/ic_arithmetic_challenge"
+        android:contentDescription="@string/content_desc_arithmetic_icon"
+        app:layout_constraintTop_toBottomOf="@id/app_bar_layout_arithmetic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_arithmetic_play"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.3"
+        android:layout_marginTop="@dimen/arithmetic_icon_margin_top"/>
+
+    <Button
+        android:id="@+id/button_arithmetic_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/arithmetic_button_min_width"
+        android:text="@string/arithmetic_play_button"
+        app:layout_constraintTop_toBottomOf="@id/image_view_arithmetic_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/text_view_difficulty_label"
+        android:layout_marginTop="@dimen/arithmetic_play_button_margin_top" />
+
+    <TextView
+        android:id="@+id/text_view_difficulty_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/arithmetic_difficulty_label"
+        android:textAppearance="?attr/textAppearanceSubtitle1"
+        app:layout_constraintTop_toBottomOf="@id/button_arithmetic_play"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/radio_group_difficulty"
+        android:layout_marginTop="@dimen/arithmetic_difficulty_margin_top" />
+
+    <RadioGroup
+        android:id="@+id/radio_group_difficulty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/text_view_difficulty_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_arithmetic_how_to_play"
+        android:layout_marginTop="@dimen/arithmetic_radio_group_spacing">
+
+        <RadioButton
+            android:id="@+id/radio_button_easy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/arithmetic_difficulty_easy"
+            android:background="@drawable/radio_button_background"
+            android:textColor="@drawable/radio_button_text_color"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginEnd="@dimen/arithmetic_radio_group_spacing"
+            android:button="@null"
+            android:gravity="center"
+            android:checked="true"/> <!-- Default to Easy -->
+
+        <RadioButton
+            android:id="@+id/radio_button_medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/arithmetic_difficulty_medium"
+            android:background="@drawable/radio_button_background"
+            android:textColor="@drawable/radio_button_text_color"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginStart="@dimen/arithmetic_radio_group_spacing"
+            android:layout_marginEnd="@dimen/arithmetic_radio_group_spacing"
+            android:button="@null"
+            android:gravity="center"/>
+
+        <RadioButton
+            android:id="@+id/radio_button_hard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/arithmetic_difficulty_hard"
+            android:background="@drawable/radio_button_background"
+            android:textColor="@drawable/radio_button_text_color"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_marginStart="@dimen/arithmetic_radio_group_spacing"
+            android:button="@null"
+            android:gravity="center"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/button_arithmetic_how_to_play"
+        style="?attr/materialButtonOutlinedStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/arithmetic_button_min_width"
+        android:text="@string/arithmetic_how_to_play_button"
+        app:layout_constraintTop_toBottomOf="@id/radio_group_difficulty"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.8"
+        android:layout_marginTop="@dimen/arithmetic_how_to_play_margin_top"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

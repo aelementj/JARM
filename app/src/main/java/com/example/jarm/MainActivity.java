@@ -82,10 +82,8 @@ public class MainActivity extends AppCompatActivity {
         // Arithmetic Challenge Card
         if (binding.cardCompactArithmetic != null) {
             binding.cardCompactArithmetic.setOnClickListener(view -> {
-                Toast.makeText(MainActivity.this, "Arithmetic Challenge tapped!", Toast.LENGTH_SHORT).show();
-                // TODO: Create and launch ArithmeticChallengeActivity
-                // Intent intent = new Intent(MainActivity.this, ArithmeticChallengeActivity.class);
-                // startActivity(intent);
+                Intent intent = new Intent(MainActivity.this, ArithmeticChallengeActivity.class);
+                startActivity(intent);
             });
 
             binding.cardCompactArithmetic.setOnLongClickListener(view -> {
