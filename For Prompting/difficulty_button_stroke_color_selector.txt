@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- When checked, make stroke color same as the active panel background -->
+    <item android:state_checked="true" android:color="@color/difficulty_active_panel_bg" />
+    <!-- Default stroke color for unchecked (outlined) state -->
+    <item android:color="?attr/colorOutline" />
+</selector>

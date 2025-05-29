@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_help_arithmetic"
+        android:icon="@drawable/ic_help"
+        android:title="@string/content_desc_help_arithmetic"
+        app:showAsAction="ifRoom"
+        android:contentDescription="@string/content_desc_help_arithmetic" />
+</menu>

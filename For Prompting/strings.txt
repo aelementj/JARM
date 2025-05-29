@@ -36,4 +36,20 @@
     <string name="tic_tac_toe_cell_desc_prefix">Cell</string>
     <string name="content_desc_help_icon">Help</string>
 
+    <!-- Arithmetic Challenge Game Strings -->
+    <string name="game_title_arithmetic_toolbar">Arithmetic Challenge</string>
+    <string name="button_play_arithmetic">Play</string>
+    <string name="difficulty_label">Select Difficulty:</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="button_how_to_play">How to Play</string>
+    <string name="content_desc_arithmetic_icon_large">Arithmetic Challenge Game Icon</string>
+    <string name="content_desc_help_arithmetic">Help for Arithmetic Challenge</string>
+
+    <string name="modifiers_easy_placeholder">Easy Difficulty:\n- More time per question\n- Simpler calculations (e.g., addition, subtraction with smaller numbers)</string>
+    <string name="modifiers_medium_placeholder">Medium Difficulty:\n- Standard time per question\n- Mixed operations including multiplication, slightly larger numbers</string>
+    <string name="modifiers_hard_placeholder">Hard Difficulty:\n- Less time per question\n- Complex calculations, division, multi-step problems, larger numbers</string>
+
+
 </resources>
