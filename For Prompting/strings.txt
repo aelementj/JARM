@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">JRAM</string>
+
+    <string name="title_toolbar_mini_games">Just Really Awesome Minigames</string>
+    <string name="content_desc_toolbar_icon">Settings</string>
+
+    <string name="game_title_tic_tac_toe">Tic Tac Toe</string>
+    <string name="game_desc_tic_tac_toe">Classic strategy game for two players.</string>
+
+    <string name="game_title_rps">Rock Paper Scissors</string>
+    <string name="game_desc_rps">Simple hand game of chance and strategy.</string>
+
+    <string name="game_title_arithmetic">Arithmetic Challenge</string>
+    <string name="game_desc_arithmetic">Test your math skills with quick calculations.</string>
+
+    <string name="button_play">Play</string>
+
+    <string name="bottom_nav_games">Games</string>
+    <string name="bottom_nav_stats">Stats</string>
+    <string name="bottom_nav_options">Options</string>
+
+    <!-- Content Descriptions for Images (Accessibility) -->
+    <string name="content_desc_tic_tac_toe_image">Tic Tac Toe game board</string>
+    <string name="content_desc_rps_image">Rock, paper, scissors hand gestures</string>
+    <string name="content_desc_arithmetic_image">Arithmetic fraction symbol</string>
+
+    <!-- Tic Tac Toe Game Strings -->
+    <string name="tic_tac_toe_score_x">x: %1$d</string>
+    <string name="tic_tac_toe_score_o">o: %1$d</string>
+    <string name="tic_tac_toe_score_ties">x/o: %1$d</string>
+    <string name="tic_tac_toe_status_player_turn">Player %1$s\'s Turn</string>
+    <string name="tic_tac_toe_status_winner">Player %1$s Wins!</string>
+    <string name="tic_tac_toe_status_draw">It\'s a Draw!</string>
+    <string name="button_clear_board">Clear Board</string>
+    <string name="button_clear_scores">Clear Scores</string>
+    <string name="tic_tac_toe_cell_desc_prefix">Cell</string>
+    <string name="content_desc_help_icon">Help</string>
+
+</resources>

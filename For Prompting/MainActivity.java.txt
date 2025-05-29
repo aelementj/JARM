@@ -1,0 +1,136 @@
+package com.example.jarm; // Replace with your actual package name
+
+import android.content.Intent; // Import Intent
+import android.os.Bundle;
+import android.widget.Toast; // For simple interaction testing
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.activity.EdgeToEdge;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import com.example.jarm.databinding.ActivityMainBinding; // Make sure this matches your package and XML name
+
+public class MainActivity extends AppCompatActivity {
+
+    // Declare the binding variable
+    private ActivityMainBinding binding;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        EdgeToEdge.enable(this);
+
+        // Inflate the layout using ViewBinding
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        // Set the root of the binding as the content view
+        setContentView(binding.getRoot());
+
+
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, v.getPaddingBottom());
+
+            return insets;
+        });
+
+        // Setup Click Listeners for Game Cards
+        setupGameCardListeners();
+
+        // Setup Bottom Navigation Listener
+        setupBottomNavigationListener();
+
+        // Setup Top App Bar Menu Listener
+        setupTopAppBarListener();
+    }
+
+    private void setupGameCardListeners() {
+        // Tic Tac Toe Card
+        if (binding.cardCompactTicTacToe != null) {
+            binding.cardCompactTicTacToe.setOnClickListener(view -> {
+                // Launch TicTacToeActivity
+                Intent intent = new Intent(MainActivity.this, TicTacToeActivity.class);
+                startActivity(intent);
+            });
+
+            binding.cardCompactTicTacToe.setOnLongClickListener(view -> {
+                String description = getString(R.string.game_desc_tic_tac_toe);
+                Toast.makeText(MainActivity.this, "Info: " + description, Toast.LENGTH_LONG).show();
+                return true; // Consumed
+            });
+        }
+
+        // Rock Paper Scissors Card
+        if (binding.cardCompactRps != null) {
+            binding.cardCompactRps.setOnClickListener(view -> {
+                Toast.makeText(MainActivity.this, "Rock Paper Scissors tapped!", Toast.LENGTH_SHORT).show();
+                // TODO: Create and launch RockPaperScissorsActivity
+                // Intent intent = new Intent(MainActivity.this, RockPaperScissorsActivity.class);
+                // startActivity(intent);
+            });
+
+            binding.cardCompactRps.setOnLongClickListener(view -> {
+                String description = getString(R.string.game_desc_rps);
+                Toast.makeText(MainActivity.this, "Info: " + description, Toast.LENGTH_LONG).show();
+                return true;
+            });
+        }
+
+        // Arithmetic Challenge Card
+        if (binding.cardCompactArithmetic != null) {
+            binding.cardCompactArithmetic.setOnClickListener(view -> {
+                Toast.makeText(MainActivity.this, "Arithmetic Challenge tapped!", Toast.LENGTH_SHORT).show();
+                // TODO: Create and launch ArithmeticChallengeActivity
+                // Intent intent = new Intent(MainActivity.this, ArithmeticChallengeActivity.class);
+                // startActivity(intent);
+            });
+
+            binding.cardCompactArithmetic.setOnLongClickListener(view -> {
+                String description = getString(R.string.game_desc_arithmetic);
+                Toast.makeText(MainActivity.this, "Info: " + description, Toast.LENGTH_LONG).show();
+                return true;
+            });
+        }
+    }
+
+    private void setupBottomNavigationListener() {
+        if (binding.bottomNavigation != null) {
+            // Set an initial selected item if needed, e.g., Games
+            // binding.bottomNavigation.setSelectedItemId(R.id.navigation_games);
+
+            binding.bottomNavigation.setOnItemSelectedListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.navigation_games) {
+                    // Already on the games screen, or navigate to it if you have fragments
+                    Toast.makeText(MainActivity.this, "Games selected", Toast.LENGTH_SHORT).show();
+                    return true;
+                } else if (itemId == R.id.navigation_stats) {
+                    Toast.makeText(MainActivity.this, "Stats selected", Toast.LENGTH_SHORT).show();
+                    // TODO: Navigate to Stats screen/fragment
+                    return true;
+                } else if (itemId == R.id.navigation_options) {
+                    Toast.makeText(MainActivity.this, "Options selected", Toast.LENGTH_SHORT).show();
+                    // TODO: Navigate to Options screen/fragment
+                    return true;
+                }
+                return false;
+            });
+        }
+    }
+
+    private void setupTopAppBarListener() {
+        if (binding.topAppBar != null) {
+            binding.topAppBar.setOnMenuItemClickListener(menuItem -> {
+                if (menuItem.getItemId() == R.id.action_help) {
+                    Toast.makeText(MainActivity.this, "Help icon clicked!", Toast.LENGTH_SHORT).show();
+                    // TODO: Implement what happens when help is clicked (e.g., show a dialog, new activity for general help)
+                    return true;
+                }
+                return false;
+            });
+        }
+    }
+}
