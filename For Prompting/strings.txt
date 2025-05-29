@@ -19,12 +19,10 @@
     <string name="bottom_nav_stats">Stats</string>
     <string name="bottom_nav_options">Options</string>
 
-    <!-- Content Descriptions for Images (Accessibility) -->
     <string name="content_desc_tic_tac_toe_image">Tic Tac Toe game board</string>
     <string name="content_desc_rps_image">Rock, paper, scissors hand gestures</string>
     <string name="content_desc_arithmetic_image">Arithmetic fraction symbol</string>
 
-    <!-- Tic Tac Toe Game Strings -->
     <string name="tic_tac_toe_score_x">x: %1$d</string>
     <string name="tic_tac_toe_score_o">o: %1$d</string>
     <string name="tic_tac_toe_score_ties">x/o: %1$d</string>
@@ -36,7 +34,6 @@
     <string name="tic_tac_toe_cell_desc_prefix">Cell</string>
     <string name="content_desc_help_icon">Help</string>
 
-    <!-- Arithmetic Challenge Game Strings -->
     <string name="game_title_arithmetic_toolbar">Arithmetic Challenge</string>
     <string name="button_play_arithmetic">Play</string>
     <string name="difficulty_label">Select Difficulty:</string>
@@ -47,9 +44,64 @@
     <string name="content_desc_arithmetic_icon_large">Arithmetic Challenge Game Icon</string>
     <string name="content_desc_help_arithmetic">Help for Arithmetic Challenge</string>
 
-    <string name="modifiers_easy_placeholder">Easy Difficulty:\n- More time per question\n- Simpler calculations (e.g., addition, subtraction with smaller numbers)</string>
-    <string name="modifiers_medium_placeholder">Medium Difficulty:\n- Standard time per question\n- Mixed operations including multiplication, slightly larger numbers</string>
-    <string name="modifiers_hard_placeholder">Hard Difficulty:\n- Less time per question\n- Complex calculations, division, multi-step problems, larger numbers</string>
+    <!-- UPDATED Difficulty Modifiers with new Time Rules -->
+    <string name="modifiers_easy_placeholder">
+        • Rounds: 10\n
+        • Operators per Round: 1\n
+        • Numbers per Operation: 2\n
+        • Digits per Number: 1-2 digits\n
+        • Time per Round: (2.5s per number) + 25s\n
+        • Scoring:\n
+        \t\t\t\t- Correct: +5s to next round (no stack)\n
+        \t\t\t\t- Incorrect: No punishment
+    </string>
+    <string name="modifiers_medium_placeholder">
+        • Rounds: 10\n
+        • Operators per Round: 1-2\n
+        • Numbers per Operation: 2-3\n
+        • Digits per Number: 1-3 digits\n
+        • Time per Round: (5s per number) + 20s\n
+        • Scoring:\n
+        \t\t\t\t- Correct: +10s to next round (stacks)\n
+        \t\t\t\t- Incorrect: -5s from next round
+    </string>
+    <string name="modifiers_hard_placeholder">
+        • Rounds: 10\n
+        • Operators per Round: 1-3\n
+        • Numbers per Operation: 2-4\n
+        • Digits per Number: 1-4 digits\n
+        • Time per Round: (7.5s per number) + 15s\n
+        • Scoring:\n
+        \t\t\t\t- Correct: +15s to next round (stacks)\n
+        \t\t\t\t- Incorrect: -10s from next round
+    </string>
 
+    <string name="game_title_arithmetic_gameplay">Math Challenge</string>
+    <string name="label_time_remaining">Time Remaining</string>
+    <string name="hint_enter_answer">Enter your answer</string>
+    <string name="button_submit">Submit</string>
+    <string name="label_difficulty_prefix">Difficulty: %s</string>
+    <string name="placeholder_time_value">15s</string>
+    <string name="placeholder_problem">12 + 8 - 5 = ?</string>
+    <string name="placeholder_difficulty_value">Difficulty: Medium</string>
+
+    <string name="placeholder_previous_answer_feedback">Previous answer feedback will appear here.</string>
+    <string name="feedback_format_correct">Previous: %1$s\nYour Answer: %2$s (Correct!)</string>
+    <string name="feedback_format_incorrect">Previous: %1$s (Correct: %2$s)\nYour Answer: %3$s (Incorrect!)</string>
+
+    <string name="label_round_counter_format">Round: %1$d / %2$d</string>
+    <string name="placeholder_round_counter">Round: 1 / 10</string>
+    <string name="history_item_round_label_format">R%1$d:</string>
+    <string name="history_item_problem_format">%1$s = %2$s</string>
+    <string name="history_item_time_up">Time Up!</string>
+    <string name="history_item_no_answer">No Answer</string>
+
+    <string name="header_label_round">Round</string>
+    <string name="header_label_previous_equation">Problem</string>
+    <string name="header_label_user_answer">Your Answer</string>
+    <string name="history_item_user_answer_format">%1$s</string>
+
+    <string name="placeholder_score_display">Score: 0</string>
+    <string name="label_score_format">Score: %d</string>
 
 </resources>

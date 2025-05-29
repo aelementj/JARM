@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_history_item_background"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/history_item_corner_radius"
+    app:cardElevation="1dp"
+    android:layout_marginTop="@dimen/spacing_small"
+    android:layout_marginBottom="@dimen/spacing_small">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/history_item_padding"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall">
+
+        <TextView
+            android:id="@+id/text_view_history_round_label"
+            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="R10:"
+        android:textStyle="bold"
+        android:textSize="@dimen/text_size_history_item"
+        android:textColor="@color/feedback_panel_text_color"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="@dimen/history_item_column_gap"/> <!-- MODIFIED: Gap after round label -->
+
+        <TextView
+            android:id="@+id/text_view_history_problem"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            tools:text="123 + 456 - 789 = -210"
+            android:textSize="@dimen/text_size_history_item"
+            android:textColor="@color/feedback_panel_text_color"
+            android:gravity="center|center_vertical"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/text_view_history_round_label"
+            app:layout_constraintEnd_toStartOf="@id/text_view_history_user_answer"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="3"
+            android:layout_marginStart="@dimen/history_item_column_gap"
+            android:layout_marginEnd="@dimen/history_item_column_gap"
+        /> <!-- MODIFIED: Gap after problem, before user_answer -->
+
+
+        <TextView
+            android:id="@+id/text_view_history_user_answer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="-210"
+            android:textSize="@dimen/text_size_history_item"
+            android:textColor="@color/feedback_panel_text_color"
+            android:gravity="end|center_vertical"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/text_view_history_problem"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_weight="2"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
