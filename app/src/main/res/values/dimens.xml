@@ -5,6 +5,7 @@
     <dimen name="spacing_medium">8dp</dimen>
     <dimen name="spacing_large">16dp</dimen>
     <dimen name="spacing_xlarge">24dp</dimen>
+    <dimen name="spacing_xxlarge">32dp</dimen> <!-- Added for more spacing options -->
 
     <!-- Card Properties -->
     <dimen name="card_corner_radius">12dp</dimen>
@@ -12,7 +13,7 @@
     <dimen name="game_image_height">180dp</dimen>
 
     <!-- Button Properties -->
-    <dimen name="button_corner_radius">20dp</dimen>
+    <dimen name="button_corner_radius">20dp</dimen> <!-- General button corner radius -->
     <dimen name="button_padding_horizontal">24dp</dimen>
     <dimen name="button_padding_vertical">10dp</dimen>
 
@@ -50,7 +51,7 @@
 
     <dimen name="action_buttons_container_margin_bottom">100dp</dimen>
     <dimen name="action_button_spacing">16dp</dimen>
-    <dimen name="action_button_corner_radius">12dp</dimen>
+    <dimen name="action_button_corner_radius">12dp</dimen> <!-- Specific for action buttons like reset -->
     <dimen name="button_drawable_padding">8dp</dimen>
     <dimen name="arithmetic_text_size_button">32sp</dimen>
 
@@ -61,6 +62,46 @@
     <dimen name="grid_item_border_width">1dp</dimen>
     <dimen name="grid_item_padding">12dp</dimen>
     <dimen name="grid_item_height">48dp</dimen> <!-- Example height -->
+
+    <!-- NEW Dimensions for Arithmetic Gameplay Screen -->
+    <dimen name="text_size_time_remaining_label">18sp</dimen>
+    <dimen name="text_size_time_value">16sp</dimen>
+    <dimen name="progress_bar_height_gameplay">10dp</dimen>
+    <dimen name="text_size_arithmetic_problem">40sp</dimen>
+    <dimen name="text_size_answer_input">20sp</dimen>
+    <dimen name="edit_text_answer_height">56dp</dimen>
+    <dimen name="edit_text_answer_corner_radius">12dp</dimen>
+    <dimen name="submit_button_corner_radius">28dp</dimen> <!-- More rounded like mockup -->
+    <dimen name="text_size_difficulty_display_gameplay">24sp</dimen>
+    <dimen name="gameplay_vertical_spacing">24dp</dimen> <!-- Spacing between problem, input, etc. -->
+
+    <!-- NEW Dimensions for Feedback Panel -->
+    <dimen name="feedback_panel_padding">@dimen/spacing_medium</dimen>
+    <dimen name="feedback_panel_corner_radius">@dimen/card_corner_radius_compact</dimen> <!-- Reusing 8dp -->
+    <dimen name="feedback_panel_elevation">@dimen/card_elevation_compact</dimen> <!-- Reusing 2dp -->
+    <dimen name="text_size_feedback_panel">14sp</dimen>
+    <dimen name="feedback_panel_min_height">48dp</dimen> <!-- Minimum height for the panel -->
+
+    <!-- ... other dimens ... -->
+
+    <!-- NEW Dimensions for Round Counter & RecyclerView -->
+    <dimen name="recycler_view_history_height">120dp</dimen> <!-- Adjust as needed -->
+    <dimen name="history_item_elevation">@dimen/card_elevation_compact</dimen>
+    <dimen name="text_size_history_item_round">14sp</dimen>
+    <dimen name="text_size_history_item_details">12sp</dimen>
+    <dimen name="history_item_line_spacing">2dp</dimen>
+
+    <!-- ... existing dimensions ... -->
+    <!-- NEW Dimensions for Round Counter and History -->
+    <dimen name="text_size_round_counter">18sp</dimen>
+    <dimen name="history_panel_height">240dp</dimen> <!-- Or adjust as needed, could be 0dp with weight -->
+    <dimen name="history_item_padding">@dimen/spacing_small</dimen>
+    <dimen name="text_size_history_item">16sp</dimen>
+    <dimen name="history_item_corner_radius">4dp</dimen>
+
+    <dimen name="text_size_history_header">13sp</dimen> <!-- Slightly larger or bolder for header -->
+    <dimen name="history_item_column_gap">16dp</dimen>
+
 
 
 </resources>

@@ -12,7 +12,7 @@
     <color name="card_background">#FFFFFF</color>
     <color name="text_primary_dark">#212121</color>
     <color name="text_secondary_dark">#757575</color>
-    <color name="button_blue_play">#2979FF</color>
+    <color name="button_blue_play">#2979FF</color> <!-- Used for submit button in mockup -->
     <color name="button_text_white">#FFFFFF</color>
     <color name="icon_tint_unselected">#757575</color>
     <color name="icon_tint_selected">@color/button_blue_play</color>
@@ -32,9 +32,9 @@
     <color name="grey_light_for_container_bg">#EEEEEE</color>
     <color name="text_secondary_dark_faint">#BDBDBD</color>
 
-     <color name="difficulty_selected_bg">#E8DEF8</color>
-     <color name="difficulty_selected_text">#1D192B</color>
-     <color name="difficulty_unselected_text">#49454F</color>
+    <color name="difficulty_selected_bg">#E8DEF8</color>
+    <color name="difficulty_selected_text">#1D192B</color>
+    <color name="difficulty_unselected_text">#49454F</color>
 
     <color name="difficulty_active_panel_bg">#E8DEF8</color> <!-- Light purple, adjust as needed -->
     <color name="difficulty_button_text_selected">#1D192B</color> <!-- Dark text for light purple bg -->
@@ -46,4 +46,18 @@
     <color name="grid_item_default_bg">@color/white</color> <!-- Or your app_background if transparent -->
     <color name="grid_item_text_selected_color">#1D192B</color>
     <color name="grid_item_text_default_color">@color/purple_500</color>
+
+    <!-- NEW Colors for Arithmetic Gameplay Screen -->
+    <color name="progress_bar_blue">#2196F3</color> <!-- A standard blue, adjust if needed -->
+    <color name="progress_bar_background">#E0E0E0</color> <!-- Light grey for progress bar background track -->
+    <color name="input_field_border_color">#BDBDBD</color> <!-- Light grey for EditText border -->
+    <color name="submit_button_background">@color/button_blue_play</color> <!-- Using existing blue -->
+
+    <!-- NEW Colors for Feedback Panel -->
+    <color name="feedback_panel_correct_bg">#4CAF50</color> <!-- Green, same as button_green_reset -->
+    <color name="feedback_panel_incorrect_bg">#D32F2F</color> <!-- Red, same as button_red_reset_scoreboard -->
+    <color name="feedback_panel_default_bg">@color/card_background</color> <!-- Default background if needed -->
+    <color name="feedback_panel_text_color">@color/button_text_white</color> <!-- White text for colored backgrounds -->
+
+
 </resources>
