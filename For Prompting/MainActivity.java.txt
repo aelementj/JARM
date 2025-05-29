@@ -9,6 +9,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import android.content.Intent;
 
 import com.example.jarm.databinding.ActivityMainBinding; // Make sure this matches your package and XML name
 
@@ -82,10 +83,9 @@ public class MainActivity extends AppCompatActivity {
         // Arithmetic Challenge Card
         if (binding.cardCompactArithmetic != null) {
             binding.cardCompactArithmetic.setOnClickListener(view -> {
-                Toast.makeText(MainActivity.this, "Arithmetic Challenge tapped!", Toast.LENGTH_SHORT).show();
-                // TODO: Create and launch ArithmeticChallengeActivity
-                // Intent intent = new Intent(MainActivity.this, ArithmeticChallengeActivity.class);
-                // startActivity(intent);
+                // Launch ArithmeticChallengeActivity
+                Intent intent = new Intent(MainActivity.this, ArithmeticChallengeActivity.class);
+                startActivity(intent);
             });
 
             binding.cardCompactArithmetic.setOnLongClickListener(view -> {
