@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:color="@color/text_primary_dark" /> <!-- Color when selected (e.g., black) -->
+    <item android:color="@color/text_secondary_dark" /> <!-- Default color (e.g., gray) -->
+</selector>

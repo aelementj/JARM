@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_games"
+        android:icon="@drawable/ic_games"
+    android:title="@string/bottom_nav_games" />
+    <item
+        android:id="@+id/navigation_stats"
+        android:icon="@drawable/ic_stats"
+    android:title="@string/bottom_nav_stats" />
+    <item
+        android:id="@+id/navigation_options"
+        android:icon="@drawable/ic_settings"
+    android:title="@string/bottom_nav_options" />
+</menu>

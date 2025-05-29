@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- General Spacing -->
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_xlarge">24dp</dimen>
+
+    <!-- Card Properties -->
+    <dimen name="card_corner_radius">12dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="game_image_height">180dp</dimen>
+
+    <!-- Button Properties -->
+    <dimen name="button_corner_radius">20dp</dimen>
+    <dimen name="button_padding_horizontal">24dp</dimen>
+    <dimen name="button_padding_vertical">10dp</dimen>
+
+    <!-- Text Sizes -->
+    <dimen name="text_size_toolbar_title">20sp</dimen>
+    <dimen name="text_size_card_title">36sp</dimen>
+    <dimen name="text_size_card_description">14sp</dimen>
+    <dimen name="text_size_button">16sp</dimen>
+    <dimen name="text_size_bottom_nav_label">12sp</dimen>
+    <dimen name="text_size_score">30sp</dimen>
+    <dimen name="text_size_game_status">50sp</dimen>
+
+
+    <!-- Icon Sizes -->
+    <dimen name="icon_size_toolbar">24dp</dimen>
+    <dimen name="compact_game_icon_size">120dp</dimen>
+    <dimen name="card_corner_radius_compact">8dp</dimen>
+    <dimen name="card_elevation_compact">2dp</dimen>
+    <dimen name="compact_item_padding">12dp</dimen>
+
+    <!-- Tic Tac Toe Specific Dimensions -->
+    <dimen name="tic_tac_toe_cell_size">120dp</dimen>
+    <dimen name="tic_tac_toe_cell_margin">2dp</dimen>
+    <dimen name="tic_tac_toe_cell_internal_padding">10dp</dimen>
+
+    <dimen name="scoreboard_item_height">100dp</dimen>
+    <dimen name="scoreboard_padding">8dp</dimen>
+    <dimen name="scoreboard_margin_top">16dp</dimen>
+    <dimen name="scoreboard_item_spacing">4dp</dimen>
+    <dimen name="scoreboard_item_corner_radius">8dp</dimen>
+
+    <dimen name="game_status_margin_top">20dp</dimen>
+    <dimen name="grid_margin_top">20dp</dimen>
+    <dimen name="grid_corner_radius">5dp</dimen>
+
+    <dimen name="action_buttons_container_margin_bottom">100dp</dimen>
+    <dimen name="action_button_spacing">16dp</dimen>
+    <dimen name="action_button_corner_radius">12dp</dimen>
+    <dimen name="button_drawable_padding">8dp</dimen>
+
+</resources>
