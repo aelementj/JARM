@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/grid_item_selected_bg" /> <!-- Base color of the panel -->
+    <stroke
+        android:width="@dimen/panel_border_width"
+        android:color="@color/panel_border_color" />
+    <corners android:radius="@dimen/difficulty_panel_corner_radius" />
+</shape>

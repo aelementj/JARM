@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Solid Background Color (same as the main panel's content area) -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/grid_item_selected_bg" />
+        </shape>
+    </item>
+
+    <!-- Top Border -->
+    <item
+        android:left="-1dp"
+        android:right="-1dp"
+        android:bottom="-1dp"> <!-- Effectively hide other borders for this shape -->
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="@dimen/grid_item_border_width"
+                android:color="@color/panel_border_color" />
+        </shape>
+    </item>
+
+    <!-- Left Border -->
+    <item
+        android:top="-1dp"
+        android:right="-1dp"
+        android:bottom="-1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="@dimen/grid_item_border_width"
+                android:color="@color/panel_border_color" />
+        </shape>
+    </item>
+
+    <!-- Right Border -->
+    <item
+        android:top="-1dp"
+        android:left="-1dp"
+        android:bottom="-1dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@android:color/transparent" />
+            <stroke
+                android:width="@dimen/grid_item_border_width"
+                android:color="@color/panel_border_color" />
+        </shape>
+    </item>
+    <!-- NO BOTTOM BORDER IS DRAWN FOR THIS LAYER-LIST -->
+</layer-list>

@@ -52,5 +52,15 @@
     <dimen name="action_button_spacing">16dp</dimen>
     <dimen name="action_button_corner_radius">12dp</dimen>
     <dimen name="button_drawable_padding">8dp</dimen>
+    <dimen name="arithmetic_text_size_button">32sp</dimen>
+
+    <dimen name="difficulty_button_corner_radius">8dp</dimen>
+    <dimen name="difficulty_panel_corner_radius">12dp</dimen>
+
+    <dimen name="panel_border_width">1dp</dimen>
+    <dimen name="grid_item_border_width">1dp</dimen>
+    <dimen name="grid_item_padding">12dp</dimen>
+    <dimen name="grid_item_height">48dp</dimen> <!-- Example height -->
+
 
 </resources>

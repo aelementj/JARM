@@ -28,4 +28,22 @@
 
     <color name="grid_line_color">#607D8B</color>
     <color name="grid_cell_background">#FFFFFF</color>
+
+    <color name="grey_light_for_container_bg">#EEEEEE</color>
+    <color name="text_secondary_dark_faint">#BDBDBD</color>
+
+     <color name="difficulty_selected_bg">#E8DEF8</color>
+     <color name="difficulty_selected_text">#1D192B</color>
+     <color name="difficulty_unselected_text">#49454F</color>
+
+    <color name="difficulty_active_panel_bg">#E8DEF8</color> <!-- Light purple, adjust as needed -->
+    <color name="difficulty_button_text_selected">#1D192B</color> <!-- Dark text for light purple bg -->
+    <color name="difficulty_button_text_unselected">?attr/colorPrimary</color> <!-- Or a specific color -->
+    <color name="difficulty_panel_text_color">#1D192B</color> <!-- Text color for the panel content -->
+
+    <color name="panel_border_color">#BDBDBD</color> <!-- Light grey for borders -->
+    <color name="grid_item_selected_bg">#E8DEF8</color> <!-- Same as previous active panel -->
+    <color name="grid_item_default_bg">@color/white</color> <!-- Or your app_background if transparent -->
+    <color name="grid_item_text_selected_color">#1D192B</color>
+    <color name="grid_item_text_default_color">@color/purple_500</color>
 </resources>

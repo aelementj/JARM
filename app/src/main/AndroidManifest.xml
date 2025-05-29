@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.JARM"
+        android:theme="@style/Theme.JRAM"
         tools:targetApi="31">
 
         <activity
@@ -26,12 +26,23 @@
             android:name=".TicTacToeActivity"
             android:exported="false"
             android:label="@string/game_title_tic_tac_toe"
-            android:parentActivityName=".MainActivity">  <!-- Optional: For Up navigation consistency -->
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />         <!-- Optional: For older API levels -->
+                android:value=".MainActivity" />
         </activity>
 
-    </application>
+        <!-- Add this for ArithmeticChallengeActivity -->
+        <activity
+            android:name=".ArithmeticChallengeActivity"
+            android:exported="false"
+            android:label="@string/game_title_arithmetic_toolbar"
+        android:parentActivityName=".MainActivity">
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
+    </activity>
 
-</manifest>
+</application>
+
+    </manifest>
