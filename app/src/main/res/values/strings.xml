@@ -76,6 +76,43 @@
         \t\t\t\t- Incorrect: -10s from next round
     </string>
 
+    <!-- Rock Paper Scissors Game Strings -->
+    <string name="game_title_rps_toolbar">Rock Paper Scissors</string>
+    <string name="rps_score_player">Player: %1$d</string>
+    <string name="rps_score_computer">Computer: %1$d</string>
+    <string name="rps_status_make_move">Make your move!</string>
+    <string name="rps_status_play_again">Play Again?</string>
+    <string name="rps_choice_rock">Rock</string>
+    <string name="rps_choice_paper">Paper</string>
+    <string name="rps_choice_scissors">Scissors</string>
+    <string name="rps_player_choice_label">Player: %1$s</string>
+    <string name="rps_computer_choice_label">Computer: %1$s</string>
+    <string name="rps_verdict_tie">It\'s a Tie!</string>
+    <string name="rps_verdict_player_wins">You Win!</string>
+    <string name="rps_verdict_computer_wins">Computer Wins!</string>
+    <string name="content_desc_rps_choice_rock">Choose Rock</string>
+    <string name="content_desc_rps_choice_paper">Choose Paper</string>
+    <string name="content_desc_rps_choice_scissors">Choose Scissors</string>
+    <string name="content_desc_rps_computer_choice_slot">Computer\'s choice display slot</string>
+    <string name="content_desc_rps_computer_image">Image of a robot representing the computer player</string>
+    <string name="menu_item_pause">Pause</string>
+    <string name="menu_item_help_rps">RPS Rules</string>
+    <string name="pause_overlay_title">Paused</string>
+    <string name="pause_overlay_resume">Resume</string>
+    <string name="pause_overlay_restart">Restart Game</string>
+    <string name="pause_overlay_main_menu">Main Menu</string>
+
+    <string name="rps_config_game_mode">Game Mode:</string>
+    <string name="rps_config_best_of">Best Of</string>
+    <string name="rps_config_first_to">First To</string>
+    <string name="rps_config_rounds_label">Rounds to Win:</string> <!-- Generic label -->
+    <string name="rps_config_rounds_label_best_of">Number of Rounds (Odd):</string>
+    <string name="rps_config_rounds_label_first_to">Points to Win:</string>
+    <string name="rps_decrease_rounds">Decrease rounds</string>
+    <string name="rps_increase_rounds">Increase rounds</string>
+    <string name="rps_button_play_again">Play Again</string>
+    <string name="rps_status_first_to_points_needed">Play Again? Get %1$d points to Win!</string>
+
     <string name="game_title_arithmetic_gameplay">Math Challenge</string>
     <string name="label_time_remaining">Time Remaining</string>
     <string name="hint_enter_answer">Enter your answer</string>
@@ -103,5 +140,6 @@
 
     <string name="placeholder_score_display">Score: 0</string>
     <string name="label_score_format">Score: %d</string>
+
 
 </resources>

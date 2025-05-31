@@ -64,6 +64,7 @@
                 android:value=".MainActivity" />
         </activity>
 
-    </application>
+</application>
+
 
 </manifest>
