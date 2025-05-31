@@ -32,16 +32,27 @@
                 android:value=".MainActivity" />
         </activity>
 
-        <!-- Add this for ArithmeticChallengeActivity -->
         <activity
             android:name=".ArithmeticChallengeActivity"
             android:exported="false"
             android:label="@string/game_title_arithmetic_toolbar"
-        android:parentActivityName=".MainActivity">
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value=".MainActivity" />
-    </activity>
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <!-- NEW Activity for Arithmetic Gameplay -->
+        <activity
+            android:name=".ArithmeticGameActivity"
+            android:exported="false"
+            android:label="@string/game_title_arithmetic_gameplay"
+            android:parentActivityName=".ArithmeticChallengeActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible"> <!-- adjustResize for keyboard, stateVisible to show keyboard on start if EditText is focused -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ArithmeticChallengeActivity" />
+        </activity>
 
         <activity
             android:name=".RockPaperScissorsActivity"
@@ -55,4 +66,5 @@
 
 </application>
 
-    </manifest>
+
+</manifest>

@@ -1,5 +1,6 @@
 package com.example.jarm;
 
+import android.content.Intent; // Make sure Intent is imported
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,13 +21,17 @@ import java.util.List;
 public class ArithmeticChallengeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ActivityArithmeticChallengeBinding binding;
-    private String selectedDifficulty = "Easy";
+    private String selectedDifficulty = "Easy"; // Default difficulty
 
-    private TextView selectedGridItemView; // Renamed for clarity
-    private List<TextView> gridItemViews; // Renamed for clarity
+    private TextView selectedGridItemView;
+    private List<TextView> gridItemViews;
 
     private Drawable defaultGridItemBackground;
-    private Drawable selectedGridItemBackgroundConnected; // New drawable for selected state
+    private Drawable selectedGridItemBackgroundConnected;
+
+    // Key for passing difficulty to the next activity
+    public static final String EXTRA_DIFFICULTY = "com.example.jarm.DIFFICULTY";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +47,6 @@ public class ArithmeticChallengeActivity extends AppCompatActivity implements Vi
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        // Load drawables
         defaultGridItemBackground = ContextCompat.getDrawable(this, R.drawable.bg_grid_difficulty_item_default);
         selectedGridItemBackgroundConnected = ContextCompat.getDrawable(this, R.drawable.bg_grid_difficulty_item_selected);
 
@@ -55,19 +59,22 @@ public class ArithmeticChallengeActivity extends AppCompatActivity implements Vi
             item.setOnClickListener(this);
         }
 
-        // Set initial selection
         if (!gridItemViews.isEmpty()) {
-            updateSelectedGridItemUI(binding.gridItemEasy); // Default to Easy
+            updateSelectedGridItemUI(binding.gridItemEasy);
             updateModifierText(binding.gridItemEasy.getId());
         }
 
-
+        // MODIFIED: Set OnClickListener for the Play button
         binding.buttonPlayArithmetic.setOnClickListener(view -> {
-            Toast.makeText(ArithmeticChallengeActivity.this, "Play button clicked! Difficulty: " + selectedDifficulty, Toast.LENGTH_SHORT).show();
+            // Toast.makeText(ArithmeticChallengeActivity.this, "Play button clicked! Difficulty: " + selectedDifficulty, Toast.LENGTH_SHORT).show(); // Optional: keep for debugging
+            Intent intent = new Intent(ArithmeticChallengeActivity.this, ArithmeticGameActivity.class);
+            intent.putExtra(EXTRA_DIFFICULTY, selectedDifficulty); // Pass the selected difficulty
+            startActivity(intent);
         });
 
         binding.buttonHowToPlayArithmetic.setOnClickListener(view -> {
             Toast.makeText(ArithmeticChallengeActivity.this, "How to Play button clicked!", Toast.LENGTH_SHORT).show();
+            // Consider showing a DialogFragment or another Activity for "How to Play"
         });
     }
 
@@ -82,18 +89,15 @@ public class ArithmeticChallengeActivity extends AppCompatActivity implements Vi
     private void updateSelectedGridItemUI(TextView newlySelectedTextView) {
         for (TextView item : gridItemViews) {
             if (item == newlySelectedTextView) {
-                // Apply selected state
                 item.setBackground(selectedGridItemBackgroundConnected);
                 item.setTextColor(ContextCompat.getColor(this, R.color.grid_item_text_selected_color));
             } else {
-                // Apply default/unselected state
                 item.setBackground(defaultGridItemBackground);
                 item.setTextColor(ContextCompat.getColor(this, R.color.grid_item_text_default_color));
             }
         }
-        this.selectedGridItemView = newlySelectedTextView; // Keep track of the selected view
+        this.selectedGridItemView = newlySelectedTextView;
     }
-
 
     private void updateModifierText(int selectedItemId) {
         if (selectedItemId == R.id.grid_item_easy) {

@@ -34,18 +34,18 @@
         android:layout_width="@dimen/game_image_height"
         android:layout_height="@dimen/game_image_height"
         app:srcCompat="@drawable/img_arithmetic_challenge"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintTop_toBottomOf="@id/appBarLayoutArithmetic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
     <Button
         android:id="@+id/button_play_arithmetic"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:textSize="@dimen/arithmetic_text_size_button"
         android:text="@string/button_play_arithmetic"
         app:cornerRadius="@dimen/action_button_corner_radius"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintTop_toBottomOf="@id/icon_arithmetic_challenge_main"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -124,7 +124,7 @@
         android:minHeight="100dp"
         android:textColor="@color/grid_item_text_selected_color"
         android:padding="@dimen/spacing_large"
-        android:gravity="center_horizontal|top"
+        android:gravity="fill"
         android:textSize="18dp"
         tools:text="@string/modifiers_easy_placeholder" />
     <!-- No separate background needed here if it should blend with the panel's bg_grid_item_selected_bg -->
