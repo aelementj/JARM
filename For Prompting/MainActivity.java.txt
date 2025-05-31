@@ -67,10 +67,9 @@ public class MainActivity extends AppCompatActivity {
         // Rock Paper Scissors Card
         if (binding.cardCompactRps != null) {
             binding.cardCompactRps.setOnClickListener(view -> {
-                Toast.makeText(MainActivity.this, "Rock Paper Scissors tapped!", Toast.LENGTH_SHORT).show();
-                // TODO: Create and launch RockPaperScissorsActivity
-                // Intent intent = new Intent(MainActivity.this, RockPaperScissorsActivity.class);
-                // startActivity(intent);
+                // Launch RockPaperScissorsActivity
+                Intent intent = new Intent(MainActivity.this, RockPaperScissorsActivity.class);
+                startActivity(intent);
             });
 
             binding.cardCompactRps.setOnLongClickListener(view -> {
