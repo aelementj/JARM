@@ -43,6 +43,16 @@
             android:value=".MainActivity" />
     </activity>
 
+        <activity
+            android:name=".RockPaperScissorsActivity"
+            android:exported="false"
+            android:label="@string/game_title_rps"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
 </application>
 
     </manifest>

@@ -20,9 +20,9 @@
             android:id="@+id/toolbar_rock_paper_scissors"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/menu_rps"
             app:title="Rock Paper Scissors"
-            app:titleTextColor="@color/text_primary_dark"
-            app:menu="@menu/menu_rps"/>
+            app:titleTextColor="@color/text_primary_dark" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Scoreboard -->
@@ -100,7 +100,7 @@
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
             android:contentDescription="Rock"
-            android:src="@drawable/rock"/>
+            android:src="@drawable/img_rock_2"/>
 
         <ImageButton
             android:id="@+id/button_paper"
@@ -109,9 +109,10 @@
             android:background="@drawable/bg_choice_button"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:src="@drawable/paper"
+            android:src="@drawable/img_paper_2"
             android:contentDescription="Paper"
-            android:layout_marginEnd="16dp"/>
+            android:layout_marginEnd="16dp"
+            />
 
         <ImageButton
             android:id="@+id/button_scissors"
@@ -120,16 +121,16 @@
             android:background="@drawable/bg_choice_button"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:src="@drawable/scissors"
+            android:src="@drawable/img_scissors_2"
             android:contentDescription="Scissors"/>
     </LinearLayout>
 
-    <!-- Result Text -->
+    <!-- Player's Choice Text -->
     <TextView
-        android:id="@+id/textView_result"
+        android:id="@+id/textView_player_choice_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Player: Rock\nComputer: Scissors\nYou Win!"
+        tools:text="Player: Rock"
         android:textColor="@color/text_primary_dark"
         android:textSize="18sp"
         android:textAlignment="center"
@@ -138,10 +139,88 @@
         app:layout_constraintTop_toBottomOf="@id/rps_choices_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:visibility="visible"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
-    <!-- Action Buttons -->
+    <!-- Verdict Text -->
+    <TextView
+        android:id="@+id/textView_verdict"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="You Win!"
+        android:textColor="@color/text_primary_dark"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/textView_player_choice_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <!-- Computer's Choice Text -->
+    <TextView
+        android:id="@+id/textView_computer_choice_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Computer: Scissors"
+        android:textColor="@color/text_primary_dark"
+        android:textSize="18sp"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/textView_verdict"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <!-- Computer's Choice Display Grid -->
+    <LinearLayout
+        android:id="@+id/computer_choice_display_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/textView_computer_choice_label"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:id="@+id/image_computer_slot_left"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_choice_button"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:contentDescription="Computer choice slot 1"/>
+
+        <ImageView
+            android:id="@+id/image_computer_slot_center"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/bg_choice_button"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:contentDescription="Computer choice slot 2"
+            android:layout_marginEnd="16dp"/>
+
+        <ImageView
+            android:id="@+id/image_computer_slot_right"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:background="@drawable/bg_choice_button"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:contentDescription="Computer choice slot 3"/>
+    </LinearLayout>
+
+    <!-- Robot Image -->
     <ImageView
         android:id="@+id/image_computer_choice"
         android:layout_width="100dp"
@@ -149,44 +228,12 @@
         android:layout_marginTop="16dp"
         android:contentDescription="Computer's choice image"
         android:scaleType="fitCenter"
-        android:src="@drawable/bot"
-        app:layout_constraintTop_toBottomOf="@id/textView_result"
+        android:src="@drawable/img_robot"
+        app:layout_constraintTop_toBottomOf="@id/computer_choice_display_container"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/action_buttons_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+    <!-- Action Buttons -->
 
-        <Button
-            android:id="@+id/button_reset_rps_game"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset Game"
-            android:textSize="14sp"
-            android:textColor="@color/button_text_white"
-            android:backgroundTint="@color/button_green_reset"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:layout_marginEnd="8dp"/>
-
-        <Button
-            android:id="@+id/button_reset_rps_scores"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Reset Scores"
-            android:textSize="14sp"
-            android:textColor="@color/button_text_white"
-            android:backgroundTint="@color/button_red_reset_scoreboard"
-            android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
-
+    <include layout="@layout/layout_pause_overlay"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
