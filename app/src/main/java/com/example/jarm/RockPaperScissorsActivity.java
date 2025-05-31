@@ -1,16 +1,21 @@
 package com.example.jarm;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+// Import Button if you need to interact beyond binding, but binding should suffice
+// import android.widget.Button;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import com.example.jarm.databinding.ActivityRockPaperScissorsBinding;
 
@@ -22,14 +27,28 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     private Random random;
 
     private enum Choice {ROCK, PAPER, SCISSORS}
+    private enum GameMode { BEST_OF, FIRST_TO }
 
     private int playerScore = 0;
     private int computerScore = 0;
+
+    // Configuration
+    private GameMode currentGameMode = GameMode.BEST_OF; // Default game mode
+    private int roundsToPlay = 3; // For Best Of (e.g., best of 3, 5, 7) - must be odd
+    private int pointsToWin = 3;  // For First To
+    private int currentRound = 0; // For Best Of mode tracking
+
+    private final int MIN_ROUNDS_POINTS = 1;
+    private final int MAX_ROUNDS_POINTS = 99; // Arbitrary max
+
 
     // Pause Overlay Views
     private View pauseOverlayContainer;
     private View buttonPauseResume, buttonPauseRestart, buttonPauseMainMenu;
     private boolean isGamePaused = false;
+    private boolean gameConfigLocked = false; // To lock config after first move
+    private boolean matchOver = false; // Flag to indicate if the current match has ended
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +66,16 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         }
 
         setupChoiceListeners();
-        // REMOVE: setupResetListeners(); // This method will be removed
         initializePauseOverlay();
+        setupConfigPanelListeners();
+        updateConfigUI(); // Set initial state of config UI
         updateScoreDisplay();
-        resetRoundUI(true); // Initial reset
+        resetRoundUI(true); // Initial UI setup, including hiding play again button
+
+        // Listener for the new Play Again button
+        binding.buttonPlayAgain.setOnClickListener(v -> {
+            resetFullGame(); // It functions like a full game restart
+        });
     }
 
     private void setupChoiceListeners() {
@@ -59,56 +84,191 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         binding.buttonScissors.setOnClickListener(v -> playGame(Choice.SCISSORS));
     }
 
-    // REMOVE: private void setupResetListeners() { ... }
-
     private void initializePauseOverlay() {
-        pauseOverlayContainer = binding.getRoot().findViewById(R.id.pause_overlay_container);
+        pauseOverlayContainer = findViewById(R.id.pause_overlay_container);
         if (pauseOverlayContainer != null) {
             buttonPauseResume = pauseOverlayContainer.findViewById(R.id.button_pause_resume);
             buttonPauseRestart = pauseOverlayContainer.findViewById(R.id.button_pause_restart);
             buttonPauseMainMenu = pauseOverlayContainer.findViewById(R.id.button_pause_main_menu);
 
-            buttonPauseResume.setOnClickListener(v -> resumeGame());
-
-            // UPDATE Restart button listener
-            buttonPauseRestart.setOnClickListener(v -> {
+            if (buttonPauseResume != null) buttonPauseResume.setOnClickListener(v -> resumeGame());
+            if (buttonPauseRestart != null) buttonPauseRestart.setOnClickListener(v -> {
                 resumeGame(); // Hide overlay first
-                // Now, reset scores AND the game round
-                playerScore = 0;
-                computerScore = 0;
-                updateScoreDisplay();
-                resetRoundUI(true); // true for a full reset including status to "Make your move!"
+                resetFullGame();
             });
-
-            buttonPauseMainMenu.setOnClickListener(v -> goToMainMenu());
-
+            if (buttonPauseMainMenu != null) buttonPauseMainMenu.setOnClickListener(v -> goToMainMenu());
             pauseOverlayContainer.setVisibility(View.GONE);
         }
     }
 
+    private void setupConfigPanelListeners() {
+        binding.textConfigBestOf.setOnClickListener(v -> selectGameMode(GameMode.BEST_OF));
+        binding.textConfigFirstTo.setOnClickListener(v -> selectGameMode(GameMode.FIRST_TO));
+
+        binding.buttonConfigDecrease.setOnClickListener(v -> changeRoundsOrPoints(-1));
+        binding.buttonConfigIncrease.setOnClickListener(v -> changeRoundsOrPoints(1));
+    }
+
+    private void selectGameMode(GameMode mode) {
+        if (gameConfigLocked) return;
+        currentGameMode = mode;
+        // Reset rounds/points to a sensible default for the new mode
+        if (currentGameMode == GameMode.BEST_OF) {
+            roundsToPlay = 3; // Default for Best Of (must be odd)
+        } else {
+            pointsToWin = 3;  // Default for First To
+        }
+        updateConfigUI();
+    }
+
+    private void changeRoundsOrPoints(int delta) {
+        if (gameConfigLocked) return;
+        if (currentGameMode == GameMode.BEST_OF) {
+            int newRounds = roundsToPlay + (delta * 2); // Best of is typically odd, so steps of 2
+            if (newRounds >= MIN_ROUNDS_POINTS && newRounds <= MAX_ROUNDS_POINTS) {
+                roundsToPlay = newRounds;
+            }
+        } else { // FIRST_TO
+            int newPoints = pointsToWin + delta;
+            if (newPoints >= MIN_ROUNDS_POINTS && newPoints <= MAX_ROUNDS_POINTS) {
+                pointsToWin = newPoints;
+            }
+        }
+        updateConfigUI();
+    }
+
+    private void updateConfigUI() {
+        // Update Game Mode TextViews styling
+        if (currentGameMode == GameMode.BEST_OF) {
+            binding.textConfigBestOf.setTextColor(ContextCompat.getColor(this, R.color.purple_500));
+            binding.textConfigBestOf.setTypeface(null, Typeface.BOLD);
+            binding.textConfigFirstTo.setTextColor(ContextCompat.getColor(this, R.color.text_secondary_dark));
+            binding.textConfigFirstTo.setTypeface(null, Typeface.NORMAL);
+            binding.edittextConfigRounds.setText(String.valueOf(roundsToPlay));
+            binding.textConfigRoundsLabel.setText(getString(R.string.rps_config_rounds_label_best_of));
+        } else { // FIRST_TO
+            binding.textConfigFirstTo.setTextColor(ContextCompat.getColor(this, R.color.purple_500));
+            binding.textConfigFirstTo.setTypeface(null, Typeface.BOLD);
+            binding.textConfigBestOf.setTextColor(ContextCompat.getColor(this, R.color.text_secondary_dark));
+            binding.textConfigBestOf.setTypeface(null, Typeface.NORMAL);
+            binding.edittextConfigRounds.setText(String.valueOf(pointsToWin));
+            binding.textConfigRoundsLabel.setText(getString(R.string.rps_config_rounds_label_first_to));
+        }
+
+        // Enable/disable config elements if game has started
+        boolean enableConfig = !gameConfigLocked;
+        binding.textConfigBestOf.setEnabled(enableConfig);
+        binding.textConfigFirstTo.setEnabled(enableConfig);
+        binding.buttonConfigDecrease.setEnabled(enableConfig);
+        binding.buttonConfigIncrease.setEnabled(enableConfig);
+        binding.edittextConfigRounds.setEnabled(enableConfig); // Though not directly editable, visual cue
+        binding.configPanelRps.setAlpha(enableConfig ? 1.0f : 0.5f); // Visual cue for locked state
+    }
+
 
     private void playGame(Choice playerChoice) {
-        if (isGamePaused) return;
+        if (isGamePaused || matchOver) return; // Don't play if paused or match is already over
+
+        if (!gameConfigLocked) {
+            gameConfigLocked = true;
+            updateConfigUI(); // Lock the UI visuals
+            binding.configPanelRps.setVisibility(View.GONE); // Hide config panel after first move
+        }
+        currentRound++; // Increment round count for Best Of mode
 
         Choice computerChoice = Choice.values()[random.nextInt(Choice.values().length)];
-        String result;
-        // int playerChoiceDrawable = getDrawableForChoice(playerChoice); // Not directly used anymore for display logic
-        // int computerChoiceDrawable = getDrawableForChoice(computerChoice); // Not directly used anymore
+        String roundResultText; // This will hold "You Win!", "Computer Wins!", or "It's a Tie!" for the current round
 
         if (playerChoice == computerChoice) {
-            result = "It's a Tie!";
+            roundResultText = getString(R.string.rps_verdict_tie);
         } else if ((playerChoice == Choice.ROCK && computerChoice == Choice.SCISSORS) ||
                 (playerChoice == Choice.PAPER && computerChoice == Choice.ROCK) ||
                 (playerChoice == Choice.SCISSORS && computerChoice == Choice.PAPER)) {
-            result = "You Win!";
+            roundResultText = getString(R.string.rps_verdict_player_wins); // Player wins the round
             playerScore++;
         } else {
-            result = "Computer Wins!";
+            roundResultText = getString(R.string.rps_verdict_computer_wins); // Computer wins the round
             computerScore++;
         }
 
         updateScoreDisplay();
-        displayResults(playerChoice, computerChoice, result);
+        // displayResults shows player/computer choices and computer's grid.
+        // The roundResultText is not directly displayed by this version of displayResults
+        // as the central verdict TextView was replaced by the "Play Again" button.
+        // If you want to show individual round results, add another TextView.
+        displayResults(playerChoice, computerChoice, roundResultText);
+
+
+        if (isGameOver()) {
+            matchOver = true; // Mark the match as over
+            binding.textViewRpsStatus.setText(getGameOverMessage()); // Display overall match result
+            // Disable player choice buttons
+            binding.buttonRock.setEnabled(false);
+            binding.buttonPaper.setEnabled(false);
+            binding.buttonScissors.setEnabled(false);
+            binding.buttonPlayAgain.setVisibility(View.VISIBLE); // Show "Play Again" button
+        } else {
+            // ****** MODIFIED STATUS UPDATE LOGIC ******
+            if (currentGameMode == GameMode.BEST_OF) {
+                // For "Best Of", show current round and total rounds
+                binding.textViewRpsStatus.setText(getString(R.string.rps_status_play_again) + " (Round " + currentRound + "/" + roundsToPlay + ")");
+            } else { // FIRST_TO and game not over
+                // For "First To", show points needed to win
+                // You might need a new string resource for this.
+                // Example: "Play Again? Get %d points to Win!"
+                String firstToStatus = String.format(getString(R.string.rps_status_first_to_points_needed), pointsToWin);
+                binding.textViewRpsStatus.setText(firstToStatus);
+            }
+            binding.buttonPlayAgain.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean isGameOver() {
+        if (currentGameMode == GameMode.FIRST_TO) {
+            return playerScore >= pointsToWin || computerScore >= pointsToWin;
+        } else { // BEST_OF
+            // Check if a player has won more than half the rounds
+            if (playerScore > roundsToPlay / 2) return true;
+            if (computerScore > roundsToPlay / 2) return true;
+
+            // Check if it's impossible for the other player to catch up
+            int roundsRemaining = roundsToPlay - currentRound;
+            if (playerScore + roundsRemaining < computerScore) return true; // Computer has an unassailable lead
+            if (computerScore + roundsRemaining < playerScore) return true; // Player has an unassailable lead
+
+            return currentRound >= roundsToPlay; // All rounds have been played
+        }
+    }
+
+    private String getGameOverMessage() {
+        if (playerScore > computerScore) {
+            return "Player Wins the Match!";
+        } else if (computerScore > playerScore) {
+            return "Computer Wins the Match!";
+        } else {
+            // This should be rare in "Best Of" with odd rounds, but possible if all rounds played and scores are equal.
+            return "Match is a Tie!";
+        }
+    }
+
+
+    private void resetFullGame() {
+        playerScore = 0;
+        computerScore = 0;
+        currentRound = 0;
+        gameConfigLocked = false; // Unlock configuration
+        matchOver = false;      // Reset match over flag
+
+        updateScoreDisplay();
+        updateConfigUI();       // Reset and re-enable config UI elements
+        resetRoundUI(true);     // Full UI reset for a new game (hides results, play again button)
+
+        binding.configPanelRps.setVisibility(View.VISIBLE); // Make config panel visible again
+
+        // Re-enable player choice buttons
+        binding.buttonRock.setEnabled(true);
+        binding.buttonPaper.setEnabled(true);
+        binding.buttonScissors.setEnabled(true);
     }
 
     private int getDrawableForChoice(Choice choice) {
@@ -122,66 +282,63 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
 
     private String getChoiceString(Choice choice) {
         switch (choice) {
-            case ROCK: return "Rock";
-            case PAPER: return "Paper";
-            case SCISSORS: return "Scissors";
+            case ROCK: return getString(R.string.rps_choice_rock);
+            case PAPER: return getString(R.string.rps_choice_paper);
+            case SCISSORS: return getString(R.string.rps_choice_scissors);
             default: return "";
         }
     }
 
     private void updateScoreDisplay() {
-        binding.textViewScorePlayer.setText("Player: " + playerScore);
-        binding.textViewScoreComputer.setText("Computer: " + computerScore);
+        binding.textViewScorePlayer.setText(getString(R.string.rps_score_player, playerScore));
+        binding.textViewScoreComputer.setText(getString(R.string.rps_score_computer, computerScore));
     }
 
-    private void displayResults(Choice player, Choice computer, String gameResult) {
-        binding.textViewPlayerChoiceLabel.setText("Player: " + getChoiceString(player));
-        binding.textViewComputerChoiceLabel.setText("Computer: " + getChoiceString(computer));
-        binding.textViewVerdict.setText(gameResult);
+    private void displayResults(Choice playerChoice, Choice computerChoice, String roundResultText_NotUsedByButton) {
+        binding.textViewPlayerChoiceLabel.setText(getString(R.string.rps_player_choice_label, getChoiceString(playerChoice)));
+        binding.textViewComputerChoiceLabel.setText(getString(R.string.rps_computer_choice_label, getChoiceString(computerChoice)));
+        // The central element is now binding.buttonPlayAgain, its text is static "Play Again".
+        // Its visibility is controlled in playGame() and resetRoundUI().
+        // The roundResultText_NotUsedByButton is passed but not used to update that central UI element directly.
 
         binding.textViewPlayerChoiceLabel.setVisibility(View.VISIBLE);
-        binding.textViewVerdict.setVisibility(View.VISIBLE);
         binding.textViewComputerChoiceLabel.setVisibility(View.VISIBLE);
         binding.computerChoiceDisplayContainer.setVisibility(View.VISIBLE);
 
+        // Clear previous computer choices in slots
         binding.imageComputerSlotLeft.setImageDrawable(null);
         binding.imageComputerSlotCenter.setImageDrawable(null);
         binding.imageComputerSlotRight.setImageDrawable(null);
 
-        int computerChoiceDrawable = getDrawableForChoice(computer);
-        if (player == Choice.ROCK) {
+        // Display computer's choice in one of the slots based on player's choice
+        int computerChoiceDrawable = getDrawableForChoice(computerChoice);
+        if (playerChoice == Choice.ROCK) {
             binding.imageComputerSlotLeft.setImageResource(computerChoiceDrawable);
-        } else if (player == Choice.PAPER) {
+        } else if (playerChoice == Choice.PAPER) {
             binding.imageComputerSlotCenter.setImageResource(computerChoiceDrawable);
-        } else {
+        } else { // SCISSORS
             binding.imageComputerSlotRight.setImageResource(computerChoiceDrawable);
         }
-
-        binding.textViewRpsStatus.setText("Play Again?");
     }
 
     private void resetRoundUI(boolean fullReset) {
+        // Hide elements that show choices and results
         binding.textViewPlayerChoiceLabel.setVisibility(View.GONE);
-        binding.textViewVerdict.setVisibility(View.GONE);
         binding.textViewComputerChoiceLabel.setVisibility(View.GONE);
         binding.computerChoiceDisplayContainer.setVisibility(View.GONE);
+        binding.buttonPlayAgain.setVisibility(View.GONE); // Hide "Play Again" button
 
+        // Clear computer's choice display slots
         binding.imageComputerSlotLeft.setImageDrawable(null);
         binding.imageComputerSlotCenter.setImageDrawable(null);
         binding.imageComputerSlotRight.setImageDrawable(null);
 
-        if (fullReset) { // If it's a full reset (like after scores are reset)
-            binding.textViewRpsStatus.setText("Make your move!");
-        } else if (playerScore > 0 || computerScore > 0 || binding.textViewVerdict.getVisibility() == View.VISIBLE) {
-            // If a game has been played or scores exist, prompt to play again, otherwise keep "Make your move!"
-            binding.textViewRpsStatus.setText("Play Again?");
-        } else {
-            binding.textViewRpsStatus.setText("Make your move!");
+        if (fullReset) {
+            // Set initial status message for a new game
+            binding.textViewRpsStatus.setText(getString(R.string.rps_status_make_move));
         }
+        // For subsequent rounds within a game, the status is updated in playGame()
     }
-
-    // REMOVE: private void resetGame() { ... }
-    // REMOVE: private void resetScores() { ... }
 
     private void togglePauseState() {
         if (isGamePaused) {
@@ -196,11 +353,12 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         if (pauseOverlayContainer != null) {
             pauseOverlayContainer.setVisibility(View.VISIBLE);
         }
-        binding.buttonRock.setEnabled(false);
-        binding.buttonPaper.setEnabled(false);
-        binding.buttonScissors.setEnabled(false);
-        // REMOVE: binding.buttonResetRpsGame.setEnabled(false);
-        // REMOVE: binding.buttonResetRpsScores.setEnabled(false);
+        // Optionally, disable choice buttons if game is not over yet
+        // if (!matchOver) {
+        //     binding.buttonRock.setEnabled(false);
+        //     binding.buttonPaper.setEnabled(false);
+        //     binding.buttonScissors.setEnabled(false);
+        // }
     }
 
     private void resumeGame() {
@@ -208,21 +366,22 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         if (pauseOverlayContainer != null) {
             pauseOverlayContainer.setVisibility(View.GONE);
         }
-        binding.buttonRock.setEnabled(true);
-        binding.buttonPaper.setEnabled(true);
-        binding.buttonScissors.setEnabled(true);
-        // REMOVE: binding.buttonResetRpsGame.setEnabled(true);
-        // REMOVE: binding.buttonResetRpsScores.setEnabled(true);
+        // Re-enable choice buttons only if the match is not over
+        // if (!matchOver) {
+        //     binding.buttonRock.setEnabled(true);
+        //     binding.buttonPaper.setEnabled(true);
+        //     binding.buttonScissors.setEnabled(true);
+        // }
     }
 
     private void goToMainMenu() {
         if (isGamePaused) {
-            resumeGame();
+            resumeGame(); // Ensure game isn't left in a paused visual state
         }
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        finish();
+        finish(); // Finish current activity
     }
 
     @Override
@@ -251,9 +410,9 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (isGamePaused) {
-            resumeGame();
+            resumeGame(); // If paused, resume and stay on screen rather than exiting
         } else {
-            super.onBackPressed();
+            super.onBackPressed(); // Default behavior (likely finish activity)
         }
     }
 }
