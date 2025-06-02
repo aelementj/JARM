@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_help_rps"
+        android:icon="@drawable/ic_help"
+        android:title="@string/content_desc_help_icon"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="10"
+    android:contentDescription="@string/content_desc_help_icon" />
+
+    <item
+        android:id="@+id/action_pause_rps"
+        android:icon="@drawable/ic_pause"
+    android:title="Pause"
+    app:showAsAction="ifRoom"
+    android:orderInCategory="20"
+    android:contentDescription="Pause game" />
+
+</menu>
