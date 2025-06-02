@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
@@ -9,14 +8,10 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="app_background">#F5F5F5</color>
-    <color name="card_background">#FFFFFF</color>
     <color name="text_primary_dark">#212121</color>
     <color name="text_secondary_dark">#757575</color>
     <color name="button_blue_play">#2979FF</color> <!-- Used for submit button in mockup -->
     <color name="button_text_white">#FFFFFF</color>
-    <color name="icon_tint_unselected">#757575</color>
-    <color name="icon_tint_selected">@color/button_blue_play</color>
-    <color name="button_background_play_dark">#303030</color>
 
     <color name="score_x_background">#2196F3</color>
     <color name="score_o_background">#F44336</color>
@@ -29,12 +24,7 @@
     <color name="grid_line_color">#607D8B</color>
     <color name="grid_cell_background">#FFFFFF</color>
 
-    <color name="grey_light_for_container_bg">#EEEEEE</color>
     <color name="text_secondary_dark_faint">#BDBDBD</color>
-
-    <color name="difficulty_selected_bg">#E8DEF8</color>
-    <color name="difficulty_selected_text">#1D192B</color>
-    <color name="difficulty_unselected_text">#49454F</color>
 
     <color name="difficulty_active_panel_bg">#E8DEF8</color> <!-- Light purple, adjust as needed -->
     <color name="difficulty_button_text_selected">#1D192B</color> <!-- Dark text for light purple bg -->
@@ -56,7 +46,6 @@
     <!-- NEW Colors for Feedback Panel -->
     <color name="feedback_panel_correct_bg">#4CAF50</color> <!-- Green, same as button_green_reset -->
     <color name="feedback_panel_incorrect_bg">#D32F2F</color> <!-- Red, same as button_red_reset_scoreboard -->
-    <color name="feedback_panel_default_bg">@color/card_background</color> <!-- Default background if needed -->
     <color name="feedback_panel_text_color">@color/button_text_white</color> <!-- White text for colored backgrounds -->
 
 

@@ -7,7 +7,6 @@
     android:background="@color/app_background"
     tools:context=".RockPaperScissorsActivity">
 
-    <!-- Toolbar, Scoreboard, Status, Choice Buttons, Player Choice Label ... (All Unchanged) -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutRPS"
         android:layout_width="match_parent"
@@ -133,7 +132,6 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
-    <!-- MODIFIED: Verdict TextView to Button_play_again -->
     <Button
         android:id="@+id/button_play_again"
         android:layout_width="wrap_content"
@@ -152,7 +150,6 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
-    <!-- Computer's Choice Text (unchanged) -->
     <TextView
         android:id="@+id/textView_computer_choice_label"
         android:layout_width="wrap_content"
@@ -169,7 +166,6 @@
     android:visibility="gone"
     tools:visibility="visible"/>
 
-    <!-- Computer's Choice Display Grid, Robot Image, Config Panel, Pause Overlay ... (All Unchanged) -->
     <LinearLayout
         android:id="@+id/computer_choice_display_container"
         android:layout_width="wrap_content"

@@ -8,7 +8,6 @@
     android:background="@color/app_background"
     tools:context=".ArithmeticChallengeActivity">
 
-    <!-- AppBarLayout remains the same -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayoutArithmetic"
         android:layout_width="match_parent"
@@ -28,7 +27,6 @@
             app:titleTextColor="@color/text_primary_dark" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Icon and Play Button remain the same -->
     <ImageView
         android:id="@+id/icon_arithmetic_challenge_main"
         android:layout_width="@dimen/game_image_height"
@@ -50,7 +48,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Main Difficulty Panel (LinearLayout for vertical stacking) -->
     <LinearLayout
         android:id="@+id/panel_difficulty_container"
         android:layout_width="0dp"
@@ -64,7 +61,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- Horizontal LinearLayout for the 3 Grid Items -->
         <LinearLayout
             android:id="@+id/grid_difficulty_selector_container"
             android:layout_width="match_parent"
@@ -127,10 +123,8 @@
         android:gravity="fill"
         android:textSize="18dp"
         tools:text="@string/modifiers_easy_placeholder" />
-    <!-- No separate background needed here if it should blend with the panel's bg_grid_item_selected_bg -->
 </LinearLayout>
 
-    <!-- How to Play Button remains the same -->
         <Button
         android:id="@+id/button_how_to_play_arithmetic"
         style="@style/Widget.Material3.Button.OutlinedButton"

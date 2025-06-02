@@ -97,10 +97,10 @@
     <string name="content_desc_rps_computer_choice_slot">Computer\'s choice display slot</string>
     <string name="content_desc_rps_computer_image">Image of a robot representing the computer player</string>
     <string name="menu_item_pause">Pause</string>
-    <string name="menu_item_help_rps">RPS Rules</string> <!-- Used if specific menu item exists -->
+    <string name="menu_item_help_rps">RPS Rules</string>
     <string name="pause_overlay_title">Paused</string>
     <string name="pause_overlay_resume">Resume</string>
-    <string name="pause_overlay_restart">Restart Game</string> <!-- Generic, used by RPS -->
+    <string name="pause_overlay_restart">Restart Game</string>
     <string name="pause_overlay_main_menu">Main Menu</string>
 
     <string name="rps_config_game_mode">Game Mode:</string>
@@ -198,7 +198,6 @@
     <string name="stats_arithmetic_fastest_answer_label">Fastest Answer:</string>
     <string name="stats_arithmetic_slowest_answer_label">Slowest Answer:</string>
 
-    <!-- Options Screen Strings -->
     <string name="options_section_data_management">Data Management</string>
     <string name="options_button_reset_stats">Reset All Game Stats</string>
     <string name="options_dialog_reset_stats_title">Confirm Reset</string>
@@ -215,7 +214,6 @@
 
     <string name="dialog_button_close">Close</string>
 
-    <!-- Help Content Strings -->
     <string name="help_title_main_activity">App Help</string>
     <string name="help_content_main_activity">Welcome to JRAM! Select a game from the list to play. Long-press a game card for a brief description. Use the bottom navigation to switch between Games, Stats, and Options.</string>
 
@@ -307,9 +305,9 @@
         - Developers: Shows information about the developers of this application.
     </string>
 
-    <!-- In strings.xml -->
-    <string name="menu_action_help_title">Help</string> <!-- NEW or RENAME for the title/tooltip -->
-    <string name="menu_action_help_content_description">View help information</string> <!-- NEW for accessibility -->
+
+    <string name="menu_action_help_title">Help</string>
+    <string name="menu_action_help_content_description">View help information</string>
 
 
 </resources>

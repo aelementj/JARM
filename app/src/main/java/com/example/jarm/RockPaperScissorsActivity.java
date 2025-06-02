@@ -34,7 +34,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     private int playerScore = 0;
     private int computerScore = 0;
 
-    // Configuration
     private GameMode currentGameMode = GameMode.BEST_OF;
     private int roundsToPlay = 3;
     private int pointsToWin = 3;
@@ -43,12 +42,10 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     private final int MIN_ROUNDS_POINTS = 1;
     private final int MAX_ROUNDS_POINTS = 99;
 
-    // Dedicated Pause Overlay Views
     private View dedicatedPauseOverlayContainer;
     private View buttonDedicatedPauseResume, buttonDedicatedPauseRestart, buttonDedicatedPauseMainMenu;
     private boolean isGamePausedByDedicatedMenu = false;
 
-    // Help Overlay Views
     private View helpOverlayContainerView;
     private TextView textViewHelpOverlayTitle;
     private TextView textViewHelpOverlayContent;
@@ -57,7 +54,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     private boolean gameConfigLocked = false;
     private boolean matchOver = false;
 
-    // Database Helper
     private StatsDbHelper dbHelper;
     private static final String TAG = "RPSActivity";
     private Menu activityMenu;
@@ -92,7 +88,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         });
     }
 
-    // --- Help Overlay Methods ---
     protected void initializeHelpOverlay() {
         helpOverlayContainerView = findViewById(R.id.help_overlay_container);
         if (helpOverlayContainerView != null) {
@@ -116,7 +111,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     protected void showHelpOverlay(String title, String content) {
         if (helpOverlayContainerView != null && textViewHelpOverlayTitle != null && textViewHelpOverlayContent != null) {
             if (isGamePausedByDedicatedMenu) {
-                resumeGameFromDedicatedPause(); // Resume dedicated pause before showing help
+                resumeGameFromDedicatedPause();
             }
 
             textViewHelpOverlayTitle.setText(title);
@@ -154,7 +149,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     protected boolean isHelpOverlayVisible() {
         return helpOverlayContainerView != null && helpOverlayContainerView.getVisibility() == View.VISIBLE;
     }
-    // --- End of Help Overlay Methods ---
 
     private void setGameInteractionEnabled(boolean enabled) {
         boolean canInteractGame = enabled && !matchOver && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible();
@@ -173,7 +167,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         binding.buttonConfigIncrease.setEnabled(enableConfigPanelInteractions);
         binding.edittextConfigRounds.setAlpha(enableConfigPanelInteractions ? 1.0f : 0.5f);
 
-        updatePauseButtonVisibility(); // Update pause button based on new interaction state
+        updatePauseButtonVisibility();
     }
 
 
@@ -268,8 +262,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             binding.edittextConfigRounds.setText(String.valueOf(pointsToWin));
             binding.textConfigRoundsLabel.setText(getString(R.string.rps_config_rounds_label_first_to));
         }
-        // Let setGameInteractionEnabled handle actual enabling/disabling
-        // This method focuses on visual state of config if it *were* enabled
         binding.edittextConfigRounds.setAlpha(gameConfigLocked ? 0.5f : 1.0f);
         binding.configPanelRps.setAlpha(gameConfigLocked ? 0.5f : 1.0f);
         setGameInteractionEnabled(!isHelpOverlayVisible() && !isGamePausedByDedicatedMenu);
@@ -277,15 +269,12 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
 
 
     private void playGame(Choice playerChoice) {
-        // Check for overlays is handled by setGameInteractionEnabled and individual listeners
-        if (matchOver) return; // Already checked by listener enable state, but good safeguard
+        if (matchOver) return;
 
         if (!gameConfigLocked) {
             gameConfigLocked = true;
-            // updateConfigUI(); // Called by setGameInteractionEnabled after this block
             binding.configPanelRps.setVisibility(View.GONE);
-            setGameInteractionEnabled(true); // Enable game buttons, disable config
-            // updatePauseButtonVisibility(); // Called by setGameInteractionEnabled
+            setGameInteractionEnabled(true);
         }
         currentRound++;
 
@@ -315,10 +304,9 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         if (isGameOver()) {
             matchOver = true;
             binding.textViewRpsStatus.setText(getGameOverMessage());
-            setGameInteractionEnabled(false); // Disables choice buttons
+            setGameInteractionEnabled(false);
             binding.buttonPlayAgain.setVisibility(View.VISIBLE);
             binding.buttonPlayAgain.setEnabled(!isHelpOverlayVisible() && !isGamePausedByDedicatedMenu);
-            // updatePauseButtonVisibility(); // Called by setGameInteractionEnabled
         } else {
             if (currentGameMode == GameMode.BEST_OF) {
                 binding.textViewRpsStatus.setText(getString(R.string.rps_status_play_again) + " (Round " + currentRound + "/" + roundsToPlay + ")");
@@ -372,17 +360,15 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         isGamePausedByDedicatedMenu = false;
 
         updateScoreDisplay();
-        updateConfigUI(); // This re-evaluates config visibility and interactions
+        updateConfigUI();
         resetRoundUI(true);
 
         binding.configPanelRps.setVisibility(View.VISIBLE);
-        // setGameInteractionEnabled(true) is called by updateConfigUI via its chain
 
         if (isHelpOverlayVisible()){ hideHelpOverlay(); }
         if(dedicatedPauseOverlayContainer != null && dedicatedPauseOverlayContainer.getVisibility() == View.VISIBLE){
             dedicatedPauseOverlayContainer.setVisibility(View.GONE);
         }
-        // updatePauseButtonVisibility(); // Called by setGameInteractionEnabled via updateConfigUI
     }
 
     private int getDrawableForChoice(Choice choice) {
@@ -425,7 +411,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             binding.imageComputerSlotLeft.setImageResource(computerChoiceDrawable);
         } else if (playerChoice == Choice.PAPER) {
             binding.imageComputerSlotCenter.setImageResource(computerChoiceDrawable);
-        } else { // SCISSORS
+        } else {
             binding.imageComputerSlotRight.setImageResource(computerChoiceDrawable);
         }
     }
@@ -453,7 +439,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         } else {
             pauseGameForDedicatedMenu();
         }
-        // updatePauseButtonVisibility(); // Called by pause/resume methods
     }
 
     private void pauseGameForDedicatedMenu() {
@@ -462,7 +447,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             dedicatedPauseOverlayContainer.setVisibility(View.VISIBLE);
         }
         setGameInteractionEnabled(false);
-        updatePauseButtonVisibility(); // Explicitly call to hide toolbar pause button
+        updatePauseButtonVisibility();
     }
 
     private void resumeGameFromDedicatedPause() {
@@ -471,7 +456,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             dedicatedPauseOverlayContainer.setVisibility(View.GONE);
         }
         setGameInteractionEnabled(true);
-        updatePauseButtonVisibility(); // Explicitly call to show toolbar pause button
+        updatePauseButtonVisibility();
     }
 
     private void goToMainMenu() {
@@ -501,7 +486,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         }
         if (isGamePausedByDedicatedMenu) {
             if (itemId == R.id.action_pause_rps || itemId == android.R.id.home) {
-                // Allow these actions
             } else {
                 return false;
             }
@@ -528,7 +512,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             hideHelpOverlay();
         } else if (isGamePausedByDedicatedMenu) {
             resumeGameFromDedicatedPause();
-            // updatePauseButtonVisibility(); // Called by resume
         } else {
             super.onBackPressed();
         }
