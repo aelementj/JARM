@@ -1,14 +1,25 @@
 package com.example.jarm;
 
+import android.content.ContentValues;
 import android.content.Context;
+// import android.content.Intent; // Not directly used in this file for new intents
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button; // Added for help overlay
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -34,7 +45,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     private int currentCorrectAnswer = 0;
 
     private CountDownTimer roundTimer;
-    private long timePerRoundMillis = 30000;
+    private long timePerRoundMillisAssigned = 30000;
     private long timeLeftInMillis = 0;
     private long bonusTimeForNextRoundMillis = 0;
 
@@ -43,10 +54,11 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     private List<RoundHistoryItem> roundHistoryList = new ArrayList<>();
 
     private Random random = new Random();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    // Using the constants you provided in the last interaction
+
     private static final long TIME_PER_NUMBER_EASY_MS = 2500L;
-    private static final long BASE_TIME_EASY_MS = 25000L; // Note: string.xml said 30s base for Easy
+    private static final long BASE_TIME_EASY_MS = 25000L;
     private static final long TIME_PER_NUMBER_MEDIUM_MS = 5000L;
     private static final long BASE_TIME_MEDIUM_MS = 20000L;
     private static final long TIME_PER_NUMBER_HARD_MS = 7500L;
@@ -54,11 +66,32 @@ public class ArithmeticGameActivity extends AppCompatActivity {
 
     private int generationAttemptCounter = 0;
 
+    private StatsDbHelper dbHelper;
+    private long currentSessionId = -1;
+    private static final String TAG = "ArithmeticGameActivity";
+
+    // Dedicated Pause Overlay
+    private View dedicatedPauseOverlayContainer;
+    private View buttonDedicatedPauseResume, buttonDedicatedPauseRestart, buttonDedicatedPauseMainMenu;
+    private boolean isGamePausedByDedicatedMenu = false; // For dedicated pause
+
+    // Help Overlay Views
+    private View helpOverlayContainerView;
+    private TextView textViewHelpOverlayTitle;
+    private TextView textViewHelpOverlayContent;
+    private Button buttonHelpOverlayClose;
+
+    private boolean gameEnded = false;
+    private Menu activityMenu;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityArithmeticGameBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        dbHelper = new StatsDbHelper(this);
 
         Toolbar toolbar = binding.toolbarArithmeticGame;
         setSupportActionBar(toolbar);
@@ -74,11 +107,140 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         }
         binding.textViewCurrentDifficulty.setText(getString(R.string.label_difficulty_prefix, currentDifficulty));
 
+        initializeHelpOverlay(); // Initialize generic help overlay
+        initializeDedicatedPauseOverlay(); // Initialize dedicated game pause overlay
+
         setupRecyclerView();
         setupListeners();
         initializeGameParameters();
         startNewRound();
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_arithmetic_game, menu);
+        this.activityMenu = menu;
+        updateToolbarButtonsVisibility();
+        return true;
+    }
+
+    private void updateToolbarButtonsVisibility() {
+        if (activityMenu != null) {
+            MenuItem pauseItem = activityMenu.findItem(R.id.action_pause_arithmetic_game);
+            MenuItem helpItem = activityMenu.findItem(R.id.action_help_arithmetic_game); // Assuming this ID is in menu_arithmetic_game.xml
+
+            if (pauseItem != null) {
+                pauseItem.setVisible(!gameEnded && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible() && currentRound <= totalRounds);
+            }
+            if (helpItem != null) {
+                helpItem.setEnabled(!isGamePausedByDedicatedMenu); // Help can be shown unless dedicated pause is active
+            }
+        }
+    }
+
+    // --- Help Overlay Methods ---
+    protected void initializeHelpOverlay() {
+        helpOverlayContainerView = findViewById(R.id.help_overlay_container);
+        if (helpOverlayContainerView != null) {
+            textViewHelpOverlayTitle = helpOverlayContainerView.findViewById(R.id.textView_help_overlay_title);
+            textViewHelpOverlayContent = helpOverlayContainerView.findViewById(R.id.textView_help_overlay_content);
+            buttonHelpOverlayClose = helpOverlayContainerView.findViewById(R.id.button_help_overlay_close);
+
+            if (buttonHelpOverlayClose != null) {
+                buttonHelpOverlayClose.setOnClickListener(v -> hideHelpOverlay());
+            }
+            helpOverlayContainerView.setOnClickListener(v -> {
+                if (v.getId() == R.id.help_overlay_container) {
+                    hideHelpOverlay();
+                }
+            });
+        } else {
+            Log.e(TAG + "Help", "Help overlay container not found.");
+        }
+    }
+
+    protected void showHelpOverlay(String title, String content) {
+        if (isGamePausedByDedicatedMenu) { // If game is paused by dedicated menu, resume it first
+            resumeGameFromDedicatedPause();
+        }
+        if (helpOverlayContainerView != null && textViewHelpOverlayTitle != null && textViewHelpOverlayContent != null) {
+            if (!gameEnded && roundTimer != null) { // Pause game timer if active
+                roundTimer.cancel();
+            }
+            mainHandler.removeCallbacksAndMessages(null); // Stop pending next round calls
+
+            textViewHelpOverlayTitle.setText(title);
+            textViewHelpOverlayContent.setText(content);
+            helpOverlayContainerView.setVisibility(View.VISIBLE);
+            setGameInteractionEnabled(false); // Disable game inputs
+            updateToolbarButtonsVisibility(); // Hide dedicated pause, disable other menu items
+        } else {
+            Log.e(TAG + "Help", "Help overlay views not properly initialized for showing.");
+        }
+    }
+
+    protected void hideHelpOverlay() {
+        if (helpOverlayContainerView != null) {
+            helpOverlayContainerView.setVisibility(View.GONE);
+            setGameInteractionEnabled(true); // Re-enable game inputs
+            updateToolbarButtonsVisibility(); // Re-evaluate button visibility
+
+            // Resume game timer if it was running and game not ended
+            if (!gameEnded && timeLeftInMillis > 0 && currentRound <= totalRounds) {
+                startTimer(timeLeftInMillis);
+            }
+        }
+    }
+
+    protected boolean isHelpOverlayVisible() {
+        return helpOverlayContainerView != null && helpOverlayContainerView.getVisibility() == View.VISIBLE;
+    }
+    // --- End of Help Overlay Methods ---
+
+    private void setGameInteractionEnabled(boolean enabled) {
+        binding.editTextAnswer.setEnabled(enabled && !gameEnded && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible());
+        binding.buttonSubmitAnswer.setEnabled(enabled && !gameEnded && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible());
+
+        if (activityMenu != null) { // Enable/disable toolbar items except help
+            for (int i = 0; i < activityMenu.size(); i++) {
+                MenuItem item = activityMenu.getItem(i);
+                if (item.getItemId() != R.id.action_help_arithmetic_game) { // Keep help actionable
+                    item.setEnabled(enabled);
+                } else {
+                    item.setEnabled(true); // Help icon always enabled unless dedicated pause is up
+                }
+            }
+        }
+        updateToolbarButtonsVisibility(); // Refresh pause button visibility specifically
+    }
+
+
+    private void initializeDedicatedPauseOverlay() {
+        dedicatedPauseOverlayContainer = findViewById(R.id.pause_overlay_container);
+        if (dedicatedPauseOverlayContainer != null) {
+            buttonDedicatedPauseResume = dedicatedPauseOverlayContainer.findViewById(R.id.button_pause_resume);
+            buttonDedicatedPauseRestart = dedicatedPauseOverlayContainer.findViewById(R.id.button_pause_restart);
+            buttonDedicatedPauseMainMenu = dedicatedPauseOverlayContainer.findViewById(R.id.button_pause_main_menu);
+
+            TextView restartLabel = dedicatedPauseOverlayContainer.findViewById(R.id.label_pause_restart);
+            if(restartLabel != null) restartLabel.setText(R.string.pause_overlay_restart_arithmetic);
+
+            if (buttonDedicatedPauseResume != null) buttonDedicatedPauseResume.setOnClickListener(v -> resumeGameFromDedicatedPause());
+            if (buttonDedicatedPauseRestart != null) buttonDedicatedPauseRestart.setOnClickListener(v -> {
+                resumeGameFromDedicatedPause();
+                Toast.makeText(this, "Restarting Arithmetic Challenge.", Toast.LENGTH_SHORT).show();
+                initializeGameParameters();
+                startNewRound();
+            });
+            if (buttonDedicatedPauseMainMenu != null) buttonDedicatedPauseMainMenu.setOnClickListener(v -> {
+                resumeGameFromDedicatedPause();
+                finish();
+            });
+            dedicatedPauseOverlayContainer.setVisibility(View.GONE);
+        }
+    }
+
 
     private void setupRecyclerView() {
         recyclerViewRoundHistory = binding.recyclerViewRoundHistory;
@@ -93,6 +255,16 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         currentRound = 0;
         bonusTimeForNextRoundMillis = 0;
         totalRounds = 10;
+        gameEnded = false;
+        isGamePausedByDedicatedMenu = false; // Ensure dedicated pause is reset
+
+        if(helpOverlayContainerView != null && helpOverlayContainerView.getVisibility() == View.VISIBLE){
+            hideHelpOverlay(); // Close help if game restarts
+        }
+        if(dedicatedPauseOverlayContainer != null && dedicatedPauseOverlayContainer.getVisibility() == View.VISIBLE){
+            dedicatedPauseOverlayContainer.setVisibility(View.GONE); // Close dedicated pause if game restarts
+        }
+
 
         roundHistoryList.clear();
         if (roundHistoryAdapter != null) {
@@ -101,14 +273,34 @@ public class ArithmeticGameActivity extends AppCompatActivity {
 
         updateScoreDisplay();
         updateRoundCounterDisplay();
-        binding.buttonSubmitAnswer.setEnabled(true);
-        binding.editTextAnswer.setEnabled(true);
+        setGameInteractionEnabled(true); // Enable inputs for new game
+        updateToolbarButtonsVisibility(); // Update toolbar buttons
+
+        startNewDbSession();
     }
 
+    // ... (startNewDbSession, setupListeners, startNewRound, updateRoundCounterDisplay, updateScoreDisplay unchanged)
+    // ... (generateNewProblem, generateNumberForDifficulty unchanged)
+    // ... (saveArithmeticRoundResult, updateDbSessionWithFinalScore, showKeyboard, hideKeyboard unchanged)
+
+    private void startNewDbSession() {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(StatsDbHelper.ArithmeticSessionEntry.COLUMN_NAME_DIFFICULTY, currentDifficulty);
+        values.put(StatsDbHelper.ArithmeticSessionEntry.COLUMN_NAME_FINAL_SCORE, 0);
+
+        currentSessionId = db.insert(StatsDbHelper.ArithmeticSessionEntry.TABLE_NAME, null, values);
+        if (currentSessionId == -1) {
+            Log.e(TAG, "Error creating new Arithmetic session in DB.");
+            Toast.makeText(this, "Error starting game session stats.", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.i(TAG, "New Arithmetic session started with ID: " + currentSessionId + " Difficulty: " + currentDifficulty);
+        }
+    }
 
     private void setupListeners() {
         binding.buttonSubmitAnswer.setOnClickListener(v -> {
-            if (!binding.buttonSubmitAnswer.isEnabled()) {
+            if (!binding.buttonSubmitAnswer.isEnabled() || isHelpOverlayVisible() || isGamePausedByDedicatedMenu) {
                 return;
             }
             handleSubmit();
@@ -116,7 +308,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
 
         binding.editTextAnswer.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                if (!binding.buttonSubmitAnswer.isEnabled()) {
+                if (!binding.buttonSubmitAnswer.isEnabled() || isHelpOverlayVisible() || isGamePausedByDedicatedMenu) {
                     return true;
                 }
                 handleSubmit();
@@ -125,10 +317,13 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             return false;
         });
     }
-
     private void startNewRound() {
+        if (gameEnded || isGamePausedByDedicatedMenu || isHelpOverlayVisible()) return;
+
         currentRound++;
         updateRoundCounterDisplay();
+        updateToolbarButtonsVisibility();
+
         if (currentRound > totalRounds) {
             endGame();
             return;
@@ -143,9 +338,10 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         generationAttemptCounter = 0;
         generateNewProblem();
 
-        long currentRoundTimeWithBonus = timePerRoundMillis + bonusTimeForNextRoundMillis;
+        long currentRoundTimeWithBonus = timePerRoundMillisAssigned + bonusTimeForNextRoundMillis;
         bonusTimeForNextRoundMillis = 0;
         if (currentRoundTimeWithBonus < 5000) currentRoundTimeWithBonus = 5000;
+
         startTimer(currentRoundTimeWithBonus);
     }
 
@@ -156,7 +352,6 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     private void updateScoreDisplay() {
         binding.textViewScore.setText(getString(R.string.label_score_format, score));
     }
-
     private void generateNewProblem() {
         generationAttemptCounter++;
         if (generationAttemptCounter > 20) {
@@ -165,7 +360,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             int n2 = random.nextInt(9) + 1;
             currentProblemExpression = n1 + " + " + n2;
             currentCorrectAnswer = n1 + n2;
-            timePerRoundMillis = (TIME_PER_NUMBER_EASY_MS * 2) + BASE_TIME_EASY_MS;
+            timePerRoundMillisAssigned = (TIME_PER_NUMBER_EASY_MS * 2) + BASE_TIME_EASY_MS;
             binding.textViewProblem.setText(String.format(Locale.getDefault(), "%s = ?", currentProblemExpression));
             generationAttemptCounter = 0;
             return;
@@ -185,7 +380,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             numOperators = random.nextInt(2) + 1;
             minNumbersInOperation = 2; maxNumbersInOperation = 3;
             minDigitsPerNumberOverall = 1; maxDigitsPerNumberOverall = 3;
-        } else { // Hard
+        } else {
             numOperators = random.nextInt(3) + 1;
             minNumbersInOperation = 2; maxNumbersInOperation = 4;
             minDigitsPerNumberOverall = 1; maxDigitsPerNumberOverall = 4;
@@ -216,24 +411,17 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             actualNumbersInProblem = 2;
             int num1 = generateNumberForDifficulty(minDigitsPerNumberOverall, maxDigitsPerNumberOverall);
             int num2;
-
             if (currentDifficulty.equals(getString(R.string.difficulty_medium))) {
-                // Medium: 2nd number 1-2 digits (capped by overall), then max 12
-                int num2MaxDigitsForMedium = Math.min(maxDigitsPerNumberOverall, 2);
-                num2 = generateNumberForDifficulty(1, num2MaxDigitsForMedium);
-                if (num2 > 12) num2 = random.nextInt(12) + 1; // Cap 1-12
+                num2 = generateNumberForDifficulty(1, Math.min(maxDigitsPerNumberOverall, 2));
+                if (num2 > 12) num2 = random.nextInt(12) + 1;
             } else if (currentDifficulty.equals(getString(R.string.difficulty_hard))) {
-                // Hard: 2nd number 1-2 digits (capped by overall), then max 20
-                int num2MaxDigitsForHard = Math.min(maxDigitsPerNumberOverall, 2);
-                num2 = generateNumberForDifficulty(1, num2MaxDigitsForHard);
-                if (num2 > 20) num2 = random.nextInt(20) + 1; // Cap 1-20
-            } else { // Easy (if multiplication were to occur, which is rare with 1 op random choice)
-                int num2MaxDigitsForEasy = Math.min(maxDigitsPerNumberOverall, 2);
-                num2 = generateNumberForDifficulty(1, num2MaxDigitsForEasy);
-                if (num2 > 20) num2 = random.nextInt(20) + 1; // Default cap
+                num2 = generateNumberForDifficulty(1, Math.min(maxDigitsPerNumberOverall, 2));
+                if (num2 > 20) num2 = random.nextInt(20) + 1;
+            } else {
+                num2 = generateNumberForDifficulty(1, Math.min(maxDigitsPerNumberOverall, 1));
+                if (num2 > 9) num2 = random.nextInt(9)+1;
             }
-            if (num2 == 0) num2 = 1; // Ensure not zero after capping
-
+            if (num2 == 0) num2 = 1;
 
             numbers.add(num1);
             numbers.add(num2);
@@ -245,36 +433,37 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             int attempts = 0;
             do {
                 int divisorMaxDigits = Math.min(maxDigitsPerNumberOverall, 2);
+                if (currentDifficulty.equals(getString(R.string.difficulty_easy))) divisorMaxDigits = 1;
                 divisor = generateNumberForDifficulty(1, divisorMaxDigits);
                 if (divisor == 0) divisor = 1;
 
                 int maxPossibleQuotient = (int) (Math.pow(10, maxDigitsPerNumberOverall) / divisor);
                 if (maxPossibleQuotient <= 0) maxPossibleQuotient = 1;
                 int qMin = 1;
-                int qMax = Math.max(qMin, random.nextInt(Math.min(maxPossibleQuotient, 100)) + qMin);
+                int qMax = Math.max(qMin, random.nextInt(Math.min(maxPossibleQuotient, currentDifficulty.equals(getString(R.string.difficulty_easy)) ? 10 : (currentDifficulty.equals(getString(R.string.difficulty_medium)) ? 20 : 50))) + qMin);
+
 
                 quotient = random.nextInt(qMax - qMin + 1) + qMin;
                 dividend = divisor * quotient;
                 attempts++;
                 if(attempts > 50) {
-                    divisor = generateNumberForDifficulty(1,1);
-                    if(divisor == 0) divisor = 1;
+                    divisor = generateNumberForDifficulty(1,1); if(divisor == 0) divisor = 1;
                     quotient = generateNumberForDifficulty(1,1);
                     dividend = divisor*quotient;
+                    Log.w(TAG, "Division generation fallback triggered.");
                     break;
                 }
-            } while (String.valueOf(dividend).length() > maxDigitsPerNumberOverall || String.valueOf(dividend).length() < minDigitsPerNumberOverall || dividend < 0 ); // Added dividend < 0 check
+            } while (String.valueOf(dividend).length() > maxDigitsPerNumberOverall || String.valueOf(dividend).length() < minDigitsPerNumberOverall || dividend < 0 );
 
-            // Ensure dividend is not negative from an unexpected generation path
             if (dividend < 0) {
-                generateNewProblem(); // Regenerate if division results in negative dividend somehow
-                return;
+                generateNewProblem(); return;
             }
 
             numbers.add(dividend);
             numbers.add(divisor);
             problemBuilder.append(dividend).append(" ÷ ").append(divisor);
             currentCorrectAnswer = quotient;
+
         } else {
             actualNumbersInProblem = random.nextInt(maxNumbersInOperation - minNumbersInOperation + 1) + minNumbersInOperation;
             actualNumbersInProblem = Math.min(actualNumbersInProblem, numOperators + 1);
@@ -301,22 +490,19 @@ public class ArithmeticGameActivity extends AppCompatActivity {
                     problemBuilder.append(" + ").append(nextNum);
                     currentCorrectAnswer += nextNum;
                 } else {
-                    if (currentCorrectAnswer < nextNum) {
-                        generateNewProblem();
-                        return;
+                    if (currentCorrectAnswer < nextNum && !currentDifficulty.equals(getString(R.string.difficulty_hard))) {
+                        generateNewProblem(); return;
                     }
                     problemBuilder.append(" - ").append(nextNum);
                     currentCorrectAnswer -= nextNum;
                 }
             }
-            if (currentCorrectAnswer < 0) {
-                generateNewProblem();
-                return;
+            if (currentCorrectAnswer < 0 && !currentDifficulty.equals(getString(R.string.difficulty_hard))) {
+                generateNewProblem(); return;
             }
         }
 
         currentProblemExpression = problemBuilder.toString();
-
         long timePerNumConstant = TIME_PER_NUMBER_EASY_MS;
         long baseTimeConstant = BASE_TIME_EASY_MS;
 
@@ -327,7 +513,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             timePerNumConstant = TIME_PER_NUMBER_HARD_MS;
             baseTimeConstant = BASE_TIME_HARD_MS;
         }
-        timePerRoundMillis = (timePerNumConstant * actualNumbersInProblem) + baseTimeConstant;
+        timePerRoundMillisAssigned = (timePerNumConstant * actualNumbersInProblem) + baseTimeConstant;
 
         binding.textViewProblem.setText(String.format(Locale.getDefault(), "%s = ?", currentProblemExpression));
         generationAttemptCounter = 0;
@@ -342,6 +528,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         }
         long maxVal = (long) Math.pow(10, maxDigits) - 1;
         if (maxVal < minVal) maxVal = minVal;
+
         if (maxVal - minVal + 1 <= 0) return (int) minVal;
         return (int) (random.nextInt((int) (maxVal - minVal + 1)) + minVal);
     }
@@ -350,11 +537,20 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         if (roundTimer != null) {
             roundTimer.cancel();
         }
-        timeLeftInMillis = millisInFuture;
-        binding.progressBarTime.setMax((int) (millisInFuture / 1000));
-        roundTimer = new CountDownTimer(millisInFuture, 1000) {
+        // timeLeftInMillis is set before calling startTimer when resuming from pause
+        // For a new round, timeLeftInMillis will be effectively millisInFuture
+        final long timerStartTime = millisInFuture; // Capture the intended start time for this timer instance
+        timeLeftInMillis = timerStartTime; // Ensure timeLeftInMillis reflects the full duration at start
+
+        binding.progressBarTime.setMax((int) (timerStartTime / 1000));
+        roundTimer = new CountDownTimer(timerStartTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                if (isGamePausedByDedicatedMenu || isHelpOverlayVisible()) { // Check both pause states
+                    cancel(); // Stop this timer instance
+                    // timeLeftInMillis should already hold the correct remaining time from before pause
+                    return;
+                }
                 timeLeftInMillis = millisUntilFinished;
                 int secondsLeft = (int) (millisUntilFinished / 1000);
                 binding.progressBarTime.setProgress(secondsLeft);
@@ -362,6 +558,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             }
             @Override
             public void onFinish() {
+                if (isGamePausedByDedicatedMenu || isHelpOverlayVisible()) return;
                 timeLeftInMillis = 0;
                 binding.progressBarTime.setProgress(0);
                 binding.textViewTimeValue.setText("0s");
@@ -396,6 +593,14 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     }
 
     private void handleAnswer(boolean isCorrect, boolean timeUp, String userAnswerText) {
+        long timeTakenMs = timePerRoundMillisAssigned - timeLeftInMillis;
+        if (timeUp) {
+            timeTakenMs = timePerRoundMillisAssigned;
+        }
+        if (timeTakenMs < 0) timeTakenMs = 0;
+
+        saveArithmeticRoundResult(timeTakenMs, isCorrect && !timeUp);
+
         RoundHistoryItem historyItem = new RoundHistoryItem(
                 currentRound,
                 currentProblemExpression,
@@ -425,29 +630,53 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             if (currentDifficulty.equals(getString(R.string.difficulty_medium))) {
                 bonusTimeForNextRoundMillis -= 5000L;
             } else if (currentDifficulty.equals(getString(R.string.difficulty_hard))) {
-                bonusTimeForNextRoundMillis = -10000L;
+                bonusTimeForNextRoundMillis -= 10000L;
             }
         }
         updateScoreDisplay();
-        binding.getRoot().postDelayed(() -> {
-            if (currentRound < totalRounds) {
+        mainHandler.postDelayed(() -> {
+            if (currentRound < totalRounds && !gameEnded) { // Ensure game hasn't ended prematurely
                 startNewRound();
-            } else {
+            } else if (!gameEnded) { // All rounds done, game not yet marked as ended
                 endGame();
             }
         }, 1500);
     }
 
+    private void saveArithmeticRoundResult(long timeTakenMs, boolean wasCorrect) {
+        if (currentSessionId == -1) {
+            Log.e(TAG, "Cannot save arithmetic round, invalid session ID.");
+            return;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(StatsDbHelper.ArithmeticRoundEntry.COLUMN_NAME_SESSION_ID, currentSessionId);
+        values.put(StatsDbHelper.ArithmeticRoundEntry.COLUMN_NAME_TIME_TAKEN_MS, timeTakenMs);
+        values.put(StatsDbHelper.ArithmeticRoundEntry.COLUMN_NAME_WAS_CORRECT, wasCorrect ? 1 : 0);
+
+        long newRowId = db.insert(StatsDbHelper.ArithmeticRoundEntry.TABLE_NAME, null, values);
+        if (newRowId == -1) {
+            Log.e(TAG, "Error saving Arithmetic round result to DB.");
+        } else {
+            Log.i(TAG, "Arithmetic round result saved for session " + currentSessionId + " (Row ID: " + newRowId + "), Time: " + timeTakenMs + "ms, Correct: " + wasCorrect);
+        }
+    }
+
     private void endGame() {
+        if (gameEnded) return;
+        gameEnded = true;
+
         if (roundTimer != null) {
             roundTimer.cancel();
         }
+        updateToolbarButtonsVisibility();
+
         String finalMessage = String.format(Locale.getDefault(), "Game Over! Final Score: %d", score);
         binding.textViewProblem.setText(finalMessage);
 
-        binding.buttonSubmitAnswer.setEnabled(false);
-        binding.editTextAnswer.setEnabled(false);
+        setGameInteractionEnabled(false); // Disable all inputs
         hideKeyboard();
+        updateDbSessionWithFinalScore();
 
         new AlertDialog.Builder(this)
                 .setTitle("Game Over!")
@@ -460,6 +689,31 @@ public class ArithmeticGameActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .show();
     }
+    private void updateDbSessionWithFinalScore() {
+        if (currentSessionId == -1) {
+            Log.e(TAG, "Cannot update session score, invalid session ID.");
+            return;
+        }
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(StatsDbHelper.ArithmeticSessionEntry.COLUMN_NAME_FINAL_SCORE, score);
+
+        String selection = StatsDbHelper.ArithmeticSessionEntry._ID + " = ?";
+        String[] selectionArgs = { String.valueOf(currentSessionId) };
+
+        int count = db.update(
+                StatsDbHelper.ArithmeticSessionEntry.TABLE_NAME,
+                values,
+                selection,
+                selectionArgs);
+
+        if (count > 0) {
+            Log.i(TAG, "Arithmetic session " + currentSessionId + " updated with final score: " + score);
+        } else {
+            Log.e(TAG, "Error updating final score for session " + currentSessionId);
+        }
+    }
+
     private void showKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
@@ -474,19 +728,111 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         if (imm != null) imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+
+    private void toggleDedicatedPauseState() {
+        if (gameEnded || isHelpOverlayVisible()) return;
+
+        if (isGamePausedByDedicatedMenu) {
+            resumeGameFromDedicatedPause();
+        } else {
+            pauseGameForDedicatedMenu();
+        }
+        updateToolbarButtonsVisibility();
+    }
+
+    private void pauseGameForDedicatedMenu() {
+        if (gameEnded) return;
+        isGamePausedByDedicatedMenu = true;
+        if (roundTimer != null) {
+            roundTimer.cancel();
+        }
+        mainHandler.removeCallbacksAndMessages(null);
+
+        if (dedicatedPauseOverlayContainer != null) {
+            dedicatedPauseOverlayContainer.setVisibility(View.VISIBLE);
+        }
+        setGameInteractionEnabled(false);
+    }
+
+    private void resumeGameFromDedicatedPause() {
+        if (gameEnded) return;
+        isGamePausedByDedicatedMenu = false;
+        if (dedicatedPauseOverlayContainer != null) {
+            dedicatedPauseOverlayContainer.setVisibility(View.GONE);
+        }
+        setGameInteractionEnabled(true);
+
+        if (timeLeftInMillis > 0 && currentRound <= totalRounds && !gameEnded) {
+            startTimer(timeLeftInMillis);
+        }
+    }
+
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+
+        if (isHelpOverlayVisible()) {
+            if (itemId == R.id.action_help_arithmetic_game || itemId == android.R.id.home) {
+                hideHelpOverlay();
+                return true;
+            }
+            return false; // Consume other actions if help is open
+        }
+
+        if (isGamePausedByDedicatedMenu) {
+            if (itemId == R.id.action_pause_arithmetic_game || itemId == android.R.id.home) {
+                // Allow these
+            } else {
+                return false; // Consume other actions
+            }
+        }
+
+
+        if (itemId == android.R.id.home) {
+            if (isGamePausedByDedicatedMenu) resumeGameFromDedicatedPause(); // Resume if paused by dedicated menu
+            // Save score if exiting prematurely
+            if (currentSessionId != -1 && !gameEnded && score >= 0) { // score can be 0
+                updateDbSessionWithFinalScore();
+            }
             if (roundTimer != null) roundTimer.cancel();
             finish();
+            return true;
+        } else if (itemId == R.id.action_pause_arithmetic_game) {
+            toggleDedicatedPauseState();
+            return true;
+        } else if (itemId == R.id.action_help_arithmetic_game) {
+            if (isGamePausedByDedicatedMenu) resumeGameFromDedicatedPause(); // Resume before showing help
+            showHelpOverlay(getString(R.string.help_title_arithmetic_game), getString(R.string.help_content_arithmetic_game));
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
+    public void onBackPressed() {
+        if (isHelpOverlayVisible()) {
+            hideHelpOverlay();
+        } else if (isGamePausedByDedicatedMenu) {
+            resumeGameFromDedicatedPause();
+            updateToolbarButtonsVisibility();
+        } else {
+            if (currentSessionId != -1 && !gameEnded && score >= 0) {
+                updateDbSessionWithFinalScore();
+            }
+            if (roundTimer != null) roundTimer.cancel();
+            super.onBackPressed();
+        }
+    }
+
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (roundTimer != null) roundTimer.cancel();
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
+        mainHandler.removeCallbacksAndMessages(null);
     }
 }

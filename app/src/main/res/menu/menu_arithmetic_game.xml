@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_help_arithmetic_game"
+        android:icon="@drawable/ic_help"
+        android:title="@string/content_desc_help_icon"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="100"
+        android:contentDescription="Arithmetic Game Help" />
+
+    <item
+        android:id="@+id/action_pause_arithmetic_game"
+        android:icon="@drawable/ic_pause"
+        android:title="@string/menu_item_pause"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="200"
+    android:contentDescription="Pause Arithmetic Game" />
+</menu>

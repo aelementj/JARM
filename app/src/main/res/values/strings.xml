@@ -6,12 +6,15 @@
 
     <string name="game_title_tic_tac_toe">Tic Tac Toe</string>
     <string name="game_desc_tic_tac_toe">Classic strategy game for two players.</string>
+    <string name="game_desc_tic_tac_toe_stats_context">Long-press for info. Stats tracked: Player X/O wins, draws, and Vs. Bot results.</string> <!-- Added -->
 
     <string name="game_title_rps">Rock Paper Scissors</string>
     <string name="game_desc_rps">Simple hand game of chance and strategy.</string>
+    <string name="game_desc_rps_stats_context">Long-press for info. Stats tracked: Wins, losses, ties, and hand pick frequency.</string> <!-- Added -->
 
     <string name="game_title_arithmetic">Arithmetic Challenge</string>
     <string name="game_desc_arithmetic">Test your math skills with quick calculations.</string>
+    <string name="game_desc_arithmetic_stats_context">Long-press for info. Stats tracked: Avg points and answer speed per difficulty.</string> <!-- Added -->
 
     <string name="button_play">Play</string>
 
@@ -44,7 +47,6 @@
     <string name="content_desc_arithmetic_icon_large">Arithmetic Challenge Game Icon</string>
     <string name="content_desc_help_arithmetic">Help for Arithmetic Challenge</string>
 
-    <!-- UPDATED Difficulty Modifiers with new Time Rules -->
     <string name="modifiers_easy_placeholder">
         • Rounds: 10\n
         • Operators per Round: 1\n
@@ -76,7 +78,6 @@
         \t\t\t\t- Incorrect: -10s from next round
     </string>
 
-    <!-- Rock Paper Scissors Game Strings -->
     <string name="game_title_rps_toolbar">Rock Paper Scissors</string>
     <string name="rps_score_player">Player: %1$d</string>
     <string name="rps_score_computer">Computer: %1$d</string>
@@ -96,16 +97,16 @@
     <string name="content_desc_rps_computer_choice_slot">Computer\'s choice display slot</string>
     <string name="content_desc_rps_computer_image">Image of a robot representing the computer player</string>
     <string name="menu_item_pause">Pause</string>
-    <string name="menu_item_help_rps">RPS Rules</string>
+    <string name="menu_item_help_rps">RPS Rules</string> <!-- Used if specific menu item exists -->
     <string name="pause_overlay_title">Paused</string>
     <string name="pause_overlay_resume">Resume</string>
-    <string name="pause_overlay_restart">Restart Game</string>
+    <string name="pause_overlay_restart">Restart Game</string> <!-- Generic, used by RPS -->
     <string name="pause_overlay_main_menu">Main Menu</string>
 
     <string name="rps_config_game_mode">Game Mode:</string>
     <string name="rps_config_best_of">Best Of</string>
     <string name="rps_config_first_to">First To</string>
-    <string name="rps_config_rounds_label">Rounds to Win:</string> <!-- Generic label -->
+    <string name="rps_config_rounds_label">Rounds to Win:</string>
     <string name="rps_config_rounds_label_best_of">Number of Rounds (Odd):</string>
     <string name="rps_config_rounds_label_first_to">Points to Win:</string>
     <string name="rps_decrease_rounds">Decrease rounds</string>
@@ -141,9 +142,6 @@
     <string name="placeholder_score_display">Score: 0</string>
     <string name="label_score_format">Score: %d</string>
 
-
-
-    <!-- Tic Tac Toe Config Panel -->
     <string name="ttt_config_title">Game Setup</string>
     <string name="ttt_config_first_player">First Player:</string>
     <string name="ttt_config_player_x">Player X</string>
@@ -157,23 +155,161 @@
     <string name="ttt_button_restart_current_game">Restart Game</string>
     <string name="ttt_status_setup_game">Setup your game</string>
 
-    <!-- Tic Tac Toe Game Series -->
     <string name="ttt_status_match_winner">Player %1$s Wins the Match!</string>
     <string name="ttt_status_match_draw">The Match is a Draw!</string>
     <string name="ttt_status_bot_thinking">Bot is thinking...</string>
     <string name="ttt_config_decrease_rounds">Decrease rounds to win</string>
     <string name="ttt_config_increase_rounds">Increase rounds to win</string>
     <string name="pause_overlay_restart_ttt">Restart Current Game</string>
+    <string name="pause_overlay_restart_arithmetic">Restart Challenge</string>
 
-
-    <!-- Tic Tac Toe Game Series -->
-    <string name="ttt_status_player_turn_series">Player %1$s\'s Turn</string> <!-- Removed (Game %2$d) here, will be in round counter -->
-    <string name="ttt_status_winner_series">Player %1$s Wins Game!</string> <!-- Removed (Game %2$d) -->
-    <string name="ttt_status_draw_series">Game is a Draw!</string> <!-- Removed (Game %2$d) -->
+    <string name="ttt_status_player_turn_series">Player %1$s\'s Turn</string>
+    <string name="ttt_status_winner_series">Player %1$s Wins Game!</string>
+    <string name="ttt_status_draw_series">Game is a Draw!</string>
     <string name="ttt_round_counter_format">Round: %1$d / %2$d</string>
     <string name="ttt_config_first_player_x_label">X</string>
     <string name="ttt_config_first_player_o_label">O</string>
     <string name="ttt_config_first_player_random_label">Random</string>
+
+    <string name="stats_title_tic_tac_toe">Tic Tac Toe Stats</string>
+    <string name="stats_title_rps">Rock Paper Scissors Stats</string>
+    <string name="stats_title_arithmetic">Arithmetic Challenge Stats</string>
+
+    <string name="stats_winrate_label">Winrate</string>
+    <string name="stats_overall_label">Overall</string>
+    <string name="stats_vs_bot_label">vs. Bot</string>
+
+    <string name="stats_ttt_player_x_wins_label">Player X Wins:</string>
+    <string name="stats_ttt_player_o_wins_label">Player O Wins:</string>
+    <string name="stats_ttt_draws_label">Draws (Overall):</string>
+    <string name="stats_ttt_bot_wins_label">Bot Wins (You as P1/P2):</string>
+    <string name="stats_ttt_bot_losses_label">Bot Losses (You as P1/P2):</string>
+    <string name="stats_ttt_bot_draws_label">Bot Draws:</string>
+    <string name="stats_ttt_player_x_winrate_label">Player X Winrate</string>
+    <string name="stats_ttt_player_o_winrate_label">Player O Winrate</string>
+
+    <string name="stats_rps_wins_label">Wins:</string>
+    <string name="stats_rps_losses_label">Losses:</string>
+    <string name="stats_rps_ties_label">Ties:</string>
+    <string name="stats_rps_hand_picks_label">Hand Picks</string>
+
+    <string name="stats_arithmetic_avg_points_label">Average Points</string>
+    <string name="stats_arithmetic_avg_speed_label">Avg. Answer Speed:</string>
+    <string name="stats_arithmetic_fastest_answer_label">Fastest Answer:</string>
+    <string name="stats_arithmetic_slowest_answer_label">Slowest Answer:</string>
+
+    <!-- Options Screen Strings -->
+    <string name="options_section_data_management">Data Management</string>
+    <string name="options_button_reset_stats">Reset All Game Stats</string>
+    <string name="options_dialog_reset_stats_title">Confirm Reset</string>
+    <string name="options_dialog_reset_stats_message">Are you sure you want to reset all game statistics? This action cannot be undone.</string>
+    <string name="options_dialog_button_reset">Reset</string>
+    <string name="options_dialog_button_cancel">Cancel</string>
+    <string name="options_stats_reset_success">All game stats have been reset.</string>
+    <string name="options_stats_reset_failure">Failed to reset stats.</string>
+
+    <string name="options_section_about">About</string>
+    <string name="options_label_app_version">App Version</string>
+    <string name="options_label_developer_info">Developers</string>
+    <string name="developer_name_placeholder">[J]emimah Sumague\n[A]lexis Jay Laino\n[R]omeo Jr. Manlocot\n[M]essiah Railey Mabuyo</string>
+
+    <string name="dialog_button_close">Close</string>
+
+    <!-- Help Content Strings -->
+    <string name="help_title_main_activity">App Help</string>
+    <string name="help_content_main_activity">Welcome to JRAM! Select a game from the list to play. Long-press a game card for a brief description. Use the bottom navigation to switch between Games, Stats, and Options.</string>
+
+    <string name="help_title_tic_tac_toe">Tic Tac Toe Help</string>
+    <string name="help_content_tic_tac_toe">
+        Objective: Be the first player to get three of your marks (X or O) in a row, column, or diagonal.\n\n
+        Setup:\n
+        - Choose your preferred first player (X, O, or Random).\n
+        - Set the number of games to win the entire match.\n
+        - Select game mode: 2 Player (play against another person on the same device) or Vs. Bot (play against the AI).\n\n
+        Gameplay:\n
+        - Players take turns placing their mark on an empty cell.\n
+        - The first player to achieve a three-in-a-row wins the game.\n
+        - If all cells are filled and no one has three in a row, the game is a draw.\n\n
+        Match:\n
+        - The first player to win the specified number of games wins the match.\n
+        - The toolbar shows the current score for X, O, and Ties within the match.\n
+        - The round counter indicates the current game number out of the total required to win the match.\n\n
+        Pause Menu:\n
+        - Resume: Continue the current game.\n
+        - Restart Game: Restarts the current game of the series (scores for the current game are reset, overall match score remains).\n
+        - Main Menu: Returns to the game setup screen, resetting the current match.
+    </string>
+
+    <string name="help_title_rps">Rock Paper Scissors Help</string>
+    <string name="help_content_rps">
+        Objective: Win rounds by choosing a hand gesture that defeats the computer\'s choice.\n\n
+        Rules:\n
+        - Rock crushes Scissors\n
+        - Scissors cuts Paper\n
+        - Paper covers Rock\n\n
+        Setup:\n
+        - Game Mode: Choose "Best Of" (win more than half of a set number of rounds) or "First To" (be the first to reach a target score).\n
+        - Rounds/Points: Set the number of rounds for "Best Of" (must be odd) or the target score for "First To".\n\n
+        Gameplay:\n
+        - Tap Rock, Paper, or Scissors to make your move.\n
+        - The computer will make its choice, and the round result will be displayed.\n
+        - Scores are updated after each round.\n\n
+        Pause Menu:\n
+        - Resume: Continue playing.\n
+        - Restart Game: Resets the current match scores and returns to the configuration panel.\n
+        - Main Menu: Exits to the main app screen.
+    </string>
+
+    <string name="help_title_arithmetic_challenge">Arithmetic Challenge Help</string>
+    <string name="help_content_arithmetic_challenge_setup">
+        Objective: Score as many points as possible by solving arithmetic problems within the time limit.\n\n
+        Setup (Difficulty Selection Screen):\n
+        - Choose a difficulty: Easy, Medium, or Hard.\n
+        - Each difficulty has different parameters for the number of operators, numbers per operation, digits per number, time per round, and scoring bonuses/penalties.\n
+        - Review the modifiers for each difficulty before playing.\n
+        - Tap "Play" to start the challenge.\n\n
+        For detailed gameplay rules, tap the "How to Play" button on this screen, or the help icon (i) during the game.
+    </string>
+
+    <string name="help_title_arithmetic_game">Arithmetic Gameplay Help</string>
+    <string name="help_content_arithmetic_game">
+        Objective: Solve the arithmetic problem shown before the timer runs out.\n\n
+        Gameplay:\n
+        - A math problem will appear on the screen.\n
+        - Enter your answer in the input field and tap "Submit".\n
+        - The timer bar at the top shows your remaining time for the current round.\n
+        - Your score and current round are displayed.\n
+        - Previous rounds are shown in the history panel at the bottom.\n\n
+        Scoring:\n
+        - Correct answers earn points.\n
+        - Depending on the difficulty, correct answers may add bonus time to the next round, and incorrect answers or running out of time may reduce time for the next round.\n
+        - The game consists of 10 rounds.\n\n
+        Pause Menu:\n
+        - Resume: Continue the current round.\n
+        - Restart Challenge: Abandons the current 10-round game and starts a new one with the same difficulty.\n
+        - MainMenu: Exits the game and returns to the difficulty selection screen.
+    </string>
+
+    <string name="help_title_stats_fragment">Statistics Help</string>
+    <string name="help_content_stats_fragment">
+        This screen displays your gameplay statistics for each game.\n\n
+        - Tic Tac Toe: Shows winrates for Player X and Player O, overall wins/draws, and detailed stats for games played against the Bot.\n
+        - Rock Paper Scissors: Displays your overall winrate, total wins, losses, ties, and how many times you\'ve picked each hand (Rock, Paper, Scissors).\n
+        - Arithmetic Challenge: Select a difficulty (Easy, Medium, Hard) to see your average points, average answer speed, and your fastest/slowest answer times for that difficulty.\n\n
+        Stats are updated after you complete games.
+    </string>
+
+    <string name="help_title_options_fragment">Options Help</string>
+    <string name="help_content_options_fragment">
+        This screen allows you to manage app settings and view information.\n\n
+        - Reset All Game Stats: Tap this button to clear all your saved game statistics from the app. A confirmation dialog will appear before any data is deleted. This action cannot be undone.\n
+        - App Version: Displays the current version of the JRAM application.\n
+        - Developers: Shows information about the developers of this application.
+    </string>
+
+    <!-- In strings.xml -->
+    <string name="menu_action_help_title">Help</string> <!-- NEW or RENAME for the title/tooltip -->
+    <string name="menu_action_help_content_description">View help information</string> <!-- NEW for accessibility -->
 
 
 </resources>

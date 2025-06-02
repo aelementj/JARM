@@ -1,135 +1,209 @@
-package com.example.jarm; // Replace with your actual package name
+package com.example.jarm;
 
-import android.content.Intent; // Import Intent
 import android.os.Bundle;
-import android.widget.Toast; // For simple interaction testing
-
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.activity.EdgeToEdge;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import android.content.Intent;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.example.jarm.databinding.ActivityMainBinding; // Make sure this matches your package and XML name
+import com.example.jarm.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Declare the binding variable
+    // ... (existing variables)
     private ActivityMainBinding binding;
+    private View helpOverlayContainer;
+    private TextView textViewHelpOverlayTitle;
+    private TextView textViewHelpOverlayContent;
+    private Button buttonHelpOverlayClose;
+    private int currentSelectedItemId = R.id.navigation_games;
 
+
+    // ... (onCreate, onSaveInstanceState, help overlay methods, replaceFragment) ...
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         EdgeToEdge.enable(this);
-
-        // Inflate the layout using ViewBinding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        // Set the root of the binding as the content view
         setContentView(binding.getRoot());
 
+        initializeHelpOverlay();
 
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.mainActivityRoot, (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, v.getPaddingTop(), systemBars.right, v.getPaddingBottom());
-
-            return insets;
+            binding.appBarLayout.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
+            binding.bottomNavigation.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            return WindowInsetsCompat.CONSUMED;
         });
 
-        // Setup Click Listeners for Game Cards
-        setupGameCardListeners();
+        if (savedInstanceState == null) {
+            replaceFragment(new GamesFragment(), R.id.navigation_games);
+            binding.bottomNavigation.setSelectedItemId(R.id.navigation_games);
+        } else {
+            currentSelectedItemId = savedInstanceState.getInt("currentSelectedItemId", R.id.navigation_games);
+        }
 
-        // Setup Bottom Navigation Listener
         setupBottomNavigationListener();
-
-        // Setup Top App Bar Menu Listener
         setupTopAppBarListener();
     }
 
-    private void setupGameCardListeners() {
-        // Tic Tac Toe Card
-        if (binding.cardCompactTicTacToe != null) {
-            binding.cardCompactTicTacToe.setOnClickListener(view -> {
-                // Launch TicTacToeActivity
-                Intent intent = new Intent(MainActivity.this, TicTacToeActivity.class);
-                startActivity(intent);
-            });
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("currentSelectedItemId", currentSelectedItemId);
+    }
 
-            binding.cardCompactTicTacToe.setOnLongClickListener(view -> {
-                String description = getString(R.string.game_desc_tic_tac_toe);
-                Toast.makeText(MainActivity.this, "Info: " + description, Toast.LENGTH_LONG).show();
-                return true; // Consumed
+    protected void initializeHelpOverlay() {
+        helpOverlayContainer = findViewById(R.id.help_overlay_container);
+        if (helpOverlayContainer != null) {
+            textViewHelpOverlayTitle = findViewById(R.id.textView_help_overlay_title);
+            textViewHelpOverlayContent = findViewById(R.id.textView_help_overlay_content);
+            buttonHelpOverlayClose = findViewById(R.id.button_help_overlay_close);
+
+            if (buttonHelpOverlayClose != null) {
+                buttonHelpOverlayClose.setOnClickListener(v -> hideHelpOverlay());
+            }
+            helpOverlayContainer.setOnClickListener(v -> {
+                if (v.getId() == R.id.help_overlay_container) {
+                    hideHelpOverlay();
+                }
             });
+        } else {
+            Log.e("MainActivityHelp", "Help overlay container not found.");
         }
+    }
 
-        // Rock Paper Scissors Card
-        if (binding.cardCompactRps != null) {
-            binding.cardCompactRps.setOnClickListener(view -> {
-                // Launch RockPaperScissorsActivity
-                Intent intent = new Intent(MainActivity.this, RockPaperScissorsActivity.class);
-                startActivity(intent);
-            });
-
-            binding.cardCompactRps.setOnLongClickListener(view -> {
-                String description = getString(R.string.game_desc_rps);
-                Toast.makeText(MainActivity.this, "Info: " + description, Toast.LENGTH_LONG).show();
-                return true;
-            });
+    protected void showHelpOverlay(String title, String content) {
+        if (helpOverlayContainer != null && textViewHelpOverlayTitle != null && textViewHelpOverlayContent != null) {
+            textViewHelpOverlayTitle.setText(title);
+            textViewHelpOverlayContent.setText(content);
+            helpOverlayContainer.setVisibility(View.VISIBLE);
+            setUiInteractionEnabled(false);
+        } else {
+            Log.e("MainActivityHelp", "Help overlay views not properly initialized for showing.");
+            Toast.makeText(this, "Error showing help.", Toast.LENGTH_SHORT).show();
         }
+    }
 
-        // Arithmetic Challenge Card
-        if (binding.cardCompactArithmetic != null) {
-            binding.cardCompactArithmetic.setOnClickListener(view -> {
-                // Launch ArithmeticChallengeActivity
-                Intent intent = new Intent(MainActivity.this, ArithmeticChallengeActivity.class);
-                startActivity(intent);
-            });
-
-            binding.cardCompactArithmetic.setOnLongClickListener(view -> {
-                String description = getString(R.string.game_desc_arithmetic);
-                Toast.makeText(MainActivity.this, "Info: " + description, Toast.LENGTH_LONG).show();
-                return true;
-            });
+    protected void hideHelpOverlay() {
+        if (helpOverlayContainer != null) {
+            helpOverlayContainer.setVisibility(View.GONE);
+            setUiInteractionEnabled(true);
         }
+    }
+
+    protected boolean isHelpOverlayVisible() {
+        return helpOverlayContainer != null && helpOverlayContainer.getVisibility() == View.VISIBLE;
+    }
+
+    private void setUiInteractionEnabled(boolean enabled) {
+        binding.bottomNavigation.setEnabled(enabled);
+        if (binding.topAppBar.getMenu() != null) {
+            for (int i = 0; i < binding.topAppBar.getMenu().size(); i++) {
+                if(binding.topAppBar.getMenu().getItem(i).getItemId() != R.id.action_help) {
+                    binding.topAppBar.getMenu().getItem(i).setEnabled(enabled);
+                } else {
+                    binding.topAppBar.getMenu().getItem(i).setEnabled(true);
+                }
+            }
+        }
+    }
+
+    private void replaceFragment(Fragment fragment, int itemId) {
+        currentSelectedItemId = itemId;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_fragment_container, fragment);
+        fragmentTransaction.commit();
     }
 
     private void setupBottomNavigationListener() {
-        if (binding.bottomNavigation != null) {
-            // Set an initial selected item if needed, e.g., Games
-            // binding.bottomNavigation.setSelectedItemId(R.id.navigation_games);
+        binding.bottomNavigation.setOnItemSelectedListener(item -> {
+            if (isHelpOverlayVisible()) {
+                hideHelpOverlay();
+                return binding.bottomNavigation.getSelectedItemId() == item.getItemId();
+            }
 
-            binding.bottomNavigation.setOnItemSelectedListener(item -> {
-                int itemId = item.getItemId();
-                if (itemId == R.id.navigation_games) {
-                    // Already on the games screen, or navigate to it if you have fragments
-                    Toast.makeText(MainActivity.this, "Games selected", Toast.LENGTH_SHORT).show();
-                    return true;
-                } else if (itemId == R.id.navigation_stats) {
-                    Toast.makeText(MainActivity.this, "Stats selected", Toast.LENGTH_SHORT).show();
-                    // TODO: Navigate to Stats screen/fragment
-                    return true;
-                } else if (itemId == R.id.navigation_options) {
-                    Toast.makeText(MainActivity.this, "Options selected", Toast.LENGTH_SHORT).show();
-                    // TODO: Navigate to Options screen/fragment
+            int itemId = item.getItemId();
+            if (currentSelectedItemId == itemId && getSupportFragmentManager().findFragmentById(R.id.main_fragment_container) != null) {
+                if (getSupportFragmentManager().findFragmentById(R.id.main_fragment_container).getClass().getSimpleName()
+                        .equals(getFragmentClassSimpleName(itemId))) {
                     return true;
                 }
-                return false;
-            });
-        }
+            }
+
+            Fragment selectedFragment = null;
+            if (itemId == R.id.navigation_games) {
+                selectedFragment = new GamesFragment();
+            } else if (itemId == R.id.navigation_stats) {
+                selectedFragment = new StatsFragment();
+            } else if (itemId == R.id.navigation_options) {
+                selectedFragment = new OptionsFragment();
+            }
+
+            if (selectedFragment != null) {
+                replaceFragment(selectedFragment, itemId);
+                return true;
+            }
+            return false;
+        });
+    }
+
+    private String getFragmentClassSimpleName(int itemId) {
+        if (itemId == R.id.navigation_games) return GamesFragment.class.getSimpleName();
+        if (itemId == R.id.navigation_stats) return StatsFragment.class.getSimpleName();
+        if (itemId == R.id.navigation_options) return OptionsFragment.class.getSimpleName();
+        return "";
     }
 
     private void setupTopAppBarListener() {
-        if (binding.topAppBar != null) {
-            binding.topAppBar.setOnMenuItemClickListener(menuItem -> {
-                if (menuItem.getItemId() == R.id.action_help) {
-                    Toast.makeText(MainActivity.this, "Help icon clicked!", Toast.LENGTH_SHORT).show();
-                    // TODO: Implement what happens when help is clicked (e.g., show a dialog, new activity for general help)
-                    return true;
+        binding.topAppBar.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.action_help) {
+                if (isHelpOverlayVisible()) {
+                    hideHelpOverlay();
+                } else {
+                    // Show help based on the current fragment
+                    if (currentSelectedItemId == R.id.navigation_games) {
+                        showHelpOverlay(getString(R.string.help_title_main_activity), getString(R.string.help_content_main_activity));
+                    } else if (currentSelectedItemId == R.id.navigation_stats) {
+                        showHelpOverlay(getString(R.string.help_title_stats_fragment), getString(R.string.help_content_stats_fragment));
+                    } else if (currentSelectedItemId == R.id.navigation_options) {
+                        showHelpOverlay(getString(R.string.help_title_options_fragment), getString(R.string.help_content_options_fragment));
+                    } else {
+                        // Default or fallback help
+                        showHelpOverlay(getString(R.string.help_title_main_activity), getString(R.string.help_content_main_activity));
+                    }
                 }
-                return false;
-            });
+                return true;
+            }
+            return false;
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isHelpOverlayVisible()) {
+            hideHelpOverlay();
+        } else {
+            if (currentSelectedItemId != R.id.navigation_games) {
+                binding.bottomNavigation.setSelectedItemId(R.id.navigation_games);
+            } else {
+                super.onBackPressed();
+            }
         }
+    }
+
+    // --- Public method to get current tab context ---
+    public int getCurrentSelectedTabId() {
+        return currentSelectedItemId;
     }
 }

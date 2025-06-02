@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/help_overlay_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E6FFFFFF"
+    android:visibility="gone"
+    android:clickable="true"
+    android:focusable="true"
+    tools:visibility="visible"
+    android:padding="@dimen/spacing_large">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_max="500dp"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="@dimen/card_corner_radius">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_large">
+
+            <TextView
+                android:id="@+id/textView_help_overlay_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                tools:text="Game Help"
+                android:textAppearance="?attr/textAppearanceHeadline5"
+                android:textColor="@color/text_primary_dark"
+                android:layout_marginBottom="@dimen/spacing_medium"/>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="200dp"
+                android:maxHeight="400dp">
+
+                <TextView
+                    android:id="@+id/textView_help_overlay_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="This is where the detailed help content for the specific game or feature will appear. It can be quite long and will scroll if necessary."
+                    android:textAppearance="?attr/textAppearanceBody1"
+                    android:textColor="@color/text_secondary_dark"
+                    android:lineSpacingExtra="4dp"/>
+            </ScrollView>
+
+            <Button
+                android:id="@+id/button_help_overlay_close"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="@string/dialog_button_close"
+                android:layout_marginTop="@dimen/spacing_medium"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

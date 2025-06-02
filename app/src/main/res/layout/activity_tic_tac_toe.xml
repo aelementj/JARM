@@ -332,6 +332,7 @@
 
     <!-- The include for pause_overlay is still here but its functionality will be side-stepped -->
     <!-- if the toolbar pause icon directly resets to config. -->
-<include layout="@layout/layout_pause_overlay"/>
+    <include layout="@layout/layout_pause_overlay"/>
+    <include layout="@layout/layout_help_overlay"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
