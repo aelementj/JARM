@@ -2,7 +2,7 @@ package com.example.jarm;
 
 public class RoundHistoryItem {
     public int roundNumber;
-    public String problemExpression; // e.g., "10 + 5"
+    public String problemExpression;
     public int correctAnswer;
     public String userAnswer;
     public boolean wasCorrect;
