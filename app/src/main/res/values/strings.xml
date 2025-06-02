@@ -129,7 +129,7 @@
     <string name="label_round_counter_format">Round: %1$d / %2$d</string>
     <string name="placeholder_round_counter">Round: 1 / 10</string>
     <string name="history_item_round_label_format">R%1$d:</string>
-    <string name="history_item_problem_format">%1$s = %2$s</string>
+    <string name="history_item_problem_format">%1$s = %2$d</string>
     <string name="history_item_time_up">Time Up!</string>
     <string name="history_item_no_answer">No Answer</string>
 
@@ -140,6 +140,40 @@
 
     <string name="placeholder_score_display">Score: 0</string>
     <string name="label_score_format">Score: %d</string>
+
+
+
+    <!-- Tic Tac Toe Config Panel -->
+    <string name="ttt_config_title">Game Setup</string>
+    <string name="ttt_config_first_player">First Player:</string>
+    <string name="ttt_config_player_x">Player X</string>
+    <string name="ttt_config_player_o">Player O</string>
+    <string name="ttt_config_player_random">Random</string>
+    <string name="ttt_config_rounds_to_win">Games to Win Match:</string>
+    <string name="ttt_config_game_mode">Game Mode:</string>
+    <string name="ttt_config_mode_2_player">2 Player</string>
+    <string name="ttt_config_mode_vs_bot">vs. Bot</string>
+    <string name="ttt_button_play_game">Play Game</string>
+    <string name="ttt_button_restart_current_game">Restart Game</string>
+    <string name="ttt_status_setup_game">Setup your game</string>
+
+    <!-- Tic Tac Toe Game Series -->
+    <string name="ttt_status_match_winner">Player %1$s Wins the Match!</string>
+    <string name="ttt_status_match_draw">The Match is a Draw!</string>
+    <string name="ttt_status_bot_thinking">Bot is thinking...</string>
+    <string name="ttt_config_decrease_rounds">Decrease rounds to win</string>
+    <string name="ttt_config_increase_rounds">Increase rounds to win</string>
+    <string name="pause_overlay_restart_ttt">Restart Current Game</string>
+
+
+    <!-- Tic Tac Toe Game Series -->
+    <string name="ttt_status_player_turn_series">Player %1$s\'s Turn</string> <!-- Removed (Game %2$d) here, will be in round counter -->
+    <string name="ttt_status_winner_series">Player %1$s Wins Game!</string> <!-- Removed (Game %2$d) -->
+    <string name="ttt_status_draw_series">Game is a Draw!</string> <!-- Removed (Game %2$d) -->
+    <string name="ttt_round_counter_format">Round: %1$d / %2$d</string>
+    <string name="ttt_config_first_player_x_label">X</string>
+    <string name="ttt_config_first_player_o_label">O</string>
+    <string name="ttt_config_first_player_random_label">Random</string>
 
 
 </resources>

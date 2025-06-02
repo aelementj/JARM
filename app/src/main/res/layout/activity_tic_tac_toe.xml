@@ -24,7 +24,8 @@
             app:title=""
             app:menu="@menu/menu_tic_tac_toe"
             app:itemIconTint="@color/text_primary_dark"
-            app:titleTextColor="@color/text_primary_dark" />
+            app:titleTextColor="@color/text_primary_dark">
+        </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Scoreboard -->
@@ -88,25 +89,225 @@
             android:layout_marginStart="@dimen/scoreboard_item_spacing"/>
     </LinearLayout>
 
+    <!-- Round Counter -->
+    <TextView
+        android:id="@+id/text_view_round_counter_ttt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        tools:text="Round: 1 / 3"
+        android:textSize="18sp"
+        android:textColor="@color/text_secondary_dark"
+        app:layout_constraintTop_toBottomOf="@id/scoreboard_container"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+
+    <!-- Status Indicator -->
     <TextView
         android:id="@+id/textView_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/game_status_margin_top"
+        android:layout_marginTop="8dp"
         tools:text="Player X's Turn"
-        android:text="@string/tic_tac_toe_status_player_turn"
+        android:text="@string/ttt_status_setup_game"
         android:textSize="@dimen/text_size_game_status"
         android:textColor="@color/text_primary_dark"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/scoreboard_container"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/text_view_round_counter_ttt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- REMOVED: button_restart_current_ttt_game -->
+
+    <!-- Game Area Container for Config Panel and Grid -->
+    <FrameLayout
+        android:id="@+id/game_area_container_ttt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/textView_status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.2"
+        android:animateLayoutChanges="true">
+
+        <!-- Configuration Panel -->
+        <ScrollView
+            android:id="@+id/config_panel_ttt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_main_difficulty_panel"
+            android:padding="16dp"
+            android:visibility="visible"
+            tools:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minWidth="320dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ttt_config_title"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/text_primary_dark"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- First Player Selection -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ttt_config_first_player"
+                android:textColor="@color/text_primary_dark"
+                android:layout_marginBottom="4dp"/>
+            <LinearLayout
+                android:id="@+id/first_player_selector_container_ttt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                android:layout_marginBottom="12dp">
+                <TextView
+                    android:id="@+id/text_select_player_x"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ttt_config_first_player_x_label"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="@color/purple_500"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/text_select_player_o"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ttt_config_first_player_o_label"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="@color/text_secondary_dark"/>
+                <TextView
+                    android:id="@+id/text_select_player_random"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ttt_config_first_player_random_label"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="@color/text_secondary_dark"/>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/text_config_rounds_label_ttt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ttt_config_rounds_to_win"
+                android:textColor="@color/text_primary_dark"
+                android:layout_marginBottom="4dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+                <ImageButton
+                    android:id="@+id/button_config_decrease_rounds_ttt"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_arrow_down"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/ttt_config_decrease_rounds"/>
+                <EditText
+                    android:id="@+id/edittext_config_rounds_ttt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="number"
+                    android:text="1"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textColor="@color/text_primary_dark"
+                    android:background="@drawable/bg_choice_button"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:focusable="false"
+                    android:clickable="false"/>
+                <ImageButton
+                    android:id="@+id/button_config_increase_rounds_ttt"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_arrow_up"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/ttt_config_increase_rounds"/>
+            </LinearLayout>
+
+            <!-- Game Mode Selection -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ttt_config_game_mode"
+                android:textColor="@color/text_primary_dark"
+                android:layout_marginBottom="4dp"/>
+            <LinearLayout
+                android:id="@+id/game_mode_selector_container_ttt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_marginBottom="24dp">
+                <TextView
+                    android:id="@+id/text_select_mode_2_player"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ttt_config_mode_2_player"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="@color/purple_500"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/text_select_mode_vs_bot"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ttt_config_mode_vs_bot"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="@color/text_secondary_dark"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_start_game_ttt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/ttt_button_play_game"
+                app:cornerRadius="@dimen/action_button_corner_radius"
+                android:textSize="@dimen/text_size_button"/>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Tic Tac Toe Grid -->
     <GridLayout
         android:id="@+id/gridLayout_tic_tac_toe_board"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/grid_margin_top"
+        android:layout_gravity="center"
         android:columnCount="3"
         android:rowCount="3"
         android:alignmentMode="alignMargins"
@@ -114,98 +315,23 @@
         android:rowOrderPreserved="false"
         android:background="@drawable/bg_game_board"
         android:padding="@dimen/tic_tac_toe_cell_margin"
-        app:layout_constraintTop_toBottomOf="@id/textView_status"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/action_buttons_container"
-        app:layout_constraintVertical_bias="0.4">
+        android:visibility="gone"
+        tools:visibility="visible">
 
-
-    <ImageButton
-        android:id="@+id/button_00"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"
-        tools:srcCompat="@drawable/ic_tic_tac_toe_x"/>
-    <ImageButton
-        android:id="@+id/button_01"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"
-        tools:srcCompat="@drawable/ic_tic_tac_toe_o"/>
-    <ImageButton
-        android:id="@+id/button_02"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-    <!-- Row 1 -->
-    <ImageButton
-        android:id="@+id/button_10"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-    <ImageButton
-        android:id="@+id/button_11"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-    <ImageButton
-        android:id="@+id/button_12"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-    <!-- Row 2 -->
-    <ImageButton
-        android:id="@+id/button_20"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-    <ImageButton
-        android:id="@+id/button_21"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-    <ImageButton
-        android:id="@+id/button_22"
-        style="@style/TicTacToeCell"
-        android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+        <ImageButton android:id="@+id/button_00" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix" tools:srcCompat="@drawable/ic_tic_tac_toe_x"/>
+        <ImageButton android:id="@+id/button_01" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix" tools:srcCompat="@drawable/ic_tic_tac_toe_o"/>
+        <ImageButton android:id="@+id/button_02" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+        <ImageButton android:id="@+id/button_10" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+        <ImageButton android:id="@+id/button_11" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+        <ImageButton android:id="@+id/button_12" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+        <ImageButton android:id="@+id/button_20" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+        <ImageButton android:id="@+id/button_21" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+        <ImageButton android:id="@+id/button_22" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
     </GridLayout>
+</FrameLayout>
 
-        <!-- Action Buttons -->
-    <LinearLayout
-    android:id="@+id/action_buttons_container"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_marginBottom="@dimen/action_buttons_container_margin_bottom"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
+    <!-- The include for pause_overlay is still here but its functionality will be side-stepped -->
+    <!-- if the toolbar pause icon directly resets to config. -->
+<include layout="@layout/layout_pause_overlay"/>
 
-    <Button
-        android:id="@+id/button_reset_game"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_clear_board"
-        android:textSize="@dimen/text_size_button"
-        android:textColor="@color/button_text_white"
-        android:backgroundTint="@color/button_green_reset"
-        android:paddingHorizontal="@dimen/button_padding_horizontal"
-        android:paddingVertical="@dimen/button_padding_vertical"
-        app:cornerRadius="@dimen/action_button_corner_radius"
-        android:layout_marginEnd="@dimen/action_button_spacing"
-        android:drawableTop="@drawable/ic_clearboard"
-        android:drawablePadding="@dimen/button_drawable_padding"
-        android:gravity="center_horizontal|bottom"
-        />
-
-    <Button
-        android:id="@+id/button_reset_scoreboard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_clear_scores"
-        android:textSize="@dimen/text_size_button"
-        android:textColor="@color/button_text_white"
-        android:backgroundTint="@color/button_red_reset_scoreboard"
-        android:paddingHorizontal="@dimen/button_padding_horizontal"
-        android:paddingVertical="@dimen/button_padding_vertical"
-        app:cornerRadius="@dimen/action_button_corner_radius"
-        android:layout_marginStart="@dimen/action_button_spacing"
-        android:drawableTop="@drawable/ic_clearscores"
-        android:drawablePadding="@dimen/button_drawable_padding"
-        android:gravity="center_horizontal|bottom" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
