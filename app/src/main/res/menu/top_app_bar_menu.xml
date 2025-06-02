@@ -6,5 +6,5 @@
         android:icon="@drawable/ic_help"
         android:title="@string/menu_action_help_title"
     app:showAsAction="ifRoom"
-    android:contentDescription="@string/menu_action_help_content_description" /> <!-- Use this for accessibility -->
+    android:contentDescription="@string/menu_action_help_content_description" />
 </menu>
