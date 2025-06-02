@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="app_background">#F5F5F5</color>
     <color name="text_primary_dark">#212121</color>
     <color name="text_secondary_dark">#757575</color>
-    <color name="button_blue_play">#2979FF</color> <!-- Used for submit button in mockup -->
     <color name="button_text_white">#FFFFFF</color>
 
     <color name="score_x_background">#2196F3</color>
@@ -19,17 +14,14 @@
     <color name="score_text_color">#FFFFFF</color>
 
     <color name="button_green_reset">#4CAF50</color>
-    <color name="button_red_reset_scoreboard">#D32F2F</color>
 
     <color name="grid_line_color">#607D8B</color>
-    <color name="grid_cell_background">#FFFFFF</color>
 
     <color name="text_secondary_dark_faint">#BDBDBD</color>
 
     <color name="difficulty_active_panel_bg">#E8DEF8</color> <!-- Light purple, adjust as needed -->
     <color name="difficulty_button_text_selected">#1D192B</color> <!-- Dark text for light purple bg -->
     <color name="difficulty_button_text_unselected">?attr/colorPrimary</color> <!-- Or a specific color -->
-    <color name="difficulty_panel_text_color">#1D192B</color> <!-- Text color for the panel content -->
 
     <color name="panel_border_color">#BDBDBD</color> <!-- Light grey for borders -->
     <color name="grid_item_selected_bg">#E8DEF8</color> <!-- Same as previous active panel -->
