@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="@dimen/history_item_column_gap"/>
+        android:layout_marginEnd="@dimen/history_item_column_gap"/> <!-- MODIFIED: Gap after round label -->
 
         <TextView
             android:id="@+id/text_view_history_problem"
@@ -46,7 +46,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_weight="3"
             android:layout_marginStart="@dimen/history_item_column_gap"
-            android:layout_marginEnd="@dimen/history_item_column_gap"/>
+            android:layout_marginEnd="@dimen/history_item_column_gap"
+        /> <!-- MODIFIED: Gap after problem, before user_answer -->
 
 
         <TextView

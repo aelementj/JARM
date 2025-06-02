@@ -120,6 +120,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- REMOVED: button_restart_current_ttt_game -->
+
+    <!-- Game Area Container for Config Panel and Grid -->
     <FrameLayout
         android:id="@+id/game_area_container_ttt"
         android:layout_width="wrap_content"
@@ -132,6 +135,7 @@
         app:layout_constraintVertical_bias="0.2"
         android:animateLayoutChanges="true">
 
+        <!-- Configuration Panel -->
         <ScrollView
             android:id="@+id/config_panel_ttt"
             android:layout_width="wrap_content"
@@ -157,6 +161,7 @@
                 android:textColor="@color/text_primary_dark"
                 android:layout_marginBottom="16dp"/>
 
+            <!-- First Player Selection -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -250,6 +255,7 @@
                     android:contentDescription="@string/ttt_config_increase_rounds"/>
             </LinearLayout>
 
+            <!-- Game Mode Selection -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -296,6 +302,7 @@
         </LinearLayout>
     </ScrollView>
 
+    <!-- Tic Tac Toe Grid -->
     <GridLayout
         android:id="@+id/gridLayout_tic_tac_toe_board"
         android:layout_width="wrap_content"
@@ -323,6 +330,8 @@
     </GridLayout>
 </FrameLayout>
 
+    <!-- The include for pause_overlay is still here but its functionality will be side-stepped -->
+    <!-- if the toolbar pause icon directly resets to config. -->
     <include layout="@layout/layout_pause_overlay"/>
     <include layout="@layout/layout_help_overlay"/>
 

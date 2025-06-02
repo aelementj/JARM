@@ -39,12 +39,13 @@ public class RoundHistoryAdapter extends RecyclerView.Adapter<RoundHistoryAdapte
         String userAnswerDisplay;
         if (item.wasTimeUp) {
             userAnswerDisplay = context.getString(R.string.history_item_time_up);
-        } else if (item.userAnswer.equals(context.getString(R.string.history_item_no_answer))) {
+        } else if (item.userAnswer.equals(context.getString(R.string.history_item_no_answer))) { // Check if it's the "No Answer" placeholder
             userAnswerDisplay = context.getString(R.string.history_item_no_answer);
         }
         else {
-            userAnswerDisplay = item.userAnswer;
+            userAnswerDisplay = item.userAnswer; // Display the answer directly
         }
+        // Use the MODIFIED string resource that doesn't have "You:"
         holder.userAnswerText.setText(String.format(Locale.getDefault(), context.getString(R.string.history_item_user_answer_format), userAnswerDisplay));
 
 

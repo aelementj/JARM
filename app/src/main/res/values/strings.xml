@@ -2,6 +2,7 @@
     <string name="app_name">JRAM</string>
 
     <string name="title_toolbar_mini_games">Just Really Awesome Minigames</string>
+    <string name="content_desc_toolbar_icon">Settings</string>
 
     <string name="game_title_tic_tac_toe">Tic Tac Toe</string>
     <string name="game_desc_tic_tac_toe">Classic strategy game for two players.</string>
@@ -15,22 +16,35 @@
     <string name="game_desc_arithmetic">Test your math skills with quick calculations.</string>
     <string name="game_desc_arithmetic_stats_context">Long-press for info. Stats tracked: Avg points and answer speed per difficulty.</string> <!-- Added -->
 
+    <string name="button_play">Play</string>
+
     <string name="bottom_nav_games">Games</string>
     <string name="bottom_nav_stats">Stats</string>
     <string name="bottom_nav_options">Options</string>
 
+    <string name="content_desc_tic_tac_toe_image">Tic Tac Toe game board</string>
+    <string name="content_desc_rps_image">Rock, paper, scissors hand gestures</string>
+    <string name="content_desc_arithmetic_image">Arithmetic fraction symbol</string>
+
     <string name="tic_tac_toe_score_x">x: %1$d</string>
     <string name="tic_tac_toe_score_o">o: %1$d</string>
     <string name="tic_tac_toe_score_ties">x/o: %1$d</string>
+    <string name="tic_tac_toe_status_player_turn">Player %1$s\'s Turn</string>
+    <string name="tic_tac_toe_status_winner">Player %1$s Wins!</string>
+    <string name="tic_tac_toe_status_draw">It\'s a Draw!</string>
+    <string name="button_clear_board">Clear Board</string>
+    <string name="button_clear_scores">Clear Scores</string>
     <string name="tic_tac_toe_cell_desc_prefix">Cell</string>
     <string name="content_desc_help_icon">Help</string>
 
     <string name="game_title_arithmetic_toolbar">Arithmetic Challenge</string>
     <string name="button_play_arithmetic">Play</string>
+    <string name="difficulty_label">Select Difficulty:</string>
     <string name="difficulty_easy">Easy</string>
     <string name="difficulty_medium">Medium</string>
     <string name="difficulty_hard">Hard</string>
     <string name="button_how_to_play">How to Play</string>
+    <string name="content_desc_arithmetic_icon_large">Arithmetic Challenge Game Icon</string>
     <string name="content_desc_help_arithmetic">Help for Arithmetic Challenge</string>
 
     <string name="modifiers_easy_placeholder">
@@ -83,7 +97,10 @@
     <string name="content_desc_rps_computer_choice_slot">Computer\'s choice display slot</string>
     <string name="content_desc_rps_computer_image">Image of a robot representing the computer player</string>
     <string name="menu_item_pause">Pause</string>
-    <string name="pause_overlay_restart">Restart Game</string>
+    <string name="menu_item_help_rps">RPS Rules</string> <!-- Used if specific menu item exists -->
+    <string name="pause_overlay_title">Paused</string>
+    <string name="pause_overlay_resume">Resume</string>
+    <string name="pause_overlay_restart">Restart Game</string> <!-- Generic, used by RPS -->
     <string name="pause_overlay_main_menu">Main Menu</string>
 
     <string name="rps_config_game_mode">Game Mode:</string>
@@ -106,6 +123,10 @@
     <string name="placeholder_problem">12 + 8 - 5 = ?</string>
     <string name="placeholder_difficulty_value">Difficulty: Medium</string>
 
+    <string name="placeholder_previous_answer_feedback">Previous answer feedback will appear here.</string>
+    <string name="feedback_format_correct">Previous: %1$s\nYour Answer: %2$s (Correct!)</string>
+    <string name="feedback_format_incorrect">Previous: %1$s (Correct: %2$s)\nYour Answer: %3$s (Incorrect!)</string>
+
     <string name="label_round_counter_format">Round: %1$d / %2$d</string>
     <string name="placeholder_round_counter">Round: 1 / 10</string>
     <string name="history_item_round_label_format">R%1$d:</string>
@@ -124,11 +145,14 @@
     <string name="ttt_config_title">Game Setup</string>
     <string name="ttt_config_first_player">First Player:</string>
     <string name="ttt_config_player_x">Player X</string>
+    <string name="ttt_config_player_o">Player O</string>
+    <string name="ttt_config_player_random">Random</string>
     <string name="ttt_config_rounds_to_win">Games to Win Match:</string>
     <string name="ttt_config_game_mode">Game Mode:</string>
     <string name="ttt_config_mode_2_player">2 Player</string>
     <string name="ttt_config_mode_vs_bot">vs. Bot</string>
     <string name="ttt_button_play_game">Play Game</string>
+    <string name="ttt_button_restart_current_game">Restart Game</string>
     <string name="ttt_status_setup_game">Setup your game</string>
 
     <string name="ttt_status_match_winner">Player %1$s Wins the Match!</string>
@@ -152,6 +176,8 @@
     <string name="stats_title_arithmetic">Arithmetic Challenge Stats</string>
 
     <string name="stats_winrate_label">Winrate</string>
+    <string name="stats_overall_label">Overall</string>
+    <string name="stats_vs_bot_label">vs. Bot</string>
 
     <string name="stats_ttt_player_x_wins_label">Player X Wins:</string>
     <string name="stats_ttt_player_o_wins_label">Player O Wins:</string>
@@ -172,6 +198,7 @@
     <string name="stats_arithmetic_fastest_answer_label">Fastest Answer:</string>
     <string name="stats_arithmetic_slowest_answer_label">Slowest Answer:</string>
 
+    <!-- Options Screen Strings -->
     <string name="options_section_data_management">Data Management</string>
     <string name="options_button_reset_stats">Reset All Game Stats</string>
     <string name="options_dialog_reset_stats_title">Confirm Reset</string>
@@ -188,6 +215,7 @@
 
     <string name="dialog_button_close">Close</string>
 
+    <!-- Help Content Strings -->
     <string name="help_title_main_activity">App Help</string>
     <string name="help_content_main_activity">Welcome to JRAM! Select a game from the list to play. Long-press a game card for a brief description. Use the bottom navigation to switch between Games, Stats, and Options.</string>
 
@@ -279,9 +307,9 @@
         - Developers: Shows information about the developers of this application.
     </string>
 
-
-    <string name="menu_action_help_title">Help</string>
-    <string name="menu_action_help_content_description">View help information</string>
+    <!-- In strings.xml -->
+    <string name="menu_action_help_title">Help</string> <!-- NEW or RENAME for the title/tooltip -->
+    <string name="menu_action_help_content_description">View help information</string> <!-- NEW for accessibility -->
 
 
 </resources>

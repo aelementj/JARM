@@ -19,6 +19,7 @@ import com.example.jarm.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
+    // ... (existing variables)
     private ActivityMainBinding binding;
     private View helpOverlayContainer;
     private TextView textViewHelpOverlayTitle;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentSelectedItemId = R.id.navigation_games;
 
 
+    // ... (onCreate, onSaveInstanceState, help overlay methods, replaceFragment) ...
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 if (isHelpOverlayVisible()) {
                     hideHelpOverlay();
                 } else {
+                    // Show help based on the current fragment
                     if (currentSelectedItemId == R.id.navigation_games) {
                         showHelpOverlay(getString(R.string.help_title_main_activity), getString(R.string.help_content_main_activity));
                     } else if (currentSelectedItemId == R.id.navigation_stats) {
@@ -176,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
                     } else if (currentSelectedItemId == R.id.navigation_options) {
                         showHelpOverlay(getString(R.string.help_title_options_fragment), getString(R.string.help_content_options_fragment));
                     } else {
+                        // Default or fallback help
                         showHelpOverlay(getString(R.string.help_title_main_activity), getString(R.string.help_content_main_activity));
                     }
                 }
@@ -198,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    // --- Public method to get current tab context ---
     public int getCurrentSelectedTabId() {
         return currentSelectedItemId;
     }

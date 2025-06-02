@@ -41,6 +41,7 @@
             android:gravity="center"
             android:orientation="horizontal">
 
+            <!-- Resume Button -->
             <LinearLayout
                 android:id="@+id/button_pause_resume"
                 android:layout_width="0dp"
@@ -71,6 +72,7 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
+            <!-- Restart Button -->
             <LinearLayout
                 android:id="@+id/button_pause_restart"
                 android:layout_width="0dp"
@@ -101,6 +103,7 @@
                 android:textSize="14sp" />
             </LinearLayout>
 
+            <!-- Main Menu Button -->
             <LinearLayout
                 android:id="@+id/button_pause_main_menu"
                 android:layout_width="0dp"

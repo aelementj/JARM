@@ -41,6 +41,7 @@ public class GamesFragment extends Fragment {
     }
 
     private void setupGameCardListeners() {
+        // Tic Tac Toe Card
         binding.cardCompactTicTacToe.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), TicTacToeActivity.class);
             startActivity(intent);
@@ -56,6 +57,7 @@ public class GamesFragment extends Fragment {
             return true;
         });
 
+        // Rock Paper Scissors Card
         binding.cardCompactRps.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), RockPaperScissorsActivity.class);
             startActivity(intent);
@@ -71,6 +73,7 @@ public class GamesFragment extends Fragment {
             return true;
         });
 
+        // Arithmetic Challenge Card
         binding.cardCompactArithmetic.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ArithmeticChallengeActivity.class);
             startActivity(intent);
