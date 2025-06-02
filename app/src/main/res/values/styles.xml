@@ -18,32 +18,4 @@
         <item name="android:padding">@dimen/tic_tac_toe_cell_internal_padding</item>
     </style>
 
-
-    <style name="ShapeAppearance.App.DifficultyButton.Checked" parent="ShapeAppearance.Material3.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopLeft">@dimen/action_button_corner_radius</item>
-        <item name="cornerSizeTopRight">@dimen/action_button_corner_radius</item>
-        <item name="cornerSizeBottomLeft">0dp</item>
-        <item name="cornerSizeBottomRight">0dp</item>
-    </style>
-
-    <style name="ShapeAppearance.App.DifficultyButton.Unchecked" parent="ShapeAppearance.Material3.SmallComponent">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">@dimen/action_button_corner_radius</item>
-    </style>
-
-    <style name="Widget.App.Button.DifficultyToggle" parent="Widget.Material3.Button.OutlinedButton">
-        <item name="android:textColor">@color/difficulty_button_text_color_selector</item>
-        <item name="backgroundTint">@color/difficulty_button_background_tint_selector</item>
-        <item name="iconTint">@color/difficulty_button_text_color_selector</item>
-        <item name="strokeColor">@color/difficulty_button_stroke_color_selector</item>
-    </style>
-
-    <style name="NumberPickerTheme" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@android:color/white</item>
-        <item name="android:textColorPrimary">@android:color/white</item>
-        <item name="android:textColorSecondary">@android:color/darker_gray</item>
-    </style>
-
-
 </resources>
