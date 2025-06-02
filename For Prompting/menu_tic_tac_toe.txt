@@ -4,10 +4,10 @@
     <item
         android:id="@+id/action_help_ttt"
         android:icon="@drawable/ic_help"
-        android:title="@string/content_desc_help_icon"
+        android:title="@string/help_title_tic_tac_toe"
         app:showAsAction="ifRoom"
         android:orderInCategory="10"
-        android:contentDescription="@string/content_desc_help_icon" />
+        android:contentDescription="@string/help_title_tic_tac_toe" />
     <item
         android:id="@+id/action_pause_ttt"
         android:icon="@drawable/ic_pause"

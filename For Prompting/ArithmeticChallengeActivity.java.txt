@@ -1,12 +1,14 @@
 package com.example.jarm;
 
-import android.content.Intent; // Make sure Intent is imported
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,7 +23,7 @@ import java.util.List;
 public class ArithmeticChallengeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ActivityArithmeticChallengeBinding binding;
-    private String selectedDifficulty = "Easy"; // Default difficulty
+    private String selectedDifficulty = "Easy";
 
     private TextView selectedGridItemView;
     private List<TextView> gridItemViews;
@@ -29,9 +31,15 @@ public class ArithmeticChallengeActivity extends AppCompatActivity implements Vi
     private Drawable defaultGridItemBackground;
     private Drawable selectedGridItemBackgroundConnected;
 
-    // Key for passing difficulty to the next activity
     public static final String EXTRA_DIFFICULTY = "com.example.jarm.DIFFICULTY";
 
+    // Help Overlay Views
+    private View helpOverlayContainerView;
+    private TextView textViewHelpOverlayTitle;
+    private TextView textViewHelpOverlayContent;
+    private Button buttonHelpOverlayClose;
+
+    private static final String TAG = "ArithmeticChallenge";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +54,8 @@ public class ArithmeticChallengeActivity extends AppCompatActivity implements Vi
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
+        initializeHelpOverlay(); // Initialize help overlay
 
         defaultGridItemBackground = ContextCompat.getDrawable(this, R.drawable.bg_grid_difficulty_item_default);
         selectedGridItemBackgroundConnected = ContextCompat.getDrawable(this, R.drawable.bg_grid_difficulty_item_selected);
@@ -64,22 +74,98 @@ public class ArithmeticChallengeActivity extends AppCompatActivity implements Vi
             updateModifierText(binding.gridItemEasy.getId());
         }
 
-        // MODIFIED: Set OnClickListener for the Play button
         binding.buttonPlayArithmetic.setOnClickListener(view -> {
-            // Toast.makeText(ArithmeticChallengeActivity.this, "Play button clicked! Difficulty: " + selectedDifficulty, Toast.LENGTH_SHORT).show(); // Optional: keep for debugging
+            if (isHelpOverlayVisible()) return;
+
             Intent intent = new Intent(ArithmeticChallengeActivity.this, ArithmeticGameActivity.class);
-            intent.putExtra(EXTRA_DIFFICULTY, selectedDifficulty); // Pass the selected difficulty
+            intent.putExtra(EXTRA_DIFFICULTY, selectedDifficulty);
             startActivity(intent);
         });
 
+        // MODIFIED: "How to Play" button now shows gameplay help
         binding.buttonHowToPlayArithmetic.setOnClickListener(view -> {
-            Toast.makeText(ArithmeticChallengeActivity.this, "How to Play button clicked!", Toast.LENGTH_SHORT).show();
-            // Consider showing a DialogFragment or another Activity for "How to Play"
+            if (isHelpOverlayVisible()) { // If already visible, maybe clicking again closes it or does nothing
+                hideHelpOverlay(); // Option: close it if already showing this help
+                return;
+            }
+            // Show gameplay help
+            showHelpOverlay(getString(R.string.help_title_arithmetic_game), getString(R.string.help_content_arithmetic_game));
         });
     }
 
+    // --- Help Overlay Methods ---
+    protected void initializeHelpOverlay() {
+        helpOverlayContainerView = findViewById(R.id.help_overlay_container);
+        if (helpOverlayContainerView != null) {
+            textViewHelpOverlayTitle = helpOverlayContainerView.findViewById(R.id.textView_help_overlay_title);
+            textViewHelpOverlayContent = helpOverlayContainerView.findViewById(R.id.textView_help_overlay_content);
+            buttonHelpOverlayClose = helpOverlayContainerView.findViewById(R.id.button_help_overlay_close);
+
+            if (buttonHelpOverlayClose != null) {
+                buttonHelpOverlayClose.setOnClickListener(v -> hideHelpOverlay());
+            }
+            helpOverlayContainerView.setOnClickListener(v -> {
+                if (v.getId() == R.id.help_overlay_container) {
+                    hideHelpOverlay();
+                }
+            });
+        } else {
+            Log.e(TAG + "Help", "Help overlay container not found. Ensure it's included in activity layout.");
+        }
+    }
+
+    protected void showHelpOverlay(String title, String content) {
+        if (helpOverlayContainerView != null && textViewHelpOverlayTitle != null && textViewHelpOverlayContent != null) {
+            textViewHelpOverlayTitle.setText(title);
+            textViewHelpOverlayContent.setText(content);
+            helpOverlayContainerView.setVisibility(View.VISIBLE);
+            setUiInteractionEnabled(false); // Disable underlying UI
+        } else {
+            Log.e(TAG + "Help", "Help overlay views not properly initialized for showing.");
+            Toast.makeText(this, "Error showing help.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void hideHelpOverlay() {
+        if (helpOverlayContainerView != null) {
+            helpOverlayContainerView.setVisibility(View.GONE);
+            setUiInteractionEnabled(true); // Re-enable underlying UI
+        }
+    }
+
+    protected boolean isHelpOverlayVisible() {
+        return helpOverlayContainerView != null && helpOverlayContainerView.getVisibility() == View.VISIBLE;
+    }
+    // --- End of Help Overlay Methods ---
+
+    private void setUiInteractionEnabled(boolean enabled) {
+        binding.buttonPlayArithmetic.setEnabled(enabled);
+        binding.buttonHowToPlayArithmetic.setEnabled(enabled);
+        binding.gridItemEasy.setEnabled(enabled);
+        binding.gridItemMedium.setEnabled(enabled);
+        binding.gridItemHard.setEnabled(enabled);
+
+        Toolbar toolbar = findViewById(R.id.toolbar_arithmetic_challenge);
+        if (toolbar != null) {
+            Menu menu = toolbar.getMenu();
+            if (menu != null) {
+                for (int i = 0; i < menu.size(); i++) {
+                    // Keep help icon itself enabled if it's the one being used to close overlay
+                    if (menu.getItem(i).getItemId() != R.id.action_help_arithmetic) {
+                        menu.getItem(i).setEnabled(enabled);
+                    } else {
+                        menu.getItem(i).setEnabled(true); // Always allow help icon to be clicked
+                    }
+                }
+            }
+        }
+    }
+
+
     @Override
-    public void onClick(View v) {
+    public void onClick(View v) { // For difficulty grid items
+        if (isHelpOverlayVisible()) return;
+
         if (v instanceof TextView && gridItemViews.contains(v)) {
             updateSelectedGridItemUI((TextView) v);
             updateModifierText(v.getId());
@@ -122,13 +208,34 @@ public class ArithmeticChallengeActivity extends AppCompatActivity implements Vi
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+
+        if (isHelpOverlayVisible()) {
+            // If help is visible, only allow clicking the same help icon (to close it) or home button
+            if (itemId == R.id.action_help_arithmetic || itemId == android.R.id.home) {
+                hideHelpOverlay();
+                return true;
+            }
+            return false; // Consume other menu item clicks
+        }
+
+        // If help is not visible:
         if (itemId == android.R.id.home) {
             finish();
             return true;
         } else if (itemId == R.id.action_help_arithmetic) {
-            Toast.makeText(this, "Help for Arithmetic Challenge clicked!", Toast.LENGTH_SHORT).show();
+            // Toolbar help icon shows help for the setup/difficulty screen
+            showHelpOverlay(getString(R.string.help_title_arithmetic_challenge), getString(R.string.help_content_arithmetic_challenge_setup));
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isHelpOverlayVisible()) {
+            hideHelpOverlay();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
