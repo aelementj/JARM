@@ -324,5 +324,6 @@
     </LinearLayout>
 
     <include layout="@layout/layout_pause_overlay"/>
+    <include layout="@layout/layout_help_overlay"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

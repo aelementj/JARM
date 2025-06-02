@@ -1,13 +1,17 @@
 package com.example.jarm;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,8 +41,8 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     // Game state variables
     private final int[][] board = new int[3][3];
     private int currentPlayer;
-    private boolean gameActive; // Is a single game active?
-    private boolean seriesInProgress; // Is a series (match) in progress?
+    private boolean gameActive;
+    private boolean seriesInProgress;
     private final ImageButton[][] cellButtons = new ImageButton[3][3];
 
     // Series and Configuration state variables
@@ -51,10 +55,21 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     private int tiesSeriesScore = 0;
     private int currentGameInSeries = 0;
 
-    // Pause state
+    // Game Pause State (for dedicated pause menu)
     private boolean isGamePaused = false;
     private View pauseOverlayContainer;
     private View buttonPauseResume, buttonPauseRestart, buttonPauseMainMenu;
+
+    // Help Overlay Views
+    private View helpOverlayContainerView;
+    private TextView textViewHelpOverlayTitle;
+    private TextView textViewHelpOverlayContent;
+    private Button buttonHelpOverlayClose;
+
+
+    private StatsDbHelper dbHelper;
+    private static final String TAG = "TicTacToeActivity";
+    private Menu activityMenu;
 
 
     @Override
@@ -71,14 +86,128 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
+        dbHelper = new StatsDbHelper(this);
+
         initializeBoardButtons();
         setupConfigPanelListeners();
-        initializePauseOverlay();
+        initializeDedicatedPauseOverlay();
+        initializeHelpOverlay();
         updateScoreTextViews();
-        setInitialUiState(); // Start on the config screen
+        setInitialUiState();
         updateFirstPlayerSelectorUI();
         updateGameModeSelectorUI();
     }
+
+    // --- Help Overlay Methods ---
+    protected void initializeHelpOverlay() {
+        helpOverlayContainerView = findViewById(R.id.help_overlay_container);
+        if (helpOverlayContainerView != null) {
+            textViewHelpOverlayTitle = helpOverlayContainerView.findViewById(R.id.textView_help_overlay_title);
+            textViewHelpOverlayContent = helpOverlayContainerView.findViewById(R.id.textView_help_overlay_content);
+            buttonHelpOverlayClose = helpOverlayContainerView.findViewById(R.id.button_help_overlay_close);
+
+            if (buttonHelpOverlayClose != null) {
+                buttonHelpOverlayClose.setOnClickListener(v -> hideHelpOverlay());
+            }
+            helpOverlayContainerView.setOnClickListener(v -> {
+                if (v.getId() == R.id.help_overlay_container) {
+                    hideHelpOverlay();
+                }
+            });
+        } else {
+            Log.e(TAG + "Help", "Help overlay container not found. Ensure it's included in activity layout.");
+        }
+    }
+
+    protected void showHelpOverlay(String title, String content) {
+        if (helpOverlayContainerView != null && textViewHelpOverlayTitle != null && textViewHelpOverlayContent != null) {
+            if (seriesInProgress && !isGamePaused) {
+                mainHandler.removeCallbacksAndMessages(null);
+            }
+
+            textViewHelpOverlayTitle.setText(title);
+            textViewHelpOverlayContent.setText(content);
+            helpOverlayContainerView.setVisibility(View.VISIBLE);
+
+            setGameInteractionEnabled(false);
+            if (activityMenu != null) {
+                for (int i = 0; i < activityMenu.size(); i++) {
+                    if(activityMenu.getItem(i).getItemId() != R.id.action_help_ttt) {
+                        activityMenu.getItem(i).setEnabled(false);
+                    }
+                }
+            }
+            updatePauseButtonVisibility();
+        } else {
+            Log.e(TAG + "Help", "Help overlay views not properly initialized for showing.");
+            Toast.makeText(this, "Error showing help.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    protected void hideHelpOverlay() {
+        if (helpOverlayContainerView != null) {
+            helpOverlayContainerView.setVisibility(View.GONE);
+            setGameInteractionEnabled(true);
+            if (activityMenu != null) {
+                for (int i = 0; i < activityMenu.size(); i++) {
+                    activityMenu.getItem(i).setEnabled(true);
+                }
+            }
+            updatePauseButtonVisibility();
+
+            if (seriesInProgress && !isGamePaused && selectedVsBotMode && currentPlayer == BOT_PLAYER && gameActive) {
+                binding.textViewStatus.setText(getString(R.string.ttt_status_bot_thinking));
+                mainHandler.postDelayed(this::botMove, 800);
+            }
+        }
+    }
+
+    protected boolean isHelpOverlayVisible() {
+        return helpOverlayContainerView != null && helpOverlayContainerView.getVisibility() == View.VISIBLE;
+    }
+    // --- End of Help Overlay Methods ---
+
+    private void setGameInteractionEnabled(boolean enabled) {
+        if (binding.gridLayoutTicTacToeBoard != null) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+                    if (cellButtons[i][j] != null) {
+                        cellButtons[i][j].setEnabled(enabled && board[i][j] == EMPTY_CELL);
+                    }
+                }
+            }
+        }
+        boolean enableConfigInteractions = enabled && !isHelpOverlayVisible() && !isGamePaused;
+        binding.buttonStartGameTtt.setEnabled(enableConfigInteractions);
+        binding.buttonConfigDecreaseRoundsTtt.setEnabled(enableConfigInteractions);
+        binding.buttonConfigIncreaseRoundsTtt.setEnabled(enableConfigInteractions);
+        binding.textSelectPlayerX.setEnabled(enableConfigInteractions);
+        binding.textSelectPlayerO.setEnabled(enableConfigInteractions);
+        binding.textSelectPlayerRandom.setEnabled(enableConfigInteractions);
+        binding.textSelectMode2Player.setEnabled(enableConfigInteractions);
+        binding.textSelectModeVsBot.setEnabled(enableConfigInteractions);
+        binding.edittextConfigRoundsTtt.setAlpha(enableConfigInteractions ? 1.0f : 0.5f);
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_tic_tac_toe, menu);
+        this.activityMenu = menu;
+        updatePauseButtonVisibility();
+        return true;
+    }
+
+    private void updatePauseButtonVisibility() {
+        if (activityMenu != null) {
+            MenuItem pauseItem = activityMenu.findItem(R.id.action_pause_ttt);
+            if (pauseItem != null) {
+                pauseItem.setVisible(seriesInProgress && !isGamePaused && !isHelpOverlayVisible());
+            }
+        }
+    }
+
 
     private void setInitialUiState() {
         binding.configPanelTtt.setVisibility(View.VISIBLE);
@@ -86,13 +215,18 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         binding.textViewStatus.setText(getString(R.string.ttt_status_setup_game));
         binding.textViewRoundCounterTtt.setVisibility(View.GONE);
         gameActive = false;
-        seriesInProgress = false; // No series is active when on config screen
+        seriesInProgress = false;
         isGamePaused = false;
         if (pauseOverlayContainer != null) {
             pauseOverlayContainer.setVisibility(View.GONE);
         }
+        if (helpOverlayContainerView != null) {
+            hideHelpOverlay();
+        } else {
+            setGameInteractionEnabled(true);
+        }
+        updatePauseButtonVisibility();
 
-        // Reset scores only when going back to config screen, ensures a fresh setup
         playerXSeriesScore = 0;
         playerOSeriesScore = 0;
         tiesSeriesScore = 0;
@@ -116,37 +250,49 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     private void setupConfigPanelListeners() {
         binding.buttonStartGameTtt.setOnClickListener(v -> {
+            if (isHelpOverlayVisible() || isGamePaused) return;
             readConfiguration();
             binding.configPanelTtt.setVisibility(View.GONE);
             binding.gridLayoutTicTacToeBoard.setVisibility(View.VISIBLE);
             binding.textViewRoundCounterTtt.setVisibility(View.VISIBLE);
-            seriesInProgress = true; // Series starts now
+            seriesInProgress = true;
+            updatePauseButtonVisibility();
             startNewSeries();
         });
 
-        binding.buttonConfigDecreaseRoundsTtt.setOnClickListener(v -> updateRoundsToWin(-1));
-        binding.buttonConfigIncreaseRoundsTtt.setOnClickListener(v -> updateRoundsToWin(1));
+        binding.buttonConfigDecreaseRoundsTtt.setOnClickListener(v -> { if (!isHelpOverlayVisible() && !isGamePaused) updateRoundsToWin(-1); });
+        binding.buttonConfigIncreaseRoundsTtt.setOnClickListener(v -> { if (!isHelpOverlayVisible() && !isGamePaused) updateRoundsToWin(1); });
 
         binding.textSelectPlayerX.setOnClickListener(v -> {
-            selectedFirstPlayerConfig = PLAYER_X;
-            updateFirstPlayerSelectorUI();
+            if (!isHelpOverlayVisible() && !isGamePaused) {
+                selectedFirstPlayerConfig = PLAYER_X;
+                updateFirstPlayerSelectorUI();
+            }
         });
         binding.textSelectPlayerO.setOnClickListener(v -> {
-            selectedFirstPlayerConfig = PLAYER_O;
-            updateFirstPlayerSelectorUI();
+            if (!isHelpOverlayVisible() && !isGamePaused) {
+                selectedFirstPlayerConfig = PLAYER_O;
+                updateFirstPlayerSelectorUI();
+            }
         });
         binding.textSelectPlayerRandom.setOnClickListener(v -> {
-            selectedFirstPlayerConfig = -1;
-            updateFirstPlayerSelectorUI();
+            if (!isHelpOverlayVisible() && !isGamePaused) {
+                selectedFirstPlayerConfig = -1;
+                updateFirstPlayerSelectorUI();
+            }
         });
 
         binding.textSelectMode2Player.setOnClickListener(v -> {
-            selectedVsBotMode = false;
-            updateGameModeSelectorUI();
+            if (!isHelpOverlayVisible() && !isGamePaused) {
+                selectedVsBotMode = false;
+                updateGameModeSelectorUI();
+            }
         });
         binding.textSelectModeVsBot.setOnClickListener(v -> {
-            selectedVsBotMode = true;
-            updateGameModeSelectorUI();
+            if (!isHelpOverlayVisible() && !isGamePaused) {
+                selectedVsBotMode = true;
+                updateGameModeSelectorUI();
+            }
         });
     }
 
@@ -216,11 +362,12 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void startNewGame() {
-        if (!seriesInProgress) return; // Don't start a new game if no series is active (e.g., on config screen)
+        if (!seriesInProgress) return;
 
         currentGameInSeries++;
         clearBoardUIAndLogic();
-        gameActive = true; // A single game is now active
+        setGameInteractionEnabled(true);
+        gameActive = true;
 
         binding.textViewRoundCounterTtt.setText(getString(R.string.ttt_round_counter_format, currentGameInSeries, gamesToWinSeries));
 
@@ -237,7 +384,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         }
-
         updateStatusTextForNewGame();
 
         if (selectedVsBotMode && currentPlayer == BOT_PLAYER) {
@@ -251,15 +397,16 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 board[i][j] = EMPTY_CELL;
-                cellButtons[i][j].setImageDrawable(null);
-                cellButtons[i][j].setEnabled(true);
+                if(cellButtons[i][j] != null) cellButtons[i][j].setImageDrawable(null);
             }
         }
     }
 
     @Override
     public void onClick(View v) {
-        if (!gameActive || isGamePaused || !(v instanceof ImageButton)) {
+        if (isHelpOverlayVisible() || isGamePaused) return;
+
+        if (!gameActive || !(v instanceof ImageButton)) {
             return;
         }
         if (selectedVsBotMode && currentPlayer == BOT_PLAYER) return;
@@ -289,13 +436,13 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         cellButtons[row][col].setEnabled(false);
 
         if (checkForWin(row, col)) {
-            gameActive = false; // Single game ends
+            gameActive = false;
             handleGameWin(player);
         } else if (isBoardFull()) {
-            gameActive = false; // Single game ends
+            gameActive = false;
             handleGameDraw();
         } else {
-            if (gameActive) { // Should always be true here unless something went wrong
+            if (gameActive) {
                 switchPlayer();
                 updateStatusTextForNewGame();
             }
@@ -303,7 +450,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void botMove() {
-        if (!gameActive || currentPlayer != BOT_PLAYER || isGamePaused) return;
+        if (!gameActive || currentPlayer != BOT_PLAYER || isGamePaused || isHelpOverlayVisible()) return;
 
         for (int r = 0; r < 3; r++) {
             for (int c = 0; c < 3; c++) {
@@ -332,7 +479,6 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
                 }
             }
         }
-
         List<int[]> emptyCells = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
@@ -379,12 +525,13 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void updateStatusTextForNewGame() {
-        if (!gameActive || !seriesInProgress) return; // Only update if a game and series are active
+        if (!gameActive || !seriesInProgress) return;
         String playerName = (currentPlayer == PLAYER_X) ? "X" : "O";
         binding.textViewStatus.setText(getString(R.string.ttt_status_player_turn_series, playerName));
     }
 
     private void handleGameWin(int winner) {
+        String winnerString = (winner == PLAYER_X) ? "X" : "O";
         if (winner == PLAYER_X) {
             playerXSeriesScore++;
             binding.textViewStatus.setText(getString(R.string.ttt_status_winner_series, "X"));
@@ -393,6 +540,7 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
             binding.textViewStatus.setText(getString(R.string.ttt_status_winner_series, "O"));
         }
         updateScoreTextViews();
+        saveGameResult(winnerString);
         proceedToNextStepOrEndSeries();
     }
 
@@ -400,19 +548,40 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
         tiesSeriesScore++;
         binding.textViewStatus.setText(getString(R.string.ttt_status_draw_series));
         updateScoreTextViews();
+        saveGameResult("DRAW");
         proceedToNextStepOrEndSeries();
     }
 
+    private void saveGameResult(String winnerString) {
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(StatsDbHelper.TicTacToeEntry.COLUMN_NAME_WINNER, winnerString);
+        String mode = selectedVsBotMode ? "VsBot" : "2P";
+        values.put(StatsDbHelper.TicTacToeEntry.COLUMN_NAME_MODE, mode);
+
+        long newRowId = db.insert(StatsDbHelper.TicTacToeEntry.TABLE_NAME, null, values);
+        if (newRowId == -1) {
+            Log.e(TAG, "Error saving TTT game result to DB.");
+            Toast.makeText(this, "Error saving game stats.", Toast.LENGTH_SHORT).show();
+        } else {
+            Log.i(TAG, "TTT Game result saved with row ID: " + newRowId);
+        }
+    }
+
+
     private void proceedToNextStepOrEndSeries() {
-        disableBoardCells(); // Disable after current game ends
+        disableBoardCells();
+        setGameInteractionEnabled(false);
         if (isSeriesOver()) {
             displaySeriesResult();
             binding.textViewRoundCounterTtt.setVisibility(View.GONE);
-            seriesInProgress = false; // Series ends here
-            gameActive = false; // No single game is active either
-            mainHandler.postDelayed(this::setInitialUiState, 3000); // Go to config after showing result
+            seriesInProgress = false;
+            gameActive = false;
+            updatePauseButtonVisibility();
+            mainHandler.postDelayed(this::setInitialUiState, 3000);
         } else {
-            mainHandler.postDelayed(this::startNewGame, 2000); // Start next game in the series
+            mainHandler.postDelayed(this::startNewGame, 2000);
         }
     }
 
@@ -440,12 +609,12 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     private void disableBoardCells() {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                cellButtons[i][j].setEnabled(false);
+                if(cellButtons[i][j] != null) cellButtons[i][j].setEnabled(false);
             }
         }
     }
 
-    private void initializePauseOverlay() {
+    private void initializeDedicatedPauseOverlay() {
         pauseOverlayContainer = findViewById(R.id.pause_overlay_container);
         if (pauseOverlayContainer != null) {
             buttonPauseResume = pauseOverlayContainer.findViewById(R.id.button_pause_resume);
@@ -454,79 +623,101 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
             ((TextView)pauseOverlayContainer.findViewById(R.id.label_pause_restart)).setText(R.string.pause_overlay_restart_ttt);
 
-            if (buttonPauseResume != null) buttonPauseResume.setOnClickListener(v -> resumeGame());
+            if (buttonPauseResume != null) buttonPauseResume.setOnClickListener(v -> resumeGameFromDedicatedPause());
             if (buttonPauseRestart != null) buttonPauseRestart.setOnClickListener(v -> {
-                resumeGame();
-                if (seriesInProgress) { // Check if a series was in progress
+                resumeGameFromDedicatedPause();
+                if (seriesInProgress) {
                     Toast.makeText(this, "Restarting match.", Toast.LENGTH_SHORT).show();
-                    startNewSeries(); // This will reset scores, game count and start game 1
+                    startNewSeries();
                 } else {
-                    // If no series was in progress (e.g., on config screen), just ensure config is shown
                     setInitialUiState();
                 }
             });
             if (buttonPauseMainMenu != null) buttonPauseMainMenu.setOnClickListener(v -> {
-                resumeGame();
+                resumeGameFromDedicatedPause();
                 Toast.makeText(this, "Returning to game setup.", Toast.LENGTH_SHORT).show();
-                setInitialUiState(); // Go back to config screen, resetting the match
+                setInitialUiState();
             });
             pauseOverlayContainer.setVisibility(View.GONE);
         }
     }
 
-    private void togglePauseState() {
-        if (!seriesInProgress || pauseOverlayContainer == null) { // Only allow pause if a series is active
+    private void toggleDedicatedPauseState() {
+        if (!seriesInProgress || pauseOverlayContainer == null || isHelpOverlayVisible()) {
             return;
         }
         if (isGamePaused) {
-            resumeGame();
+            resumeGameFromDedicatedPause();
         } else {
-            pauseGame();
+            pauseGameForDedicatedMenu();
         }
+        // updatePauseButtonVisibility(); // Called by resume/pause methods now
     }
 
-    private void pauseGame() {
+    private void pauseGameForDedicatedMenu() {
         isGamePaused = true;
         if (pauseOverlayContainer != null) {
             pauseOverlayContainer.setVisibility(View.VISIBLE);
         }
         mainHandler.removeCallbacksAndMessages(null);
+        setGameInteractionEnabled(false);
+        updatePauseButtonVisibility(); // Hide pause button from toolbar when overlay is shown
     }
 
-    private void resumeGame() {
+    private void resumeGameFromDedicatedPause() {
         isGamePaused = false;
         if (pauseOverlayContainer != null) {
             pauseOverlayContainer.setVisibility(View.GONE);
         }
+        setGameInteractionEnabled(true); // Re-enable based on current game state (not just true)
+        updatePauseButtonVisibility(); // Show pause button in toolbar again
+
         if (selectedVsBotMode && currentPlayer == BOT_PLAYER && gameActive && seriesInProgress) {
             binding.textViewStatus.setText(getString(R.string.ttt_status_bot_thinking));
             mainHandler.postDelayed(this::botMove, 800);
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_tic_tac_toe, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+
+        if (isHelpOverlayVisible()) {
+            if (itemId == R.id.action_help_ttt || itemId == android.R.id.home) {
+                hideHelpOverlay();
+                return true;
+            }
+            return false;
+        }
+
+        if (isGamePaused) {
+            if (itemId == R.id.action_pause_ttt || itemId == android.R.id.home) {
+                // Allow these actions
+            } else {
+                return false;
+            }
+        }
+
+
         if (itemId == android.R.id.home) {
-            if (seriesInProgress) { // If a series/match is active (grid is visible)
-                Toast.makeText(this, "Returning to game setup.", Toast.LENGTH_SHORT).show();
-                setInitialUiState(); // Go to config, reset match
-            } else { // On config screen
-                finish(); // Go back to MainActivity
+            if (isGamePaused) {
+                resumeGameFromDedicatedPause();
+            } else if (seriesInProgress) {
+                Toast.makeText(this, "Match in progress. Returning to game setup.", Toast.LENGTH_SHORT).show();
+                setInitialUiState();
+            } else {
+                finish();
             }
             return true;
         } else if (itemId == R.id.action_help_ttt) {
-            Toast.makeText(this, "Get 3 in a row to win. Win 'Games to Win Match' to win the series!", Toast.LENGTH_LONG).show();
+            if (isGamePaused) { // If dedicated pause is active, resume it first
+                resumeGameFromDedicatedPause();
+            }
+            showHelpOverlay(getString(R.string.help_title_tic_tac_toe), getString(R.string.help_content_tic_tac_toe));
             return true;
         } else if (itemId == R.id.action_pause_ttt) {
-            togglePauseState();
+            toggleDedicatedPauseState();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -534,14 +725,17 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed() {
-        if (isGamePaused) {
-            resumeGame();
-        } else if (seriesInProgress) { // If a series/match is active (grid is or was visible)
-            Toast.makeText(this, "Returning to game setup.", Toast.LENGTH_SHORT).show();
-            setInitialUiState(); // Go to config, reset match
+        if (isHelpOverlayVisible()) {
+            hideHelpOverlay();
+        } else if (isGamePaused) {
+            resumeGameFromDedicatedPause();
+            // updatePauseButtonVisibility(); // Called by resumeGameFromDedicatedPause
+        } else if (seriesInProgress) {
+            Toast.makeText(this, "Match in progress. Returning to game setup.", Toast.LENGTH_SHORT).show();
+            setInitialUiState();
         }
-        else { // On config screen
-            super.onBackPressed(); // Default: finish activity
+        else {
+            super.onBackPressed();
         }
     }
 
@@ -549,5 +743,8 @@ public class TicTacToeActivity extends AppCompatActivity implements View.OnClick
     protected void onDestroy() {
         super.onDestroy();
         mainHandler.removeCallbacksAndMessages(null);
+        if (dbHelper != null) {
+            dbHelper.close();
+        }
     }
 }

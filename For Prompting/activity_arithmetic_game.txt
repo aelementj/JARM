@@ -22,7 +22,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:title="@string/game_title_arithmetic_toolbar"
-            app:titleTextColor="@color/text_primary_dark" />
+            app:menu="@menu/menu_arithmetic_game"
+        app:titleTextColor="@color/text_primary_dark" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <!-- Score Display -->
@@ -32,13 +33,13 @@
         android:layout_height="wrap_content"
         tools:text="Score: 120"
         android:text="@string/placeholder_score_display"
-    android:textSize="@dimen/text_size_round_counter"
-    android:textColor="@color/text_primary_dark"
-    android:textStyle="bold"
-    android:layout_marginTop="@dimen/spacing_medium"
-    android:layout_marginStart="@dimen/spacing_large"
-    app:layout_constraintTop_toBottomOf="@id/appBarLayoutArithmeticGame"
-    app:layout_constraintStart_toStartOf="parent"/>
+        android:textSize="@dimen/text_size_round_counter"
+        android:textColor="@color/text_primary_dark"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/spacing_medium"
+        android:layout_marginStart="@dimen/spacing_large"
+        app:layout_constraintTop_toBottomOf="@id/appBarLayoutArithmeticGame"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/text_view_round_counter"
@@ -66,7 +67,7 @@
         android:layout_marginTop="@dimen/spacing_medium"
         android:layout_marginStart="@dimen/spacing_large"
         app:layout_constraintTop_toBottomOf="@id/text_view_score"
-    app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"/>
 
 
     <ProgressBar
@@ -85,7 +86,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Rest of the layout (time_value, problem, answer, submit, difficulty, history_panel_container) remains the same -->
     <TextView
         android:id="@+id/text_view_time_value"
         android:layout_width="wrap_content"
@@ -242,5 +242,8 @@
             tools:listitem="@layout/list_item_round_history"
             tools:itemCount="3" />
     </LinearLayout>
+
+    <include layout="@layout/layout_pause_overlay"/> <!-- ADDED: Pause Overlay -->
+    <include layout="@layout/layout_help_overlay"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_background"
@@ -36,138 +37,14 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
-        android:id="@+id/game_list_container"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_fragment_container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/spacing_medium"
-        android:paddingBottom="@dimen/spacing_medium"
-        android:paddingStart="@dimen/spacing_medium"
-        android:paddingEnd="@dimen/spacing_medium"
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_compact_tic_tac_toe"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:layout_marginBottom="@dimen/spacing_small"
-            app:cardCornerRadius="@dimen/card_corner_radius_compact"
-            app:cardElevation="@dimen/card_elevation_compact"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/compact_item_padding">
-
-                <ImageView
-                    android:id="@+id/icon_tic_tac_toe"
-                    android:layout_width="@dimen/compact_game_icon_size"
-                    android:layout_height="@dimen/compact_game_icon_size"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/img_tic_tac_toe"
-                    android:contentDescription="@string/game_title_tic_tac_toe"/>
-
-                <TextView
-                    android:id="@+id/name_tic_tac_toe"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_medium"
-                    android:text="@string/game_title_tic_tac_toe"
-                    android:textSize="@dimen/text_size_card_title"
-                    android:textColor="@color/text_primary_dark"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_compact_rps"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:layout_marginBottom="@dimen/spacing_small"
-            app:cardCornerRadius="@dimen/card_corner_radius_compact"
-            app:cardElevation="@dimen/card_elevation_compact"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/compact_item_padding">
-
-                <ImageView
-                    android:id="@+id/icon_rps"
-                    android:layout_width="@dimen/compact_game_icon_size"
-                    android:layout_height="@dimen/compact_game_icon_size"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/img_rock_paper_scissors"
-                    android:contentDescription="@string/game_title_rps"/>
-
-                <TextView
-                    android:id="@+id/name_rps"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_medium"
-                    android:text="@string/game_title_rps"
-                    android:textSize="@dimen/text_size_card_title"
-                    android:textColor="@color/text_primary_dark"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_compact_arithmetic"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="@dimen/spacing_small"
-            android:layout_marginBottom="@dimen/spacing_small"
-            app:cardCornerRadius="@dimen/card_corner_radius_compact"
-            app:cardElevation="@dimen/card_elevation_compact"
-            android:clickable="true"
-            android:focusable="true">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="@dimen/compact_item_padding">
-
-                <ImageView
-                    android:id="@+id/icon_arithmetic"
-                    android:layout_width="@dimen/compact_game_icon_size"
-                    android:layout_height="@dimen/compact_game_icon_size"
-                    android:scaleType="fitCenter"
-                    app:srcCompat="@drawable/img_arithmetic_challenge"
-                    android:contentDescription="@string/game_title_arithmetic"/>
-
-                <TextView
-                    android:id="@+id/name_arithmetic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_medium"
-                    android:text="@string/game_title_arithmetic"
-                    android:textSize="@dimen/text_size_card_title"
-                    android:textColor="@color/text_primary_dark"
-                    android:textStyle="bold"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-    </LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
@@ -180,5 +57,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
+    <include layout="@layout/layout_help_overlay"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
