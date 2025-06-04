@@ -6,15 +6,15 @@
 
     <string name="game_title_tic_tac_toe">Tic Tac Toe</string>
     <string name="game_desc_tic_tac_toe">Classic strategy game for two players.</string>
-    <string name="game_desc_tic_tac_toe_stats_context">Long-press for info. Stats tracked: Player X/O wins, draws, and Vs. Bot results.</string> <!-- Added -->
+    <string name="game_desc_tic_tac_toe_stats_context">Long-press for info. Stats tracked: Player X/O wins, draws, and Vs. Bot results.</string>
 
     <string name="game_title_rps">Rock Paper Scissors</string>
     <string name="game_desc_rps">Simple hand game of chance and strategy.</string>
-    <string name="game_desc_rps_stats_context">Long-press for info. Stats tracked: Wins, losses, ties, and hand pick frequency.</string> <!-- Added -->
+    <string name="game_desc_rps_stats_context">Long-press for info. Stats tracked: Wins, losses, ties, and hand pick frequency.</string>
 
     <string name="game_title_arithmetic">Arithmetic Challenge</string>
     <string name="game_desc_arithmetic">Test your math skills with quick calculations.</string>
-    <string name="game_desc_arithmetic_stats_context">Long-press for info. Stats tracked: Avg points and answer speed per difficulty.</string> <!-- Added -->
+    <string name="game_desc_arithmetic_stats_context">Long-press for info. Stats tracked: Avg points and answer speed per difficulty.</string>
 
     <string name="button_play">Play</string>
 
@@ -88,19 +88,27 @@
     <string name="rps_choice_scissors">Scissors</string>
     <string name="rps_player_choice_label">Player: %1$s</string>
     <string name="rps_computer_choice_label">Computer: %1$s</string>
+    <string name="rps_computer_choice_countdown">Computer choosing: %1$s…</string>
     <string name="rps_verdict_tie">It\'s a Tie!</string>
     <string name="rps_verdict_player_wins">You Win!</string>
     <string name="rps_verdict_computer_wins">Computer Wins!</string>
+    <string name="rps_round_winner_player">Player Wins Round!</string>
+    <string name="rps_round_winner_computer">Computer Wins Round!</string>
+    <string name="rps_round_winner_tie">Round is a Tie!</string>
+    <string name="rps_match_winner_player">Player Wins the Match!</string>
+    <string name="rps_match_winner_computer">Computer Wins the Match!</string>
+    <string name="rps_match_winner_tie">Match is a Tie!</string>
+
     <string name="content_desc_rps_choice_rock">Choose Rock</string>
     <string name="content_desc_rps_choice_paper">Choose Paper</string>
     <string name="content_desc_rps_choice_scissors">Choose Scissors</string>
     <string name="content_desc_rps_computer_choice_slot">Computer\'s choice display slot</string>
     <string name="content_desc_rps_computer_image">Image of a robot representing the computer player</string>
     <string name="menu_item_pause">Pause</string>
-    <string name="menu_item_help_rps">RPS Rules</string> <!-- Used if specific menu item exists -->
+    <string name="menu_item_help_rps">RPS Rules</string>
     <string name="pause_overlay_title">Paused</string>
     <string name="pause_overlay_resume">Resume</string>
-    <string name="pause_overlay_restart">Restart Game</string> <!-- Generic, used by RPS -->
+    <string name="pause_overlay_restart">Restart Game</string>
     <string name="pause_overlay_main_menu">Main Menu</string>
 
     <string name="rps_config_game_mode">Game Mode:</string>
@@ -113,6 +121,8 @@
     <string name="rps_increase_rounds">Increase rounds</string>
     <string name="rps_button_play_again">Play Again</string>
     <string name="rps_status_first_to_points_needed">Play Again? Get %1$d points to Win!</string>
+    <string name="rps_status_play_again_rounds">Play Again? (Round %1$d/%2$d)</string>
+
 
     <string name="game_title_arithmetic_gameplay">Math Challenge</string>
     <string name="label_time_remaining">Time Remaining</string>
@@ -154,6 +164,7 @@
     <string name="ttt_button_play_game">Play Game</string>
     <string name="ttt_button_restart_current_game">Restart Game</string>
     <string name="ttt_status_setup_game">Setup your game</string>
+    <string name="ttt_button_undo">Undo last move</string>
 
     <string name="ttt_status_match_winner">Player %1$s Wins the Match!</string>
     <string name="ttt_status_match_draw">The Match is a Draw!</string>
@@ -198,7 +209,6 @@
     <string name="stats_arithmetic_fastest_answer_label">Fastest Answer:</string>
     <string name="stats_arithmetic_slowest_answer_label">Slowest Answer:</string>
 
-    <!-- Options Screen Strings -->
     <string name="options_section_data_management">Data Management</string>
     <string name="options_button_reset_stats">Reset All Game Stats</string>
     <string name="options_dialog_reset_stats_title">Confirm Reset</string>
@@ -215,7 +225,6 @@
 
     <string name="dialog_button_close">Close</string>
 
-    <!-- Help Content Strings -->
     <string name="help_title_main_activity">App Help</string>
     <string name="help_content_main_activity">Welcome to JRAM! Select a game from the list to play. Long-press a game card for a brief description. Use the bottom navigation to switch between Games, Stats, and Options.</string>
 
@@ -228,6 +237,7 @@
         - Select game mode: 2 Player (play against another person on the same device) or Vs. Bot (play against the AI).\n\n
         Gameplay:\n
         - Players take turns placing their mark on an empty cell.\n
+        - In 2 Player mode, an "Undo" button below the status allows reverting the last move.\n
         - The first player to achieve a three-in-a-row wins the game.\n
         - If all cells are filled and no one has three in a row, the game is a draw.\n\n
         Match:\n
@@ -236,7 +246,7 @@
         - The round counter indicates the current game number out of the total required to win the match.\n\n
         Pause Menu:\n
         - Resume: Continue the current game.\n
-        - Restart Game: Restarts the current game of the series (scores for the current game are reset, overall match score remains).\n
+        - Restart Game: Restarts the current game of the series (board is cleared, player turn reset for this game; overall match score remains).\n
         - Main Menu: Returns to the game setup screen, resetting the current match.
     </string>
 
@@ -252,7 +262,8 @@
         - Rounds/Points: Set the number of rounds for "Best Of" (must be odd) or the target score for "First To".\n\n
         Gameplay:\n
         - Tap Rock, Paper, or Scissors to make your move.\n
-        - The computer will make its choice, and the round result will be displayed.\n
+        - A short countdown will occur before the computer reveals its choice.\n
+        - The winner of the round will be indicated.\n
         - Scores are updated after each round.\n\n
         Pause Menu:\n
         - Resume: Continue playing.\n
@@ -307,9 +318,7 @@
         - Developers: Shows information about the developers of this application.
     </string>
 
-    <!-- In strings.xml -->
-    <string name="menu_action_help_title">Help</string> <!-- NEW or RENAME for the title/tooltip -->
-    <string name="menu_action_help_content_description">View help information</string> <!-- NEW for accessibility -->
-
+    <string name="menu_action_help_title">Help</string>
+    <string name="menu_action_help_content_description">View help information</string>
 
 </resources>

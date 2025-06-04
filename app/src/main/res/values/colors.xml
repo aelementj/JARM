@@ -1,63 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <!-- New JRAM Game Palette -->
+    <color name="jram_teal_primary">#00A99D</color>
+    <color name="jram_teal_primary_dark">#007A70</color>
+    <color name="jram_teal_primary_light">#66D6CC</color>
+
+    <color name="jram_coral_secondary">#FF6B6B</color>
+    <color name="jram_coral_secondary_dark">#CC5555</color>
+    <color name="jram_coral_secondary_light">#FF9D9D</color>
+
+    <color name="jram_yellow_accent">#FFD166</color>
+    <color name="jram_yellow_accent_light">#FFF8E1</color> <!-- Very light yellow for backgrounds -->
+
+    <color name="jram_text_deep_blue">#073B4C</color> <!-- Primary text on light backgrounds -->
+    <color name="jram_text_cool_gray">#6A7F8F</color> <!-- Secondary text on light backgrounds -->
+    <color name="jram_text_on_dark">#FFFFFF</color>
+
+    <color name="jram_bg_main_app">#F4F7F6</color> <!-- Very light, slightly cool gray -->
+    <color name="jram_bg_cards_white">#FFFFFF</color>
+    <color name="jram_border_subtle">#DDE2E5</color> <!-- Subtle borders -->
+
+
+    <!-- Material Theme Colors (mapping new palette) -->
+    <color name="purple_200">@color/jram_teal_primary_light</color> <!-- Was Lighter Claret, now Lighter Teal for consistency if primary is Teal -->
+    <color name="purple_500">@color/jram_teal_primary</color>     <!-- Primary: Teal -->
+    <color name="purple_700">@color/jram_teal_primary_dark</color> <!-- Darker Teal -->
+    <color name="teal_200">@color/jram_coral_secondary</color>     <!-- Secondary: Coral -->
+    <color name="teal_700">@color/jram_coral_secondary_dark</color> <!-- Darker Coral -->
+
+    <!-- Standard Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="app_background">#F5F5F5</color>
-    <color name="card_background">#FFFFFF</color>
-    <color name="text_primary_dark">#212121</color>
-    <color name="text_secondary_dark">#757575</color>
-    <color name="button_blue_play">#2979FF</color> <!-- Used for submit button in mockup -->
-    <color name="button_text_white">#FFFFFF</color>
-    <color name="icon_tint_unselected">#757575</color>
-    <color name="icon_tint_selected">@color/button_blue_play</color>
-    <color name="button_background_play_dark">#303030</color>
+    <!-- App Specific Colors (updated with new JRAM palette) -->
+    <color name="app_background">@color/jram_bg_main_app</color>
+    <color name="card_background">@color/jram_bg_cards_white</color>
+    <color name="text_primary_dark">@color/jram_text_deep_blue</color>
+    <color name="text_secondary_dark">@color/jram_text_cool_gray</color>
+    <color name="button_blue_play">@color/jram_teal_primary</color> <!-- Main action button -->
+    <color name="button_text_white">@color/jram_text_on_dark</color>
+    <color name="icon_tint_unselected">@color/jram_text_cool_gray</color>
+    <color name="icon_tint_selected">@color/jram_teal_primary</color>
+    <color name="button_background_play_dark">@color/jram_teal_primary_dark</color>
 
-    <color name="score_x_background">#2196F3</color>
-    <color name="score_o_background">#F44336</color>
-    <color name="score_ties_background">#757575</color>
-    <color name="score_text_color">#FFFFFF</color>
+    <color name="score_x_background">@color/jram_teal_primary</color>
+    <color name="score_o_background">@color/jram_coral_secondary</color>
+    <color name="score_ties_background">@color/jram_yellow_accent</color>
+    <color name="score_text_color">@color/jram_text_on_dark</color>
 
-    <color name="button_green_reset">#4CAF50</color>
-    <color name="button_red_reset_scoreboard">#D32F2F</color>
+    <color name="button_green_reset">@color/jram_teal_primary</color> <!-- Positive action -->
+    <color name="button_red_reset_scoreboard">@color/jram_coral_secondary</color> <!-- Destructive/alert action -->
 
-    <color name="grid_line_color">#607D8B</color>
-    <color name="grid_cell_background">#FFFFFF</color>
+    <color name="grid_line_color">@color/jram_border_subtle</color>
+    <color name="grid_cell_background">@color/jram_bg_cards_white</color>
 
-    <color name="grey_light_for_container_bg">#EEEEEE</color>
-    <color name="text_secondary_dark_faint">#BDBDBD</color>
+    <color name="grey_light_for_container_bg">#EEEEEE</color> <!-- Can keep for very neutral elements if needed -->
+    <color name="text_secondary_dark_faint">#A8B4BE</color> <!-- Lighter version of jram_text_cool_gray -->
 
-    <color name="difficulty_selected_bg">#E8DEF8</color>
-    <color name="difficulty_selected_text">#1D192B</color>
-    <color name="difficulty_unselected_text">#49454F</color>
+    <color name="difficulty_selected_bg">@color/jram_yellow_accent_light</color>
+    <color name="difficulty_selected_text">@color/jram_text_deep_blue</color>
+    <color name="difficulty_unselected_text">@color/jram_teal_primary</color>
 
-    <color name="difficulty_active_panel_bg">#E8DEF8</color> <!-- Light purple, adjust as needed -->
-    <color name="difficulty_button_text_selected">#1D192B</color> <!-- Dark text for light purple bg -->
-    <color name="difficulty_button_text_unselected">?attr/colorPrimary</color> <!-- Or a specific color -->
-    <color name="difficulty_panel_text_color">#1D192B</color> <!-- Text color for the panel content -->
+    <color name="difficulty_active_panel_bg">@color/difficulty_selected_bg</color>
+    <color name="difficulty_button_text_selected">@color/difficulty_selected_text</color>
+    <color name="difficulty_button_text_unselected">@color/jram_teal_primary</color>
+    <color name="difficulty_panel_text_color">@color/difficulty_selected_text</color>
 
-    <color name="panel_border_color">#BDBDBD</color> <!-- Light grey for borders -->
-    <color name="grid_item_selected_bg">#E8DEF8</color> <!-- Same as previous active panel -->
-    <color name="grid_item_default_bg">@color/white</color> <!-- Or your app_background if transparent -->
-    <color name="grid_item_text_selected_color">#1D192B</color>
-    <color name="grid_item_text_default_color">@color/purple_500</color>
+    <color name="panel_border_color">@color/jram_border_subtle</color>
+    <color name="grid_item_selected_bg">@color/difficulty_selected_bg</color>
+    <color name="grid_item_default_bg">@color/jram_bg_cards_white</color>
+    <color name="grid_item_text_selected_color">@color/difficulty_selected_text</color>
+    <color name="grid_item_text_default_color">@color/jram_teal_primary</color>
 
-    <!-- NEW Colors for Arithmetic Gameplay Screen -->
-    <color name="progress_bar_blue">#2196F3</color> <!-- A standard blue, adjust if needed -->
-    <color name="progress_bar_background">#E0E0E0</color> <!-- Light grey for progress bar background track -->
-    <color name="input_field_border_color">#BDBDBD</color> <!-- Light grey for EditText border -->
-    <color name="submit_button_background">@color/button_blue_play</color> <!-- Using existing blue -->
+    <!-- Colors for Arithmetic Gameplay Screen -->
+    <color name="progress_bar_blue">@color/jram_teal_primary</color>
+    <color name="progress_bar_background">@color/jram_border_subtle</color>
+    <color name="input_field_border_color">@color/jram_text_cool_gray</color>
+    <color name="submit_button_background">@color/jram_teal_primary</color>
 
-    <!-- NEW Colors for Feedback Panel -->
-    <color name="feedback_panel_correct_bg">#4CAF50</color> <!-- Green, same as button_green_reset -->
-    <color name="feedback_panel_incorrect_bg">#D32F2F</color> <!-- Red, same as button_red_reset_scoreboard -->
-    <color name="feedback_panel_default_bg">@color/card_background</color> <!-- Default background if needed -->
-    <color name="feedback_panel_text_color">@color/button_text_white</color> <!-- White text for colored backgrounds -->
-
+    <!-- Colors for Feedback Panel -->
+    <color name="feedback_panel_correct_bg">@color/jram_teal_primary</color>
+    <color name="feedback_panel_incorrect_bg">@color/jram_coral_secondary</color>
+    <color name="feedback_panel_default_bg">@color/card_background</color>
+    <color name="feedback_panel_text_color">@color/jram_text_on_dark</color>
 
 </resources>

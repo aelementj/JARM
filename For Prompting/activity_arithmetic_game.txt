@@ -23,10 +23,9 @@
             android:layout_height="?attr/actionBarSize"
             app:title="@string/game_title_arithmetic_toolbar"
             app:menu="@menu/menu_arithmetic_game"
-        app:titleTextColor="@color/text_primary_dark" />
+            app:titleTextColor="@color/text_primary_dark" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Score Display -->
     <TextView
         android:id="@+id/text_view_score"
         android:layout_width="wrap_content"
@@ -165,17 +164,17 @@
         app:layout_constraintTop_toBottomOf="@id/button_submit_answer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/history_panel_container"
-        app:layout_constraintVertical_bias="0.0" />
+        />
 
     <LinearLayout
         android:id="@+id/history_panel_container"
         android:layout_width="0dp"
-        android:layout_height="@dimen/history_panel_height"
+        android:layout_height="0dp"
         android:orientation="vertical"
         android:background="@drawable/bg_main_difficulty_panel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_view_current_difficulty"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginStart="@dimen/spacing_large"
         android:layout_marginEnd="@dimen/spacing_large"
@@ -243,7 +242,7 @@
             tools:itemCount="3" />
     </LinearLayout>
 
-    <include layout="@layout/layout_pause_overlay"/> <!-- ADDED: Pause Overlay -->
+    <include layout="@layout/layout_pause_overlay"/>
     <include layout="@layout/layout_help_overlay"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
