@@ -28,7 +28,6 @@
         </com.google.android.material.appbar.MaterialToolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Scoreboard -->
     <LinearLayout
         android:id="@+id/scoreboard_container"
         android:layout_width="0dp"
@@ -89,7 +88,6 @@
             android:layout_marginStart="@dimen/scoreboard_item_spacing"/>
     </LinearLayout>
 
-    <!-- Round Counter -->
     <TextView
         android:id="@+id/text_view_round_counter_ttt"
         android:layout_width="wrap_content"
@@ -104,7 +102,6 @@
         android:visibility="gone"
         tools:visibility="visible"/>
 
-    <!-- Status Indicator -->
     <TextView
         android:id="@+id/textView_status"
         android:layout_width="wrap_content"
@@ -120,22 +117,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- REMOVED: button_restart_current_ttt_game -->
+    <ImageButton
+        android:id="@+id/button_undo_ttt"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_undo"
+        android:contentDescription="@string/ttt_button_undo"
+        app:tint="@color/text_primary_dark"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintTop_toBottomOf="@id/textView_status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        tools:visibility="visible"/>
 
-    <!-- Game Area Container for Config Panel and Grid -->
+
     <FrameLayout
         android:id="@+id/game_area_container_ttt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/textView_status"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/button_undo_ttt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.2"
         android:animateLayoutChanges="true">
 
-        <!-- Configuration Panel -->
         <ScrollView
             android:id="@+id/config_panel_ttt"
             android:layout_width="wrap_content"
@@ -149,190 +158,185 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minWidth="320dp"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ttt_config_title"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_primary_dark"
-                android:layout_marginBottom="16dp"/>
-
-            <!-- First Player Selection -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/ttt_config_first_player"
-                android:textColor="@color/text_primary_dark"
-                android:layout_marginBottom="4dp"/>
-            <LinearLayout
-                android:id="@+id/first_player_selector_container_ttt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                android:layout_marginBottom="12dp">
                 <TextView
-                    android:id="@+id/text_select_player_x"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/ttt_config_first_player_x_label"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold"/>
-                <TextView
-                    android:id="@+id/text_select_player_o"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ttt_config_first_player_o_label"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:textColor="@color/text_secondary_dark"/>
-                <TextView
-                    android:id="@+id/text_select_player_random"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ttt_config_first_player_random_label"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:textColor="@color/text_secondary_dark"/>
-            </LinearLayout>
-
-
-            <TextView
-                android:id="@+id/text_config_rounds_label_ttt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/ttt_config_rounds_to_win"
-                android:textColor="@color/text_primary_dark"
-                android:layout_marginBottom="4dp"/>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
-                <ImageButton
-                    android:id="@+id/button_config_decrease_rounds_ttt"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_arrow_down"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/ttt_config_decrease_rounds"/>
-                <EditText
-                    android:id="@+id/edittext_config_rounds_ttt"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:text="1"
-                    android:gravity="center"
-                    android:textSize="18sp"
+                    android:text="@string/ttt_config_title"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
                     android:textColor="@color/text_primary_dark"
-                    android:background="@drawable/bg_choice_button"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:focusable="false"
-                    android:clickable="false"/>
-                <ImageButton
-                    android:id="@+id/button_config_increase_rounds_ttt"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_arrow_up"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/ttt_config_increase_rounds"/>
-            </LinearLayout>
+                    android:layout_marginBottom="16dp"/>
 
-            <!-- Game Mode Selection -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/ttt_config_game_mode"
-                android:textColor="@color/text_primary_dark"
-                android:layout_marginBottom="4dp"/>
-            <LinearLayout
-                android:id="@+id/game_mode_selector_container_ttt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_marginBottom="24dp">
                 <TextView
-                    android:id="@+id/text_select_mode_2_player"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ttt_config_mode_2_player"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold"/>
+                    android:text="@string/ttt_config_first_player"
+                    android:textColor="@color/text_primary_dark"
+                    android:layout_marginBottom="4dp"/>
+                <LinearLayout
+                    android:id="@+id/first_player_selector_container_ttt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_marginBottom="12dp">
+                    <TextView
+                        android:id="@+id/text_select_player_x"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ttt_config_first_player_x_label"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:textColor="@color/purple_500"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/text_select_player_o"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ttt_config_first_player_o_label"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:textColor="@color/text_secondary_dark"/>
+                    <TextView
+                        android:id="@+id/text_select_player_random"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ttt_config_first_player_random_label"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:textColor="@color/text_secondary_dark"/>
+                </LinearLayout>
+
+
                 <TextView
-                    android:id="@+id/text_select_mode_vs_bot"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:id="@+id/text_config_rounds_label_ttt"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/ttt_config_mode_vs_bot"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:textColor="@color/text_secondary_dark"/>
+                    android:text="@string/ttt_config_rounds_to_win"
+                    android:textColor="@color/text_primary_dark"
+                    android:layout_marginBottom="4dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+                    <ImageButton
+                        android:id="@+id/button_config_decrease_rounds_ttt"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_arrow_down"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/ttt_config_decrease_rounds"/>
+                    <EditText
+                        android:id="@+id/edittext_config_rounds_ttt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:text="1"
+                        android:gravity="center"
+                        android:textSize="18sp"
+                        android:textColor="@color/text_primary_dark"
+                        android:background="@drawable/bg_choice_button"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="8dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:focusable="false"
+                        android:clickable="false"/>
+                    <ImageButton
+                        android:id="@+id/button_config_increase_rounds_ttt"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_arrow_up"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/ttt_config_increase_rounds"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ttt_config_game_mode"
+                    android:textColor="@color/text_primary_dark"
+                    android:layout_marginBottom="4dp"/>
+                <LinearLayout
+                    android:id="@+id/game_mode_selector_container_ttt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:layout_marginBottom="24dp">
+                    <TextView
+                        android:id="@+id/text_select_mode_2_player"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ttt_config_mode_2_player"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:textColor="@color/purple_500"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/text_select_mode_vs_bot"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ttt_config_mode_vs_bot"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:background="?attr/selectableItemBackground"
+                        android:textColor="@color/text_secondary_dark"/>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_start_game_ttt"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ttt_button_play_game"
+                    app:cornerRadius="@dimen/action_button_corner_radius"
+                    android:textSize="@dimen/text_size_button"/>
             </LinearLayout>
+        </ScrollView>
 
-            <Button
-                android:id="@+id/button_start_game_ttt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/ttt_button_play_game"
-                app:cornerRadius="@dimen/action_button_corner_radius"
-                android:textSize="@dimen/text_size_button"/>
-        </LinearLayout>
-    </ScrollView>
+        <GridLayout
+            android:id="@+id/gridLayout_tic_tac_toe_board"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:columnCount="3"
+            android:rowCount="3"
+            android:alignmentMode="alignMargins"
+            android:columnOrderPreserved="false"
+            android:rowOrderPreserved="false"
+            android:background="@drawable/bg_game_board"
+            android:padding="@dimen/tic_tac_toe_cell_margin"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-    <!-- Tic Tac Toe Grid -->
-    <GridLayout
-        android:id="@+id/gridLayout_tic_tac_toe_board"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:columnCount="3"
-        android:rowCount="3"
-        android:alignmentMode="alignMargins"
-        android:columnOrderPreserved="false"
-        android:rowOrderPreserved="false"
-        android:background="@drawable/bg_game_board"
-        android:padding="@dimen/tic_tac_toe_cell_margin"
-        android:visibility="gone"
-        tools:visibility="visible">
+            <ImageButton android:id="@+id/button_00" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix" tools:srcCompat="@drawable/ic_tic_tac_toe_x"/>
+            <ImageButton android:id="@+id/button_01" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix" tools:srcCompat="@drawable/ic_tic_tac_toe_o"/>
+            <ImageButton android:id="@+id/button_02" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+            <ImageButton android:id="@+id/button_10" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+            <ImageButton android:id="@+id/button_11" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+            <ImageButton android:id="@+id/button_12" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+            <ImageButton android:id="@+id/button_20" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+            <ImageButton android:id="@+id/button_21" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+            <ImageButton android:id="@+id/button_22" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
+        </GridLayout>
+    </FrameLayout>
 
-        <ImageButton android:id="@+id/button_00" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix" tools:srcCompat="@drawable/ic_tic_tac_toe_x"/>
-        <ImageButton android:id="@+id/button_01" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix" tools:srcCompat="@drawable/ic_tic_tac_toe_o"/>
-        <ImageButton android:id="@+id/button_02" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-        <ImageButton android:id="@+id/button_10" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-        <ImageButton android:id="@+id/button_11" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-        <ImageButton android:id="@+id/button_12" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-        <ImageButton android:id="@+id/button_20" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-        <ImageButton android:id="@+id/button_21" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-        <ImageButton android:id="@+id/button_22" style="@style/TicTacToeCell" android:contentDescription="@string/tic_tac_toe_cell_desc_prefix"/>
-    </GridLayout>
-</FrameLayout>
-
-    <!-- The include for pause_overlay is still here but its functionality will be side-stepped -->
-    <!-- if the toolbar pause icon directly resets to config. -->
     <include layout="@layout/layout_pause_overlay"/>
     <include layout="@layout/layout_help_overlay"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,12 +23,16 @@ import androidx.core.content.ContextCompat;
 
 import com.example.jarm.databinding.ActivityRockPaperScissorsBinding;
 
+import java.util.Locale;
 import java.util.Random;
 
 public class RockPaperScissorsActivity extends AppCompatActivity {
 
     private ActivityRockPaperScissorsBinding binding;
     private Random random;
+    private Handler countdownHandler = new Handler(Looper.getMainLooper());
+    private Runnable countdownRunnable;
+    private int countdownSeconds = 3;
 
     private enum Choice {ROCK, PAPER, SCISSORS}
     private enum GameMode { BEST_OF, FIRST_TO }
@@ -34,7 +40,6 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     private int playerScore = 0;
     private int computerScore = 0;
 
-    // Configuration
     private GameMode currentGameMode = GameMode.BEST_OF;
     private int roundsToPlay = 3;
     private int pointsToWin = 3;
@@ -43,12 +48,10 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     private final int MIN_ROUNDS_POINTS = 1;
     private final int MAX_ROUNDS_POINTS = 99;
 
-    // Dedicated Pause Overlay Views
     private View dedicatedPauseOverlayContainer;
     private View buttonDedicatedPauseResume, buttonDedicatedPauseRestart, buttonDedicatedPauseMainMenu;
     private boolean isGamePausedByDedicatedMenu = false;
 
-    // Help Overlay Views
     private View helpOverlayContainerView;
     private TextView textViewHelpOverlayTitle;
     private TextView textViewHelpOverlayContent;
@@ -56,12 +59,11 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
 
     private boolean gameConfigLocked = false;
     private boolean matchOver = false;
+    private boolean isCountingDown = false;
 
-    // Database Helper
     private StatsDbHelper dbHelper;
     private static final String TAG = "RPSActivity";
     private Menu activityMenu;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +89,11 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         updateScoreDisplay();
         resetRoundUI(true);
         binding.buttonPlayAgain.setOnClickListener(v -> {
-            if (isHelpOverlayVisible() || isGamePausedByDedicatedMenu) return;
+            if (isHelpOverlayVisible() || isGamePausedByDedicatedMenu || isCountingDown) return;
             resetFullGame();
         });
     }
 
-    // --- Help Overlay Methods ---
     protected void initializeHelpOverlay() {
         helpOverlayContainerView = findViewById(R.id.help_overlay_container);
         if (helpOverlayContainerView != null) {
@@ -116,7 +117,11 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     protected void showHelpOverlay(String title, String content) {
         if (helpOverlayContainerView != null && textViewHelpOverlayTitle != null && textViewHelpOverlayContent != null) {
             if (isGamePausedByDedicatedMenu) {
-                resumeGameFromDedicatedPause(); // Resume dedicated pause before showing help
+                resumeGameFromDedicatedPause();
+            }
+            if (isCountingDown) {
+                countdownHandler.removeCallbacks(countdownRunnable);
+                isCountingDown = false;
             }
 
             textViewHelpOverlayTitle.setText(title);
@@ -154,28 +159,25 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     protected boolean isHelpOverlayVisible() {
         return helpOverlayContainerView != null && helpOverlayContainerView.getVisibility() == View.VISIBLE;
     }
-    // --- End of Help Overlay Methods ---
 
     private void setGameInteractionEnabled(boolean enabled) {
-        boolean canInteractGame = enabled && !matchOver && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible();
+        boolean canInteractGame = enabled && !matchOver && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible() && !isCountingDown;
         binding.buttonRock.setEnabled(canInteractGame);
         binding.buttonPaper.setEnabled(canInteractGame);
         binding.buttonScissors.setEnabled(canInteractGame);
 
-        boolean canInteractPlayAgain = enabled && matchOver && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible();
+        boolean canInteractPlayAgain = enabled && matchOver && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible() && !isCountingDown;
         binding.buttonPlayAgain.setEnabled(canInteractPlayAgain);
 
-
-        boolean enableConfigPanelInteractions = enabled && !gameConfigLocked && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible();
+        boolean enableConfigPanelInteractions = enabled && !gameConfigLocked && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible() && !isCountingDown;
         binding.textConfigBestOf.setEnabled(enableConfigPanelInteractions);
         binding.textConfigFirstTo.setEnabled(enableConfigPanelInteractions);
         binding.buttonConfigDecrease.setEnabled(enableConfigPanelInteractions);
         binding.buttonConfigIncrease.setEnabled(enableConfigPanelInteractions);
         binding.edittextConfigRounds.setAlpha(enableConfigPanelInteractions ? 1.0f : 0.5f);
 
-        updatePauseButtonVisibility(); // Update pause button based on new interaction state
+        updatePauseButtonVisibility();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -190,7 +192,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         if (activityMenu != null) {
             MenuItem pauseItem = activityMenu.findItem(R.id.action_pause_rps);
             if (pauseItem != null) {
-                pauseItem.setVisible(gameConfigLocked && !matchOver && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible());
+                pauseItem.setVisible(gameConfigLocked && !matchOver && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible() && !isCountingDown);
             }
         }
     }
@@ -213,9 +215,9 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     }
 
     private void setupChoiceListeners() {
-        binding.buttonRock.setOnClickListener(v -> { if(binding.buttonRock.isEnabled()) playGame(Choice.ROCK); });
-        binding.buttonPaper.setOnClickListener(v -> { if(binding.buttonPaper.isEnabled()) playGame(Choice.PAPER); });
-        binding.buttonScissors.setOnClickListener(v -> { if(binding.buttonScissors.isEnabled()) playGame(Choice.SCISSORS); });
+        binding.buttonRock.setOnClickListener(v -> { if(binding.buttonRock.isEnabled()) startRoundWithPlayerChoice(Choice.ROCK); });
+        binding.buttonPaper.setOnClickListener(v -> { if(binding.buttonPaper.isEnabled()) startRoundWithPlayerChoice(Choice.PAPER); });
+        binding.buttonScissors.setOnClickListener(v -> { if(binding.buttonScissors.isEnabled()) startRoundWithPlayerChoice(Choice.SCISSORS); });
     }
 
     private void setupConfigPanelListeners() {
@@ -268,65 +270,94 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             binding.edittextConfigRounds.setText(String.valueOf(pointsToWin));
             binding.textConfigRoundsLabel.setText(getString(R.string.rps_config_rounds_label_first_to));
         }
-        // Let setGameInteractionEnabled handle actual enabling/disabling
-        // This method focuses on visual state of config if it *were* enabled
         binding.edittextConfigRounds.setAlpha(gameConfigLocked ? 0.5f : 1.0f);
         binding.configPanelRps.setAlpha(gameConfigLocked ? 0.5f : 1.0f);
-        setGameInteractionEnabled(!isHelpOverlayVisible() && !isGamePausedByDedicatedMenu);
+        setGameInteractionEnabled(!isHelpOverlayVisible() && !isGamePausedByDedicatedMenu && !isCountingDown);
     }
 
-
-    private void playGame(Choice playerChoice) {
-        // Check for overlays is handled by setGameInteractionEnabled and individual listeners
-        if (matchOver) return; // Already checked by listener enable state, but good safeguard
+    private void startRoundWithPlayerChoice(Choice playerChoice) {
+        if (matchOver || isCountingDown) return;
 
         if (!gameConfigLocked) {
             gameConfigLocked = true;
-            // updateConfigUI(); // Called by setGameInteractionEnabled after this block
             binding.configPanelRps.setVisibility(View.GONE);
-            setGameInteractionEnabled(true); // Enable game buttons, disable config
-            // updatePauseButtonVisibility(); // Called by setGameInteractionEnabled
         }
+        binding.textViewPlayerChoiceLabel.setText(getString(R.string.rps_player_choice_label, getChoiceString(playerChoice)));
+        binding.textViewPlayerChoiceLabel.setVisibility(View.VISIBLE);
+        binding.textViewComputerChoiceLabel.setText(getString(R.string.rps_computer_choice_countdown, "3"));
+        binding.textViewComputerChoiceLabel.setVisibility(View.VISIBLE);
+        binding.computerChoiceDisplayContainer.setVisibility(View.VISIBLE);
+        binding.imageComputerSlotLeft.setImageResource(0);
+        binding.imageComputerSlotCenter.setImageResource(0);
+        binding.imageComputerSlotRight.setImageResource(0);
+
+        binding.textViewRoundWinnerIndicator.setVisibility(View.GONE);
+
+        isCountingDown = true;
+        setGameInteractionEnabled(false);
+        countdownSeconds = 3;
+
+        countdownRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (countdownSeconds > 0) {
+                    binding.textViewComputerChoiceLabel.setText(getString(R.string.rps_computer_choice_countdown, String.valueOf(countdownSeconds)));
+                    countdownSeconds--;
+                    countdownHandler.postDelayed(this, 1000);
+                } else {
+                    isCountingDown = false;
+                    playGame(playerChoice);
+                }
+            }
+        };
+        countdownHandler.post(countdownRunnable);
+    }
+
+    private void playGame(Choice playerChoice) {
         currentRound++;
 
         Choice computerChoice = Choice.values()[random.nextInt(Choice.values().length)];
         String roundResultText;
         String roundOutcomeForDb;
+        int roundWinnerIndicatorColor;
 
         if (playerChoice == computerChoice) {
-            roundResultText = getString(R.string.rps_verdict_tie);
+            roundResultText = getString(R.string.rps_round_winner_tie);
             roundOutcomeForDb = "TIE";
+            roundWinnerIndicatorColor = ContextCompat.getColor(this, R.color.text_secondary_dark);
         } else if ((playerChoice == Choice.ROCK && computerChoice == Choice.SCISSORS) ||
                 (playerChoice == Choice.PAPER && computerChoice == Choice.ROCK) ||
                 (playerChoice == Choice.SCISSORS && computerChoice == Choice.PAPER)) {
-            roundResultText = getString(R.string.rps_verdict_player_wins);
+            roundResultText = getString(R.string.rps_round_winner_player);
             playerScore++;
             roundOutcomeForDb = "WIN";
+            roundWinnerIndicatorColor = ContextCompat.getColor(this, R.color.button_green_reset);
         } else {
-            roundResultText = getString(R.string.rps_verdict_computer_wins);
+            roundResultText = getString(R.string.rps_round_winner_computer);
             computerScore++;
             roundOutcomeForDb = "LOSE";
+            roundWinnerIndicatorColor = ContextCompat.getColor(this, R.color.button_red_reset_scoreboard);
         }
 
         saveRpsRoundResult(playerChoice, computerChoice, roundOutcomeForDb);
         updateScoreDisplay();
-        displayResults(playerChoice, computerChoice, roundResultText);
+        displayResults(playerChoice, computerChoice, roundResultText, roundWinnerIndicatorColor);
 
         if (isGameOver()) {
             matchOver = true;
             binding.textViewRpsStatus.setText(getGameOverMessage());
-            setGameInteractionEnabled(false); // Disables choice buttons
             binding.buttonPlayAgain.setVisibility(View.VISIBLE);
-            binding.buttonPlayAgain.setEnabled(!isHelpOverlayVisible() && !isGamePausedByDedicatedMenu);
-            // updatePauseButtonVisibility(); // Called by setGameInteractionEnabled
+            setGameInteractionEnabled(false);
+            binding.buttonPlayAgain.setEnabled(!isHelpOverlayVisible() && !isGamePausedByDedicatedMenu && !isCountingDown);
         } else {
             if (currentGameMode == GameMode.BEST_OF) {
-                binding.textViewRpsStatus.setText(getString(R.string.rps_status_play_again) + " (Round " + currentRound + "/" + roundsToPlay + ")");
+                binding.textViewRpsStatus.setText(getString(R.string.rps_status_play_again_rounds, currentRound, roundsToPlay));
             } else {
                 String firstToStatus = String.format(getString(R.string.rps_status_first_to_points_needed), pointsToWin);
                 binding.textViewRpsStatus.setText(firstToStatus);
             }
             binding.buttonPlayAgain.setVisibility(View.GONE);
+            setGameInteractionEnabled(true);
         }
     }
 
@@ -358,9 +389,9 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     }
 
     private String getGameOverMessage() {
-        if (playerScore > computerScore) return "Player Wins the Match!";
-        else if (computerScore > playerScore) return "Computer Wins the Match!";
-        else return "Match is a Tie!";
+        if (playerScore > computerScore) return getString(R.string.rps_match_winner_player);
+        else if (computerScore > playerScore) return getString(R.string.rps_match_winner_computer);
+        else return getString(R.string.rps_match_winner_tie);
     }
 
     private void resetFullGame() {
@@ -370,19 +401,19 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         gameConfigLocked = false;
         matchOver = false;
         isGamePausedByDedicatedMenu = false;
+        isCountingDown = false;
+        countdownHandler.removeCallbacks(countdownRunnable);
 
         updateScoreDisplay();
-        updateConfigUI(); // This re-evaluates config visibility and interactions
+        updateConfigUI();
         resetRoundUI(true);
 
         binding.configPanelRps.setVisibility(View.VISIBLE);
-        // setGameInteractionEnabled(true) is called by updateConfigUI via its chain
 
         if (isHelpOverlayVisible()){ hideHelpOverlay(); }
         if(dedicatedPauseOverlayContainer != null && dedicatedPauseOverlayContainer.getVisibility() == View.VISIBLE){
             dedicatedPauseOverlayContainer.setVisibility(View.GONE);
         }
-        // updatePauseButtonVisibility(); // Called by setGameInteractionEnabled via updateConfigUI
     }
 
     private int getDrawableForChoice(Choice choice) {
@@ -408,7 +439,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         binding.textViewScoreComputer.setText(getString(R.string.rps_score_computer, computerScore));
     }
 
-    private void displayResults(Choice playerChoice, Choice computerChoice, String roundResultText_NotUsedByButton) {
+    private void displayResults(Choice playerChoice, Choice computerChoice, String roundWinnerText, int winnerIndicatorColor) {
         binding.textViewPlayerChoiceLabel.setText(getString(R.string.rps_player_choice_label, getChoiceString(playerChoice)));
         binding.textViewComputerChoiceLabel.setText(getString(R.string.rps_computer_choice_label, getChoiceString(computerChoice)));
 
@@ -416,18 +447,22 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         binding.textViewComputerChoiceLabel.setVisibility(View.VISIBLE);
         binding.computerChoiceDisplayContainer.setVisibility(View.VISIBLE);
 
-        binding.imageComputerSlotLeft.setImageDrawable(null);
-        binding.imageComputerSlotCenter.setImageDrawable(null);
-        binding.imageComputerSlotRight.setImageDrawable(null);
+        binding.imageComputerSlotLeft.setImageResource(0);
+        binding.imageComputerSlotCenter.setImageResource(0);
+        binding.imageComputerSlotRight.setImageResource(0);
 
         int computerChoiceDrawable = getDrawableForChoice(computerChoice);
         if (playerChoice == Choice.ROCK) {
             binding.imageComputerSlotLeft.setImageResource(computerChoiceDrawable);
         } else if (playerChoice == Choice.PAPER) {
             binding.imageComputerSlotCenter.setImageResource(computerChoiceDrawable);
-        } else { // SCISSORS
+        } else {
             binding.imageComputerSlotRight.setImageResource(computerChoiceDrawable);
         }
+
+        binding.textViewRoundWinnerIndicator.setText(roundWinnerText);
+        binding.textViewRoundWinnerIndicator.setTextColor(winnerIndicatorColor);
+        binding.textViewRoundWinnerIndicator.setVisibility(View.VISIBLE);
     }
 
     private void resetRoundUI(boolean fullReset) {
@@ -435,10 +470,11 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         binding.textViewComputerChoiceLabel.setVisibility(View.GONE);
         binding.computerChoiceDisplayContainer.setVisibility(View.GONE);
         binding.buttonPlayAgain.setVisibility(View.GONE);
+        binding.textViewRoundWinnerIndicator.setVisibility(View.GONE);
 
-        binding.imageComputerSlotLeft.setImageDrawable(null);
-        binding.imageComputerSlotCenter.setImageDrawable(null);
-        binding.imageComputerSlotRight.setImageDrawable(null);
+        binding.imageComputerSlotLeft.setImageResource(0);
+        binding.imageComputerSlotCenter.setImageResource(0);
+        binding.imageComputerSlotRight.setImageResource(0);
 
         if (fullReset) {
             binding.textViewRpsStatus.setText(getString(R.string.rps_status_make_move));
@@ -446,14 +482,13 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     }
 
     private void toggleDedicatedPauseState() {
-        if (!gameConfigLocked || matchOver || isHelpOverlayVisible()) return;
+        if (!gameConfigLocked || matchOver || isHelpOverlayVisible() || isCountingDown) return;
 
         if (isGamePausedByDedicatedMenu) {
             resumeGameFromDedicatedPause();
         } else {
             pauseGameForDedicatedMenu();
         }
-        // updatePauseButtonVisibility(); // Called by pause/resume methods
     }
 
     private void pauseGameForDedicatedMenu() {
@@ -462,7 +497,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             dedicatedPauseOverlayContainer.setVisibility(View.VISIBLE);
         }
         setGameInteractionEnabled(false);
-        updatePauseButtonVisibility(); // Explicitly call to hide toolbar pause button
+        updatePauseButtonVisibility();
     }
 
     private void resumeGameFromDedicatedPause() {
@@ -471,7 +506,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             dedicatedPauseOverlayContainer.setVisibility(View.GONE);
         }
         setGameInteractionEnabled(true);
-        updatePauseButtonVisibility(); // Explicitly call to show toolbar pause button
+        updatePauseButtonVisibility();
     }
 
     private void goToMainMenu() {
@@ -481,12 +516,15 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         if (isHelpOverlayVisible()){
             hideHelpOverlay();
         }
+        if (isCountingDown) {
+            countdownHandler.removeCallbacks(countdownRunnable);
+            isCountingDown = false;
+        }
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -501,13 +539,16 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
         }
         if (isGamePausedByDedicatedMenu) {
             if (itemId == R.id.action_pause_rps || itemId == android.R.id.home) {
-                // Allow these actions
             } else {
                 return false;
             }
         }
 
         if (itemId == android.R.id.home) {
+            if (isCountingDown) {
+                countdownHandler.removeCallbacks(countdownRunnable);
+                isCountingDown = false;
+            }
             if (isGamePausedByDedicatedMenu) resumeGameFromDedicatedPause();
             finish();
             return true;
@@ -528,8 +569,14 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
             hideHelpOverlay();
         } else if (isGamePausedByDedicatedMenu) {
             resumeGameFromDedicatedPause();
-            // updatePauseButtonVisibility(); // Called by resume
-        } else {
+        } else if (isCountingDown) {
+            countdownHandler.removeCallbacks(countdownRunnable);
+            isCountingDown = false;
+            resetRoundUI(false);
+            setGameInteractionEnabled(true);
+            binding.textViewRpsStatus.setText(getString(R.string.rps_status_make_move));
+        }
+        else {
             super.onBackPressed();
         }
     }
@@ -537,6 +584,7 @@ public class RockPaperScissorsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        countdownHandler.removeCallbacks(countdownRunnable);
         if (dbHelper != null) {
             dbHelper.close();
         }
