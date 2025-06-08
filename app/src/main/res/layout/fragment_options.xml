@@ -14,7 +14,6 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_large">
 
-        <!-- Data Management Section -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +47,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- About Section -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +68,6 @@
                     android:textColor="@color/text_primary_dark"
                     android:layout_marginBottom="@dimen/spacing_medium"/>
 
-                <!-- App Version -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -100,7 +97,6 @@
                     android:layout_marginTop="@dimen/spacing_small"
                     android:layout_marginBottom="@dimen/spacing_small"/>
 
-                <!-- Developer Info/Credits -->
                 <LinearLayout
                     android:id="@+id/layout_developer_info"
                     android:layout_width="match_parent"
@@ -126,8 +122,6 @@
                         android:textColor="@color/text_secondary_dark"
                         android:textSize="14sp"/>
                 </LinearLayout>
-
-                <!-- REMOVED Privacy Policy and Open Source Licenses -->
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

@@ -221,7 +221,7 @@
     <string name="options_section_about">About</string>
     <string name="options_label_app_version">App Version</string>
     <string name="options_label_developer_info">Developers</string>
-    <string name="developer_name_placeholder">[J]emimah Sumague\n[A]lexis Jay Laino\n[R]omeo Jr. Manlocot\n[M]essiah Railey Mabuyo</string>
+    <string name="developer_name_placeholder">[J]emimah Sumague\n[R]omeo Jr. Manlocot\n[A]lexis Jay Laino\n[M]essiah Railey Mabuyo</string>
 
     <string name="dialog_button_close">Close</string>
 

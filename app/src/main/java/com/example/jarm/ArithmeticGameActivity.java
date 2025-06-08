@@ -2,7 +2,6 @@ package com.example.jarm;
 
 import android.content.ContentValues;
 import android.content.Context;
-// import android.content.Intent; // Not directly used in this file for new intents
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -15,7 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button; // Added for help overlay
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,12 +69,10 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     private long currentSessionId = -1;
     private static final String TAG = "ArithmeticGameActivity";
 
-    // Dedicated Pause Overlay
     private View dedicatedPauseOverlayContainer;
     private View buttonDedicatedPauseResume, buttonDedicatedPauseRestart, buttonDedicatedPauseMainMenu;
-    private boolean isGamePausedByDedicatedMenu = false; // For dedicated pause
+    private boolean isGamePausedByDedicatedMenu = false;
 
-    // Help Overlay Views
     private View helpOverlayContainerView;
     private TextView textViewHelpOverlayTitle;
     private TextView textViewHelpOverlayContent;
@@ -107,8 +104,8 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         }
         binding.textViewCurrentDifficulty.setText(getString(R.string.label_difficulty_prefix, currentDifficulty));
 
-        initializeHelpOverlay(); // Initialize generic help overlay
-        initializeDedicatedPauseOverlay(); // Initialize dedicated game pause overlay
+        initializeHelpOverlay();
+        initializeDedicatedPauseOverlay();
 
         setupRecyclerView();
         setupListeners();
@@ -128,18 +125,17 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     private void updateToolbarButtonsVisibility() {
         if (activityMenu != null) {
             MenuItem pauseItem = activityMenu.findItem(R.id.action_pause_arithmetic_game);
-            MenuItem helpItem = activityMenu.findItem(R.id.action_help_arithmetic_game); // Assuming this ID is in menu_arithmetic_game.xml
+            MenuItem helpItem = activityMenu.findItem(R.id.action_help_arithmetic_game);
 
             if (pauseItem != null) {
                 pauseItem.setVisible(!gameEnded && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible() && currentRound <= totalRounds);
             }
             if (helpItem != null) {
-                helpItem.setEnabled(!isGamePausedByDedicatedMenu); // Help can be shown unless dedicated pause is active
+                helpItem.setEnabled(!isGamePausedByDedicatedMenu);
             }
         }
     }
 
-    // --- Help Overlay Methods ---
     protected void initializeHelpOverlay() {
         helpOverlayContainerView = findViewById(R.id.help_overlay_container);
         if (helpOverlayContainerView != null) {
@@ -161,20 +157,20 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     }
 
     protected void showHelpOverlay(String title, String content) {
-        if (isGamePausedByDedicatedMenu) { // If game is paused by dedicated menu, resume it first
+        if (isGamePausedByDedicatedMenu) {
             resumeGameFromDedicatedPause();
         }
         if (helpOverlayContainerView != null && textViewHelpOverlayTitle != null && textViewHelpOverlayContent != null) {
-            if (!gameEnded && roundTimer != null) { // Pause game timer if active
+            if (!gameEnded && roundTimer != null) {
                 roundTimer.cancel();
             }
-            mainHandler.removeCallbacksAndMessages(null); // Stop pending next round calls
+            mainHandler.removeCallbacksAndMessages(null);
 
             textViewHelpOverlayTitle.setText(title);
             textViewHelpOverlayContent.setText(content);
             helpOverlayContainerView.setVisibility(View.VISIBLE);
-            setGameInteractionEnabled(false); // Disable game inputs
-            updateToolbarButtonsVisibility(); // Hide dedicated pause, disable other menu items
+            setGameInteractionEnabled(false);
+            updateToolbarButtonsVisibility();
         } else {
             Log.e(TAG + "Help", "Help overlay views not properly initialized for showing.");
         }
@@ -183,10 +179,9 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     protected void hideHelpOverlay() {
         if (helpOverlayContainerView != null) {
             helpOverlayContainerView.setVisibility(View.GONE);
-            setGameInteractionEnabled(true); // Re-enable game inputs
-            updateToolbarButtonsVisibility(); // Re-evaluate button visibility
+            setGameInteractionEnabled(true);
+            updateToolbarButtonsVisibility();
 
-            // Resume game timer if it was running and game not ended
             if (!gameEnded && timeLeftInMillis > 0 && currentRound <= totalRounds) {
                 startTimer(timeLeftInMillis);
             }
@@ -196,23 +191,22 @@ public class ArithmeticGameActivity extends AppCompatActivity {
     protected boolean isHelpOverlayVisible() {
         return helpOverlayContainerView != null && helpOverlayContainerView.getVisibility() == View.VISIBLE;
     }
-    // --- End of Help Overlay Methods ---
 
     private void setGameInteractionEnabled(boolean enabled) {
         binding.editTextAnswer.setEnabled(enabled && !gameEnded && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible());
         binding.buttonSubmitAnswer.setEnabled(enabled && !gameEnded && !isGamePausedByDedicatedMenu && !isHelpOverlayVisible());
 
-        if (activityMenu != null) { // Enable/disable toolbar items except help
+        if (activityMenu != null) {
             for (int i = 0; i < activityMenu.size(); i++) {
                 MenuItem item = activityMenu.getItem(i);
-                if (item.getItemId() != R.id.action_help_arithmetic_game) { // Keep help actionable
+                if (item.getItemId() != R.id.action_help_arithmetic_game) {
                     item.setEnabled(enabled);
                 } else {
-                    item.setEnabled(true); // Help icon always enabled unless dedicated pause is up
+                    item.setEnabled(true);
                 }
             }
         }
-        updateToolbarButtonsVisibility(); // Refresh pause button visibility specifically
+        updateToolbarButtonsVisibility();
     }
 
 
@@ -256,13 +250,13 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         bonusTimeForNextRoundMillis = 0;
         totalRounds = 10;
         gameEnded = false;
-        isGamePausedByDedicatedMenu = false; // Ensure dedicated pause is reset
+        isGamePausedByDedicatedMenu = false;
 
         if(helpOverlayContainerView != null && helpOverlayContainerView.getVisibility() == View.VISIBLE){
-            hideHelpOverlay(); // Close help if game restarts
+            hideHelpOverlay();
         }
         if(dedicatedPauseOverlayContainer != null && dedicatedPauseOverlayContainer.getVisibility() == View.VISIBLE){
-            dedicatedPauseOverlayContainer.setVisibility(View.GONE); // Close dedicated pause if game restarts
+            dedicatedPauseOverlayContainer.setVisibility(View.GONE);
         }
 
 
@@ -273,15 +267,12 @@ public class ArithmeticGameActivity extends AppCompatActivity {
 
         updateScoreDisplay();
         updateRoundCounterDisplay();
-        setGameInteractionEnabled(true); // Enable inputs for new game
-        updateToolbarButtonsVisibility(); // Update toolbar buttons
+        setGameInteractionEnabled(true);
+        updateToolbarButtonsVisibility();
 
         startNewDbSession();
     }
 
-    // ... (startNewDbSession, setupListeners, startNewRound, updateRoundCounterDisplay, updateScoreDisplay unchanged)
-    // ... (generateNewProblem, generateNumberForDifficulty unchanged)
-    // ... (saveArithmeticRoundResult, updateDbSessionWithFinalScore, showKeyboard, hideKeyboard unchanged)
 
     private void startNewDbSession() {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -537,18 +528,17 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         if (roundTimer != null) {
             roundTimer.cancel();
         }
-        // timeLeftInMillis is set before calling startTimer when resuming from pause
-        // For a new round, timeLeftInMillis will be effectively millisInFuture
-        final long timerStartTime = millisInFuture; // Capture the intended start time for this timer instance
-        timeLeftInMillis = timerStartTime; // Ensure timeLeftInMillis reflects the full duration at start
+
+        final long timerStartTime = millisInFuture;
+        timeLeftInMillis = timerStartTime;
 
         binding.progressBarTime.setMax((int) (timerStartTime / 1000));
         roundTimer = new CountDownTimer(timerStartTime, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                if (isGamePausedByDedicatedMenu || isHelpOverlayVisible()) { // Check both pause states
-                    cancel(); // Stop this timer instance
-                    // timeLeftInMillis should already hold the correct remaining time from before pause
+                if (isGamePausedByDedicatedMenu || isHelpOverlayVisible()) {
+                    cancel();
+
                     return;
                 }
                 timeLeftInMillis = millisUntilFinished;
@@ -635,9 +625,9 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         }
         updateScoreDisplay();
         mainHandler.postDelayed(() -> {
-            if (currentRound < totalRounds && !gameEnded) { // Ensure game hasn't ended prematurely
+            if (currentRound < totalRounds && !gameEnded) {
                 startNewRound();
-            } else if (!gameEnded) { // All rounds done, game not yet marked as ended
+            } else if (!gameEnded) {
                 endGame();
             }
         }, 1500);
@@ -674,7 +664,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
         String finalMessage = String.format(Locale.getDefault(), "Game Over! Final Score: %d", score);
         binding.textViewProblem.setText(finalMessage);
 
-        setGameInteractionEnabled(false); // Disable all inputs
+        setGameInteractionEnabled(false);
         hideKeyboard();
         updateDbSessionWithFinalScore();
 
@@ -777,22 +767,21 @@ public class ArithmeticGameActivity extends AppCompatActivity {
                 hideHelpOverlay();
                 return true;
             }
-            return false; // Consume other actions if help is open
+            return false;
         }
 
         if (isGamePausedByDedicatedMenu) {
             if (itemId == R.id.action_pause_arithmetic_game || itemId == android.R.id.home) {
-                // Allow these
-            } else {
-                return false; // Consume other actions
+            }
+            else {
+                return false;
             }
         }
 
 
         if (itemId == android.R.id.home) {
-            if (isGamePausedByDedicatedMenu) resumeGameFromDedicatedPause(); // Resume if paused by dedicated menu
-            // Save score if exiting prematurely
-            if (currentSessionId != -1 && !gameEnded && score >= 0) { // score can be 0
+            if (isGamePausedByDedicatedMenu) resumeGameFromDedicatedPause();
+            if (currentSessionId != -1 && !gameEnded && score >= 0) {
                 updateDbSessionWithFinalScore();
             }
             if (roundTimer != null) roundTimer.cancel();
@@ -802,7 +791,7 @@ public class ArithmeticGameActivity extends AppCompatActivity {
             toggleDedicatedPauseState();
             return true;
         } else if (itemId == R.id.action_help_arithmetic_game) {
-            if (isGamePausedByDedicatedMenu) resumeGameFromDedicatedPause(); // Resume before showing help
+            if (isGamePausedByDedicatedMenu) resumeGameFromDedicatedPause();
             showHelpOverlay(getString(R.string.help_title_arithmetic_game), getString(R.string.help_content_arithmetic_game));
             return true;
         }

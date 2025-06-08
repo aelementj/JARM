@@ -14,7 +14,6 @@
         android:orientation="vertical"
         android:padding="@dimen/spacing_medium">
 
-        <!-- Tic Tac Toe Stats Panel -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_stats_tic_tac_toe"
             android:layout_width="match_parent"
@@ -39,7 +38,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"/>
 
-                <!-- Player X Winrate -->
                 <TextView
                     android:id="@+id/text_stats_ttt_player_x_winrate_label"
                     android:layout_width="wrap_content"
@@ -72,7 +70,6 @@
                     android:orientation="vertical"
                     app:layout_constraintGuide_percent="0.5"/>
 
-                <!-- Player O Winrate -->
                 <TextView
                     android:id="@+id/text_stats_ttt_player_o_winrate_label"
                     android:layout_width="wrap_content"
@@ -215,7 +212,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Rock Paper Scissors Stats Panel (NO CHANGES HERE) -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_stats_rps"
             android:layout_width="match_parent"
@@ -403,7 +399,6 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Arithmetic Challenge Stats Panel (NO CHANGES HERE)-->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/card_stats_arithmetic"
             android:layout_width="match_parent"

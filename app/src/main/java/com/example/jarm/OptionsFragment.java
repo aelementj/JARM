@@ -1,12 +1,10 @@
 package com.example.jarm;
 
 import android.content.Context;
-// import android.content.DialogInterface; // No longer needed directly for this setup
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
-// import android.net.Uri; // No longer needed
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,17 +42,12 @@ public class OptionsFragment extends Fragment {
     }
 
     private void setupButtonListeners() {
-        // Reset All Stats Button
         binding.buttonResetAllStats.setOnClickListener(v -> showResetStatsConfirmationDialog());
 
-        // Developer Info Click
         binding.layoutDeveloperInfo.setOnClickListener(v -> {
             Toast.makeText(getContext(), "Developed by: " + getString(R.string.developer_name_placeholder), Toast.LENGTH_LONG).show();
         });
 
-        // REMOVED Privacy Policy Click Listener
-
-        // REMOVED Open Source Licenses Click Listener
     }
 
     private void displayAppVersion() {

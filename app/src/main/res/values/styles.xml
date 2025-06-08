@@ -36,8 +36,7 @@
         <item name="android:textColor">@color/difficulty_button_text_color_selector</item>
         <item name="backgroundTint">@color/difficulty_button_background_tint_selector</item>
         <item name="iconTint">@color/difficulty_button_text_color_selector</item>
-        <item name="strokeColor">@color/difficulty_button_stroke_color_selector</item> <!-- ADD THIS LINE -->
-        <!-- The shapeAppearance will be handled programmatically for dynamic corner changes -->
+        <item name="strokeColor">@color/difficulty_button_stroke_color_selector</item>
     </style>
 
     <style name="NumberPickerTheme" parent="Theme.AppCompat.Light">

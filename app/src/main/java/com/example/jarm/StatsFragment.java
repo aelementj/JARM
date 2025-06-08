@@ -76,11 +76,10 @@ public class StatsFragment extends Fragment {
         int playerOWins = 0;
         int draws = 0;
 
-        // For VsBot specific stats
-        int playerWinsVsBotAsX = 0; // Player X wins vs Bot
-        int playerWinsVsBotAsO = 0; // Player O wins vs Bot
-        int botWinsVsPlayerX = 0;   // Bot (as O) wins vs Player X
-        int botWinsVsPlayerO = 0;   // Bot (as X) wins vs Player O
+        int playerWinsVsBotAsX = 0;
+        int playerWinsVsBotAsO = 0;
+        int botWinsVsPlayerX = 0;
+        int botWinsVsPlayerO = 0;
         int drawsVsBot = 0;
 
         try {
@@ -102,14 +101,9 @@ public class StatsFragment extends Fragment {
 
                     if ("VsBot".equals(mode)) {
                         if ("X".equals(winner)) {
-                            playerWinsVsBotAsX++; // Human played as X and won
+                            playerWinsVsBotAsX++;
                         } else if ("O".equals(winner)) {
-                            botWinsVsPlayerX++; // Bot (as O) won against Human (X) OR Human played as O and won (this needs careful thought based on your TicTacToeActivity bot logic)
-                            // Let's assume Bot is always O in TicTacToeActivity for simplicity of stats here.
-                            // So, if O wins in VsBot, it's a bot win.
-                            // If your bot can be X or O, this logic needs refinement in TicTacToeActivity save and here.
-                            // For now, assuming Bot is always O.
-                            // If winner is O in VsBot, it means Bot won.
+                            botWinsVsPlayerX++;
                         } else if ("DRAW".equals(winner)) {
                             drawsVsBot++;
                         }
@@ -128,45 +122,24 @@ public class StatsFragment extends Fragment {
         binding.textStatsTttPlayerOWinsValue.setText(String.valueOf(playerOWins));
         binding.textStatsTttDrawsValue.setText(String.valueOf(draws));
 
-        // Player X Winrate: (X wins) / (Total games where X played and didn't draw)
-        // Player O Winrate: (O wins) / (Total games where O played and didn't draw)
-        // "Total games played by X" = totalGames - games_where_O_won_vs_bot_if_X_was_not_playing - draws
-        // This can get complicated if players switch. For simplicity:
-        // Winrate for X = X_wins / (TotalGames - Draws)
-        // Winrate for O = O_wins / (TotalGames - Draws)
-        // This definition means their winrates are based on decisive games they could have won.
 
         int decisiveGames = totalGames - draws;
         double tttWinRateX = (decisiveGames > 0) ? ((double) playerXWins / decisiveGames) * 100 : 0.0;
-        if(playerXWins == 0 && decisiveGames == 0 && draws > 0 && totalGames > 0) tttWinRateX = 0.0; // only draws, no decisive games for X
-        else if(playerXWins == 0 && decisiveGames == 0 && totalGames == 0) tttWinRateX = 0.0; // no games
+        if(playerXWins == 0 && decisiveGames == 0 && draws > 0 && totalGames > 0) tttWinRateX = 0.0;
+        else if(playerXWins == 0 && decisiveGames == 0 && totalGames == 0) tttWinRateX = 0.0;
 
         double tttWinRateO = (decisiveGames > 0) ? ((double) playerOWins / decisiveGames) * 100 : 0.0;
-        if(playerOWins == 0 && decisiveGames == 0 && draws > 0 && totalGames > 0) tttWinRateO = 0.0; // only draws, no decisive games for O
-        else if(playerOWins == 0 && decisiveGames == 0 && totalGames == 0) tttWinRateO = 0.0; // no games
-
+        if(playerOWins == 0 && decisiveGames == 0 && draws > 0 && totalGames > 0) tttWinRateO = 0.0;
+        else if(playerOWins == 0 && decisiveGames == 0 && totalGames == 0) tttWinRateO = 0.0;
 
         binding.textStatsTttPlayerXWinrateValue.setText(String.format(Locale.getDefault(), "%.1f%%", tttWinRateX));
         binding.textStatsTttPlayerOWinrateValue.setText(String.format(Locale.getDefault(), "%.1f%%", tttWinRateO));
 
-        // Vs Bot Stats
-        // Assuming Bot is always Player O in TicTacToeActivity for these stats.
-        // Bot Wins (as O) = Count of (winner='O' AND mode='VsBot')
-        // Bot Losses (as O) = Count of (winner='X' AND mode='VsBot') Human player X won
-        // Bot Draws = Count of (winner='DRAW' AND mode='VsBot')
 
         int botWinsAsO_vsBotMode = 0;
-        int playerXWins_vsBotMode = 0; // Human as X wins
-        // drawsVsBot is already calculated
+        int playerXWins_vsBotMode = 0;
 
-        // Re-query for more specific VsBot stats if needed, or refine the first loop.
-        // For simplicity with current loop:
-        // Bot Wins (You as P1/P2): This label is a bit ambiguous.
-        // Let's interpret it as:
-        // "Bot Wins": How many times the Bot won. (Calculated as 'O' wins in 'VsBot' mode)
-        // "Bot Losses": How many times the Bot lost (i.e., human player won against Bot). (Calculated as 'X' wins in 'VsBot' mode)
-
-        SQLiteDatabase db2 = dbHelper.getReadableDatabase(); // Use a new instance or ensure the first one is still open
+        SQLiteDatabase db2 = dbHelper.getReadableDatabase();
         Cursor vsBotCursor = null;
         try {
             String selection = StatsDbHelper.TicTacToeEntry.COLUMN_NAME_MODE + " = ?";
@@ -179,12 +152,11 @@ public class StatsFragment extends Fragment {
             if (vsBotCursor != null && vsBotCursor.moveToFirst()) {
                 do {
                     String winner = vsBotCursor.getString(vsBotCursor.getColumnIndexOrThrow(StatsDbHelper.TicTacToeEntry.COLUMN_NAME_WINNER));
-                    if ("O".equals(winner)) { // Assuming Bot is O
+                    if ("O".equals(winner)) {
                         botWinsAsO_vsBotMode++;
-                    } else if ("X".equals(winner)) { // Assuming Human is X
+                    } else if ("X".equals(winner)) {
                         playerXWins_vsBotMode++;
                     }
-                    // drawsVsBot is already counted from the main loop if mode is VsBot
                 } while (vsBotCursor.moveToNext());
             }
         } catch (IllegalArgumentException e) {
@@ -198,7 +170,7 @@ public class StatsFragment extends Fragment {
 
         binding.textStatsTttBotWinsValue.setText(String.valueOf(botWinsAsO_vsBotMode));
         binding.textStatsTttBotLossesValue.setText(String.valueOf(playerXWins_vsBotMode));
-        binding.textStatsTttBotDrawsValue.setText(String.valueOf(drawsVsBot)); // Already calculated from the first loop correctly for draws in VsBot
+        binding.textStatsTttBotDrawsValue.setText(String.valueOf(drawsVsBot));
     }
 
 
@@ -256,11 +228,9 @@ public class StatsFragment extends Fragment {
         binding.textStatsRpsScissorsPicksValue.setText(String.valueOf(scissorsPicks));
 
         double rpsWinRate = 0.0;
-        if (playerWins + playerLosses > 0) { // Only calculate if there are wins or losses
+        if (playerWins + playerLosses > 0) {
             rpsWinRate = ((double) playerWins / (playerWins + playerLosses)) * 100;
         }
-        // If totalRounds > 0 and (playerWins + playerLosses == 0), it means only ties, so winrate is 0.
-        // If totalRounds == 0, winrate is 0.
 
         binding.textStatsRpsWinrateValue.setText(String.format(Locale.getDefault(), "%.1f%%", rpsWinRate));
     }
@@ -304,7 +274,7 @@ public class StatsFragment extends Fragment {
                     boolean sessionHasRounds = false;
                     if (roundCursor != null && roundCursor.moveToFirst()) {
                         sessionHasRounds = true;
-                        roundsCount += roundCursor.getCount(); // Add to total rounds count for this difficulty
+                        roundsCount += roundCursor.getCount();
                         do {
                             long timeTaken = roundCursor.getLong(roundCursor.getColumnIndexOrThrow(StatsDbHelper.ArithmeticRoundEntry.COLUMN_NAME_TIME_TAKEN_MS));
                             totalTimeTakenMs += timeTaken;
@@ -313,7 +283,6 @@ public class StatsFragment extends Fragment {
                         } while (roundCursor.moveToNext());
                     }
                     if (roundCursor != null) roundCursor.close();
-                    // If a session has no rounds, its times won't contribute, which is correct.
 
                 } while (sessionCursor.moveToNext());
             }
@@ -334,10 +303,9 @@ public class StatsFragment extends Fragment {
         if (fastestTimeMs == Long.MAX_VALUE || roundsCount == 0) fastestTimeMs = 0;
         binding.textStatsArithmeticFastestAnswerValue.setText(String.format(Locale.getDefault(), "%.1fs", fastestTimeMs / 1000.0));
 
-        if (roundsCount == 0) slowestTimeMs = 0; // Ensure slowest is 0 if no rounds
+        if (roundsCount == 0) slowestTimeMs = 0;
         binding.textStatsArithmeticSlowestAnswerValue.setText(String.format(Locale.getDefault(), "%.1fs", slowestTimeMs / 1000.0));
     }
-
 
     @Override
     public void onDestroyView() {
